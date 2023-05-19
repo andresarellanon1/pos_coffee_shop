@@ -18,8 +18,8 @@ class ProductsTemplateWidget extends PosComponent {
         this.state = useState({ currentOffset: 0 });
     }
     get productsToDisplay() {
-        // TODO: Patch DB class and add get_product_template_by_menu()
-        return this.env.pos.db.get_product_by_category(this.selectedCategoryId);
+        // TODO: add customizable menu feature, for now it's 0 default
+        return this.env.pos.db.get_product_template_by_menu(0);
     }
     get breadcrumbs() {
         // TODO: SWITCH SUBCATEGORY BREADCRUMB TO ATTRS TO SELECT VARIANT
@@ -32,7 +32,7 @@ class ProductsTemplateWidget extends PosComponent {
         ].map(id => this.env.pos.db.get_category_by_id(id));
     }
     get hasNoVariants() {
-        // TODO: fetch and .lengt === 0 variant total
+        // TODO: fetch and .length === 0 variant total, idk how to do that, where do i check count() of product.template total variant list ? or product.product where product_tmpl_id == x 
         return this.env.pos.db.get_category_childs_ids(0).length === 0;
     }
     _updateProductTemplateList() {
@@ -54,7 +54,7 @@ class ProductsTemplateWidget extends PosComponent {
                 }
             });
             if (ProductTemplateIds.length) {
-                await this.env.pos._addProductsTemplate(ProductkemplateIds, false);
+                await this.env.pos._addProductsTemplate(ProductTemplateIds, false);
             }
             this._updateProductList();
             return ProductIds;

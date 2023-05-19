@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="ProductTemplateItem" owl="1">
-        <article class="product_template" tabindex="0" t-on-keypress="spaceClickProduct"
+        <article class="product_template" tabindex="0"
                  t-on-click="() => this.trigger('click-product', props.product)"
                  t-att-data-product-id="props.product.id"
                  t-attf-aria-labelledby="article_product_{{props.product.id}}">
@@ -11,11 +11,11 @@
             <div class="product-content">
                 <div class="product-name" t-attf-id="article_product_{{props.product.id}}">
                     <t t-esc="props.product.display_name" />
-                </div
+                </div>
                 <span class="price-tag">
                     <t t-esc="price" />
                 </span>
             </div>
         </article>
     </t>
-</templates>                                                                                                                                                                                                         </templates>
+</templates>

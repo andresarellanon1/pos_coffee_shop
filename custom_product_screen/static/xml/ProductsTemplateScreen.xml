@@ -7,17 +7,19 @@
         <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
             <div class="screen-full-width">
                 <div class="leftpane pane-border">
-                    <CustomOrderWidget/>
+                    <OrderWidget/>
                 </div>
                 <div class="rightpane">
                     <ProductsTemplatesWidget />
                </div>
                  <div class="pads">
                     <t t-if="isClientPos">
-                        <ClientActionpadWidget partner="partner" />
+                        <!-- <ClientActionpadWidget partner="partner" /> -->
+                        aqui va el client action pad widget
                     </t>
                     <t t-else="">
-                        <UserActionpadWidget partner="partner" />
+                        <!-- <UserActionpadWidget partner="partner" /> -->
+                        aqui va el use actionpad widget
                     </t>
                  </div>
             </div>
