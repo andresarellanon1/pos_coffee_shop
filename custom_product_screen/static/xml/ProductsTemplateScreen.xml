@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductsTemplateScreen"  
-        t-inherit="ProductScreen" t-inherit-mode="primary" 
+    <t  t-inherit="point_of_sale.ProductScreen" t-inherit-mode="primary" 
         owl="1">
-        <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
-            <div class="screen-full-width">
-                <div class="leftpane pane-border">
-                    <OrderWidget/>
+            <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+                <div class="screen-full-width">
+                    <div class="leftpane pane-border">
+                        <OrderWidget/>
+                    </div>
+                    <div class="rightpane">
+                        <ProductsTemplatesWidget />
+                   </div>
+                     <div class="pads">
+                        <t t-if="isClientPos">
+                            <!-- <ClientActionpadWidget partner="partner" /> -->
+                            aqui va el client action pad widget
+                        </t>
+                        <t t-else="">
+                            <!-- <UserActionpadWidget partner="partner" /> -->
+                            aqui va el use actionpad widget
+                        </t>
+                     </div>
                 </div>
-                <div class="rightpane">
-                    <ProductsTemplatesWidget />
-               </div>
-                 <div class="pads">
-                    <t t-if="isClientPos">
-                        <!-- <ClientActionpadWidget partner="partner" /> -->
-                        aqui va el client action pad widget
-                    </t>
-                    <t t-else="">
-                        <!-- <UserActionpadWidget partner="partner" /> -->
-                        aqui va el use actionpad widget
-                    </t>
-                 </div>
             </div>
-        </div>
     </t>
 
 </templates>

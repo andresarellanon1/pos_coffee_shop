@@ -4,11 +4,12 @@ from itertools import groupby
 from odoo import models, _
 
 class PosSession(models.Model):
-    _inherit = 'point_of_sale.pos.session'
+    _inherit = 'pos.session'
 
     def _get_attributes_by_ptal_id(self):
         product_attributes = self.env['product.attribute'].search([('create_variant', '!=', 'no_variant')])
         product_attributes_by_id = {product_attribute.id: product_attribute for product_attribute in product_attributes}
+
         domain = [('attribute_id', 'in', product_attributes.mapped('id'))]
         product_template_attribute_values = self.env['product.template.attribute.value'].search(domain)
         key = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { PosComponent } from '@point_of_sale/js/Screens/ProductScreen'
+import { PosComponent } from '@point_of_sale/js';
 import { Registry } from "@web/core/registry";
 
 const Registries = new Registry();
@@ -14,6 +14,6 @@ class ProductTemplateItem extends PosComponent {
     }
 }
 
-ProductTemplateItem.template = 'custom_product_screen.ProductTemplateItem';;
+ProductTemplateItem.template = 'custom_product_screen.ProductTemplateItem';
 
 Registries.Component.add(ProductTemplateItem)

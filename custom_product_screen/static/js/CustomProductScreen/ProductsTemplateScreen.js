@@ -1,10 +1,16 @@
 /** @odoo-module **/
 
-import { patch } from '@web.utils'
-import { ProductScreen } from '@point_of_sale/js/Screens/ProductScreen'
+import { ProductScreen } from '@point_of_sale/js/ProductScreen';
+import { Registry } from "@web/core/registry";
 
-patch(ProductScreen.prototype, "prototype patch", {
+const Registries = new Registry();
+const { useState } = owl.hooks;
 
+class ProductsTemplateScreen extends PosComponent {
+ setup(){
+    super.setup();
+    
+}
     async _clickProduct(event) {
         if (!this.currentOrder) {
             this.env.pos.add_new_order();
@@ -42,4 +48,9 @@ patch(ProductScreen.prototype, "prototype patch", {
     isClient() {
         return true;
     }
-});
+
+}
+
+//ProductsTemplateScreen.template = 'custom_product_screen.ProductsTemplateScreen ';
+
+//Registries.Component.add(ProductsTemplateScreen):
