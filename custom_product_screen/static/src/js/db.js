@@ -3,12 +3,14 @@
 import { patch } from '@web.utils'
 import { PosDB } from '@point_of_sale/js'
 
-patch(PosDB.prototype, "prototype patch", {
+patch(PosDB.prototype, "constructor", {
     setup() {
         this.setup()
         this.products_template_by_id = {}
     },
-    add_products_templates: function (products) {
+});
+patch(PosDB.prototype, "prototype patch", {
+  add_products_templates: function (products) {
         if (!(products instanceof Array)) {
             products = [products];
         }
