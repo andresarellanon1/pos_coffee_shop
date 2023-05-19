@@ -10,7 +10,6 @@
     'assets': {
         'web.assets_backend': [
             'custom_product_screen/static/src/**/*.js',
-            'custom_product_screen/static/src/**/*.js',
         ],
         'web.assets_qweb': [
             'custom_product_screen/static/src/**/*.xml',
