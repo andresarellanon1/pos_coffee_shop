@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import { ProductScreen } from '@point_of_sale/js/ProductScreen';
+import { PosComponent } from '@point_of_sale/js';
 import { Registry } from "@web/core/registry";
 
 const Registries = new Registry();
 const { useState } = owl.hooks;
 
 class ProductsTemplateScreen extends PosComponent {
- setup(){
-    super.setup();
-    
-}
+    setup() {
+        super.setup();
+
+    }
     async _clickProduct(event) {
         if (!this.currentOrder) {
             this.env.pos.add_new_order();
@@ -24,7 +24,7 @@ class ProductsTemplateScreen extends PosComponent {
         // Add the product after having the extra information.
         await this._addProduct(product, options);
         NumberBuffer.reset();
-    },
+    }
     // NOTA: EL FUNCIONAMIENTO DESEADO IMPLICA QUE ESTA OPCION SIEMPRE REGRESE LOS OPTIONS CORRECTOS Y QUE NO GENERE EL POPUP
     // TODO: OVERWRITE _getAddProductOptions to make sure it always return the options from the custom options manager
     async _getAddProductOptions(product) {
@@ -44,7 +44,7 @@ class ProductsTemplateScreen extends PosComponent {
             }
         }
         return { draftPackLotLines, quantity: weight, description, price_extra };
-    },
+    }
     isClient() {
         return true;
     }
