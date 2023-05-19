@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { patch } from '@web.utils'
-import { ProductScreen } from '@point_of_sale/js/Screens/ProductScreen'
+import { patch } from 'web.utils'
+import { ProductScreen } from 'point_of_sale.ProductScreen'
 
 patch(ProductScreen.prototype, "prototype patch", {
 
@@ -11,7 +11,7 @@ patch(ProductScreen.prototype, "prototype patch", {
         }
         const productTemplate = event.detail;
 
-        Console.log("customclickproduct");
+        console.log("customclickproduct");
         const options = await this._getAddProductOptions(payload);
         // Do not add product if options is undefined.
         if (!options) return;

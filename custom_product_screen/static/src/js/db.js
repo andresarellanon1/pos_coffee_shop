@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { patch } from '@web.utils'
-import { PosDB } from '@point_of_sale/js'
+import { patch } from 'web.utils'
+import { PosDB } from 'point_of_sale.DB'
 
+        console.log("patching pos testing")
 patch(PosDB.prototype, "prototype patch", {
     setup() {
         this.setup()
         this.products_template_by_id = {}
+        console.log("patching pos POSDB")
     },
     add_products_templates: function (products) {
         if (!(products instanceof Array)) {

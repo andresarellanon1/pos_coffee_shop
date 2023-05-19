@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { patch } from '@web.utils'
-import { PosCollection } from '@point_of_sale/js'
+import { patch } from 'web.utils'
+import { PosGlobalState } from 'point_of_sale.models'
 
-patch(PosCollection.prototype, "prototype patch", {
+console.log("patching pos collection"),
+patch(PosGlobalState.prototype, "prototype patch", {
     async _processData(loadedData) {
         this._loadProductTemplate(loadedData['product.template']);
         this._super(loadedData)

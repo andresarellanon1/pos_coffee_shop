@@ -2,12 +2,13 @@
 
 import { ConnectionLostError, ConnectionAbortedError } from '@web/core/network/rpc_service'
 import { useListener } from "@web/core/utils/hooks"
-import { identifyError } from '@point_of_sale.utils'
-import { PosComponent } from '@point_of_sale.PosComponent'
-import { Registries } from '@point_of_sale.Registries'
+import { PosComponent} from 'point_of_sale.PosComponent'
+import Registries from 'point_of_sale.Registries'
+import { identifyError } from 'point_of_sale.utils'
 
 const { useState } = owl;
 
+console.log("Product tempalte widget file");
 class ProductsTemplateWidget extends PosComponent {
     /**
      * @param {Object} props
