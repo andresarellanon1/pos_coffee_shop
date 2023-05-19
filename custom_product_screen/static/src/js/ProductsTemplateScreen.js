@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { PosComponent } from '@point_of_sale/js';
+import { PosComponent } from 'point_of_sale.PosComponent';
 import { Registry } from "@web/core/registry";
 
 const Registries = new Registry();
@@ -10,6 +10,7 @@ class ProductsTemplateScreen extends PosComponent {
     setup() {
         super.setup();
 
+        console.log("customclickproduct");
     }
     async _clickProduct(event) {
         if (!this.currentOrder) {
@@ -17,7 +18,7 @@ class ProductsTemplateScreen extends PosComponent {
         }
         const productTemplate = event.detail;
 
-        Console.log("customclickproduct");
+        console.log("customclickproduct");
         const options = await this._getAddProductOptions(payload);
         // Do not add product if options is undefined.
         if (!options) return;

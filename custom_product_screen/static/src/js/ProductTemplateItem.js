@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { PosComponent } from '@point_of_sale/js';
+import { PosComponent } from 'point_of_sale.PosComponent';
 import { Registry } from "@web/core/registry";
 
 const Registries = new Registry();
