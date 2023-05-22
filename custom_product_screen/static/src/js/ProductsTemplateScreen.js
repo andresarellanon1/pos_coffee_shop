@@ -4,12 +4,10 @@ import { PosComponent } from 'point_of_sale.PosComponent';
 import { Registry } from "@web/core/registry";
 
 const Registries = new Registry();
-const { useState } = owl.hooks;
 
 class ProductsTemplateScreen extends PosComponent {
     setup() {
         super.setup();
-
         console.log("customclickproduct");
     }
     async _clickProduct(event) {
@@ -54,4 +52,4 @@ class ProductsTemplateScreen extends PosComponent {
 
 //ProductsTemplateScreen.template = 'custom_product_screen.ProductsTemplateScreen ';
 
-//Registries.Component.add(ProductsTemplateScreen):
+    //Registries.Component.add(ProductsTemplateScreen):

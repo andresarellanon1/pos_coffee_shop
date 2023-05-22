@@ -4,7 +4,6 @@ import { PosComponent } from 'point_of_sale.PosComponent';
 import { Registry } from "@web/core/registry";
 
 const Registries = new Registry();
-const { useState } = owl.hooks;
 
 class ProductTemplateItem extends PosComponent {
 
