@@ -3,7 +3,7 @@
 import { patch } from 'web.utils'
 import ProductScreen from 'point_of_sale.ProductScreen'
 import NumberBuffer from 'point_of_sale.NumberBuffer'
-import { useExternalListener, onMounted, useState } from '@odoo/owl';
+import { useExternalListener, onMounted, onRendered, useState } from '@odoo/owl';
 
 patch(ProductScreen.prototype, "prototype patch", {
     setup() {
