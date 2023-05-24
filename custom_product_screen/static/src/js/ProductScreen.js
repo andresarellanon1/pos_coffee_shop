@@ -19,16 +19,18 @@ patch(ProductScreen.prototype, "prototype patch", {
         useExternalListener(window, 'click-product', this._clickProduct);
         useExternalListener(window, 'click-partner', this.onClickPartner);
         useExternalListener(window, 'click-pay', this._onClickPay);
-                NumberBuffer.use({
+        /*
+         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
             triggerAtInput: 'update-selected-orderline',
             useWithBarcode: true,
         });
-        onMounted(this.onMounted);
+        */
+        //onMounted(this.onMounted);
         // Call `reset` when the `onMounted` callback in `NumberBuffer.use` is done.
         // We don't do this in the `mounted` lifecycle method because it is called before
         // the callbacks in `onMounted` hook.
-        onMounted(() => NumberBuffer.reset());
+        //onMounted(() => NumberBuffer.reset());
         this.state = useState({
             mobile_pane: this.props.mobile_pane || 'right',
         });
