@@ -19,15 +19,7 @@ patch(ProductScreen.prototype, "prototype patch", {
         useExternalListener(window, 'click-product', this._clickProduct);
         useExternalListener(window, 'click-partner', this.onClickPartner);
         useExternalListener(window, 'click-pay', this._onClickPay);
-        useBarcodeReader({
-            product: this._barcodeProductAction,
-            weight: this._barcodeProductAction,
-            price: this._barcodeProductAction,
-            client: this._barcodePartnerAction,
-            discount: this._barcodeDiscountAction,
-            error: this._barcodeErrorAction,
-        });
-        NumberBuffer.use({
+                NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
             triggerAtInput: 'update-selected-orderline',
             useWithBarcode: true,
