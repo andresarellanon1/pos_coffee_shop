@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t  t-inherit="point_of_sale.ProductScreen" t-inherit-mode="primary" 
+    <t
+        t-name="ProductScreen"
+        t-inherit="point_of_sale.ProductScreen"
+        t-inherit-mode="extension"
         owl="1">
+        <xpath expr="//div[hasclass('product-screen')]" position="replace" >
             <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
                 <div class="screen-full-width">
                     <div class="leftpane pane-border">
                         <OrderWidget/>
                     </div>
                     <div class="rightpane">
-                        <ProductsTemplatesWidget />
+                        <ProductsTemplateWidget />
                    </div>
                      <div class="pads">
                         <t t-if="isClientPos">
@@ -23,6 +27,7 @@
                      </div>
                 </div>
             </div>
+        </xpath>
     </t>
 
 </templates>

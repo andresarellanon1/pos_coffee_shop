@@ -8,11 +8,9 @@
     'depends': ['point_of_sale', 'pos_enterprise'],
     'installable': True,
     'assets': {
-        'web.assets_backend': [
-            'custom_product_screen/static/src/**/*.js',
-        ],
-        'web.assets_qweb': [
-            'custom_product_screen/static/src/**/*.xml',
+        'point_of_sale.assets': [
+            'custom_product_screen/static/src/xml/*.xml',
+            'custom_product_screen/static/src/js/*.js',
         ]
     }
 }

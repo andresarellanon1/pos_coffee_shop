@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-  <t t-name="ProductsTemplateWidget" owl="1">
+  <t t-name="custom_product_screen.ProductsTemplateWidget" owl="1">
     <div class="products-widget">
    <!--    <ProductsTemplateWidgetControlPanel breadcrumbs="breadcrumbs" hasNoVariants="hasNoVariants" /> -->
       <div class="product-list-container">
-        <div t-if="productTemplatesToDisplay.length != 0" class="product-list">
-            <t t-foreach="productTemplatesToDisplay" t-as="product" t-key="product.id">
+        <div t-if="productsTemplateToDisplay.length != 0" class="product-list">
+            <t t-foreach="productsTemplateToDisplay" t-as="product" t-key="product.id">
               <ProductTemplateItem product="product" />
             </t>
         </div>
       </div>
     </div>
-  </t>
+   </t>
 </templates> 
