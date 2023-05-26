@@ -1,17 +1,15 @@
 /** @odoo-module **/
 
 import { ConnectionLostError, ConnectionAbortedError } from '@web/core/network/rpc_service'
-import { useListener } from "@web/core/utils/hooks"
 import PosComponent from 'point_of_sale.PosComponent'
 import Registries from 'point_of_sale.Registries'
 import { identifyError } from 'point_of_sale.utils'
 import { useState } from '@odoo/owl';
-class ProductsTemplateWidget extends PosComponent {
+
+class ProductTemplateWidget extends PosComponent {
    setup() {
         super.setup();
-        //useListener('load-products-from-server', this.loadProductTemplateFromDB);
         this.state = useState({ currentOffset: 0 });
-        console.log("Product tempalte widget file constructor");
     }
     get productsTemplateToDisplay() {
         // TODO: add customizable menu feature, for now it's 0 default
@@ -53,7 +51,7 @@ class ProductsTemplateWidget extends PosComponent {
         }
     }
 }
-ProductsTemplateWidget.template = 'custom_product_screen.ProductsTemplateWidget';
+ProductTemplateWidget.template = 'custom_product_screen.ProductTemplateWidget';
 
-Registries.Component.add(ProductsTemplateWidget);
+Registries.Component.add(ProductTemplateWidget);
 

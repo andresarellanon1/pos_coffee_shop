@@ -7,9 +7,9 @@ patch(PosGlobalState.prototype, "prototype patch", {
     async _processData(loadedData) {
         this._loadProductTemplate(loadedData['product.template']);
         this._super(loadedData);
-        console.log("patching pos collection");
     },
     _loadProductTemplate(products) {
+        if
         const productMap = {};
         const productTemplateMap = {};
         const modelProducts = products.map(product => {
@@ -19,9 +19,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
             productTemplateMap[product.product_tmpl_id[0]] = (productTemplateMap[product.product_tmpl_id[0]] || []).concat(product);
             return Product.create(product);
         });
-        console.log("modelProducts:");
-        console.log(modelProducts);
-        console.log(this.db);
         this.db.add_products_templates(modelProducts)
     }
 });

@@ -5,13 +5,11 @@ import PosDB from 'point_of_sale.DB'
 
 patch(PosDB.prototype, "prototype patch", {
     init(options) {
-        console.log("patching pos POSDB setup")
         this.products_template_by_id = {}
         this._super(options)
     },
 
     add_products_templates: function (products) {
-        console.log("patching pos POSDB");
         if (!(products instanceof Array)) {
             products = [products];
         }

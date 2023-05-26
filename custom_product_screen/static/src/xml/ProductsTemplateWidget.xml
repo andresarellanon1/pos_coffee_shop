@@ -2,7 +2,6 @@
 <templates id="template" xml:space="preserve">
   <t t-name="custom_product_screen.ProductsTemplateWidget" owl="1">
     <div class="products-widget">
-   <!--    <ProductsTemplateWidgetControlPanel breadcrumbs="breadcrumbs" hasNoVariants="hasNoVariants" /> -->
       <div class="product-list-container">
         <div t-if="productsTemplateToDisplay.length != 0" class="product-list">
             <t t-foreach="productsTemplateToDisplay" t-as="product" t-key="product.id">
