@@ -1,4 +1,4 @@
-/** @odoo-module  **/
+/** @odoo-module **/
 
 import ProductScreen from 'point_of_sale.ProductScreen'
 import Registries from 'point_of_sale.Registries'

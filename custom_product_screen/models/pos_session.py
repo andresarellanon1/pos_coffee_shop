@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from itertools import groupby
 from odoo import models, _
 from odoo import api, fields, models, _, Command
@@ -7,7 +5,6 @@ from odoo import api, fields, models, _, Command
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    @api.model
     def _pos_ui_models_to_load(self):
         models_to_load = [
             'res.company',
@@ -89,4 +86,10 @@ class PosSession(models.Model):
             },
             'context': {'display_default_code': False},
         }
-}
+
+
+
+
+
+
+
