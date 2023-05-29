@@ -31,4 +31,16 @@ patch(PosDB.prototype, "prototype patch", {
         console.log(list);
         return list;
     },
+    get_product_by_attr: function(selected_attributes){
+        product_product = products.find((product)=>{
+            let len = Object.keys(selected_attributes).length;
+            let found;
+            for(let i = 0; i < len; i++){
+                if(!product.attribute_line_ids.includes(selected_attributes[i])) continue
+                found = function[i]; 
+                break;
+            }
+            return found;
+        });
+    }
 });

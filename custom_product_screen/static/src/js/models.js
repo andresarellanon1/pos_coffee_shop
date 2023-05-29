@@ -4,11 +4,11 @@ import { patch } from 'web.utils'
 import { PosGlobalState, Product } from 'point_of_sale.models'
 
 patch(PosGlobalState.prototype, "prototype patch", {
-    async _processData(loadedData) {
+    _processData: async function(loadedData) {
         this._loadProductTemplate(loadedData['product.template']);
         this._super(loadedData);
     },
-    _loadProductTemplate(products) {
+    _loadProductTemplate: function(products) {
         if
         const productMap = {};
         const productTemplateMap = {};
