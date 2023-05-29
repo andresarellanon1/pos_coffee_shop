@@ -15,5 +15,4 @@ class ProductTemplateItem extends PosComponent {
 }
 
 ProductTemplateItem.template = 'custom_product_screen.ProductTemplateItem';
-
 Registries.Component.add(ProductTemplateItem)

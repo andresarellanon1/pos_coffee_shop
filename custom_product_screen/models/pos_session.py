@@ -89,4 +89,4 @@ class PosSession(models.Model):
             },
             'context': {'display_default_code': False},
         }
-
+}

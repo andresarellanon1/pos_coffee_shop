@@ -52,6 +52,5 @@ class ProductTemplateWidget extends PosComponent {
     }
 }
 ProductTemplateWidget.template = 'custom_product_screen.ProductTemplateWidget';
-
 Registries.Component.add(ProductTemplateWidget);
 
