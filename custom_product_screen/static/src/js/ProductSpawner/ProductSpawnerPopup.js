@@ -11,17 +11,21 @@ class ProductSpawnerPopup extends AbstractAwaitablePopup {
         useSubEnv({ attribute_components });
     }
     getPayload() {
-        let selected_attributes = [];
+        let selected_attributes = {};
         let price_extra = 0.0;
         let product_product;
 
         this.env.attribute_components.forEach((attribute_component) => {
             let { value, extra } = attribute_component.getValue();
-            selected_attributes.push(value);
+            selected_attributes[value.id] = value;
             price_extra += extra;
         });
         
         description =selected_attributes.join(', ');
+        
+        let products = this.env.pos.db.get_product_template_by_menu(0);
+        // TODO: use selected attributes to search and retrieve product.product object (variant created with instantlly option)
+        product_product = products.find(()=>)
 
         return {
             product_product,
