@@ -25,7 +25,10 @@ class ProductSpawnerPopup extends AbstractAwaitablePopup {
         
         let products = this.env.pos.db.get_product_template_by_menu(0);
         // TODO: use selected attributes to search and retrieve product.product object (variant created with instantlly option)
-        product_product = products.find(()=>)
+        product_product = products.find((product)=>{
+            product.k
+
+        })
 
         return {
             product_product,
