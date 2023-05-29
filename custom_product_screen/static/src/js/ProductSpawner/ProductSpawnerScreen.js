@@ -19,13 +19,13 @@ class ProductSpawnerScreen extends PosComponent {
             selected_attributes[value.id] = value;
             price_extra += extra;
         });
-        description =selected_attributes.join(', ');
-        let product_product = this.env.pos.db.get_product_by_attr(selected_attributes);
+        description = selected_attributes.join(', ');
+        product_product = this.env.pos.db.get_product_by_attr(selected_attributes);
         this.trigger('product-spawned', {
             product_product,
             price_extra,
             description
-        }
+        });
     }
 }
 ProductSpawnerScreen.template = 'custom_product_screen.ProductSpawnerScreen';

@@ -7,7 +7,7 @@ import { identifyError } from 'point_of_sale.utils'
 import { useState } from '@odoo/owl';
 
 class ProductTemplateWidget extends PosComponent {
-   setup() {
+    setup() {
         super.setup();
         this.state = useState({ currentOffset: 0 });
     }
