@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-  <t t-name="custom_product_screen.ProductsTemplateWidget" owl="1">
+  <t t-name="custom_product_screen.ProductTemplateWidget" owl="1">
     <div class="products-widget">
       <div class="product-list-container">
         <div t-if="productsTemplateToDisplay.length != 0" class="product-list">

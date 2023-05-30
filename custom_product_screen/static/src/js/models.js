@@ -9,10 +9,9 @@ patch(PosGlobalState.prototype, "prototype patch", {
         this._super(loadedData);
     },
     _loadProductTemplate: function(products) {
-        if
-        const productMap = {};
-        const productTemplateMap = {};
-        const modelProducts = products.map(product => {
+        let productMap = {};
+        let productTemplateMap = {};
+        let modelProducts = products.map(product => {
             product.pos = this;
             product.applicablePricelistItems = {};
             productMap[product.id] = product;

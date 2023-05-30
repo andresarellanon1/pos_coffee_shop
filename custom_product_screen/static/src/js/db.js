@@ -22,13 +22,12 @@ patch(PosDB.prototype, "prototype patch", {
     get_product_template_by_menu: function (menu_id) {
         var list = [];
         if (this.products_template_by_id) {
-            for (const key in this.products_template_by_id) {
-                const product = this.products_template_by_id[key];
+            for (let key in this.products_template_by_id) {
+                let product = this.products_template_by_id[key];
                 if (!(product.active && product.available_in_pos)) continue;
                 list.push(product);
             }
         }
-        console.log(list);
         return list;
     },
     get_product_by_attr: function(selected_attributes){
@@ -36,8 +35,8 @@ patch(PosDB.prototype, "prototype patch", {
             let len = Object.keys(selected_attributes).length;
             let found;
             for(let i = 0; i < len; i++){
-                if(!product.attribute_line_ids.includes(selected_attributes[i])) continue
-                found = function[i]; 
+                if(!product.attribute_line_ids.includes(selected_attributes[i])) continue;
+                found = selected_attributes[i]; 
                 break;
             }
             return found;

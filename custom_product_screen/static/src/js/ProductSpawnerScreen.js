@@ -2,13 +2,14 @@
 
 import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
-import { useSubEnv, useState, useExternalListener } from '@odoo/owl'
+import { useSubEnv, useState, } from '@odoo/owl'
+import { useListener } from '@web/core/utils/hooks'
 
 class ProductSpawnerScreen extends PosComponent {
     setup() {
         super.setup();
         useSubEnv({ attribute_components: [] });
-        useExternalListener('spawn-product', this.spawnProduct)
+        useListener('spawn-product', this.spawnProduct)
     }
     spawnProduct(event) {
         let selected_attributes = {};

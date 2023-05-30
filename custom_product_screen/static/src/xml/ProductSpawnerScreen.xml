@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="custom_product_screen.ProductTemplateScreen" owl="1" >
+    <t t-name="custom_product_screen.ProductSpawnerScreen" owl="1" >
             <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
                 <div class="screen-full-width">
                     <div class="leftpane pane-border">
                         <OrderWidget/>
                     </div>
                     <div class="rightpane">
-                        <ProductTemplateWidget />
+                        <ProductSpawnerWidget />
                      <div class="pads">
                         <t t-if="isClientPos">
                             <!-- <ClientActionpadWidget partner="partner" /> -->
@@ -23,5 +23,5 @@
             </div>
         </div>
     </t>
-
+    
 </templates>

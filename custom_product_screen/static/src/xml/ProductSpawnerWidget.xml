@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductSpawnerWidget" owl="1">
+    <t t-name="custom_product_screen.ProductSpawnerWidget" owl="1">
         <div t-foreach="attributes" t-as="attribute" t-key="attribute.id" class="attribute">
             <div class="attribute_name" t-esc="attribute.name"/>
             <CustomRadioProductAttribute attribute="attribute"/>
         </div>
     </t>
  
-    <t t-name="CustomRadioProductAttribute" owl="1">
+    <t t-name="custom_product_screen.CustomRadioProductAttribute" owl="1">
         <div class="configurator_radio">
             <div class="table">
                 <t t-foreach="values" t-as="value" t-key="value.id">
@@ -35,3 +35,4 @@
             </div>
         </div>
     </t>
+</templates>
