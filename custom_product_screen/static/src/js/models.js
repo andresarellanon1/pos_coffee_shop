@@ -9,15 +9,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
         this._super(loadedData);
     },
     _loadProductTemplate: function(products) {
-        let productMap = {};
-        let productTemplateMap = {};
-        let modelProducts = products.map(product => {
-            product.pos = this;
-            product.applicablePricelistItems = {};
-            productMap[product.id] = product;
-            productTemplateMap[product.product_tmpl_id[0]] = (productTemplateMap[product.product_tmpl_id[0]] || []).concat(product);
-            return Product.create(product);
-        });
-        this.db.add_products_templates(modelProducts)
+        this.db.add_products_templates(products)
     }
 });

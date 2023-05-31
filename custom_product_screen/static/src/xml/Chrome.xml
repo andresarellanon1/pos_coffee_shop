@@ -5,6 +5,7 @@
         <xpath expr="//div[hasclass('pos-topheader')]" position="replace">
             <div class="">
                 Custom top header buttons
+                <HeaderButton/>
             </div>
         </xpath>
     </t>

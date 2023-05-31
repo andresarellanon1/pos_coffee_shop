@@ -23,7 +23,7 @@ patch(PosDB.prototype, "prototype patch", {
         var list = [];
         if (this.products_template_by_id) {
             for (let key in this.products_template_by_id) {
-                let product = this.products_template_by_id[key];k
+                let product = this.products_template_by_id[key];
                 if (!(product.active && product.available_in_pos)) continue;
                 list.push(product);
             }
@@ -31,10 +31,9 @@ patch(PosDB.prototype, "prototype patch", {
         return list;
     },
     get_product_by_attr: function(selected_attributes){
-        let result; 
+        let result
         Object.keys(selected_attributes).foreach((value) => {
-            if(this.product_by_id.display_name.contains(selected)){
-            
+            if(this.product_by_id.display_name.contains(value)){
             }
         });
         return [];
