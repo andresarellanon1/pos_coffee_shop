@@ -28,22 +28,27 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         // Filter attributes per product template attribute line
         let attributes = _.map(productTemplate.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
-        console.warn(productTemplate);
+        //console.warn(productTemplate);
+        console.warn('Product Template Attributes by PTAL_ID');
         console.warn(attributes);
-        await this.showTempScreen("ProductSpawnerScreen")
+        await this.showTempScreen("ProductSpawnerScreen",{
+            product: productTemplate,
+            attributes: attributes,
+        })
     }
     get currentOrder(){
         return ths.env.pos.get_order();
     }
     async productSpawned(event){
+        console.warn('Product Product');
         let payload = event.detail;
+        console.warn(payload);
         await this.currentOrder.add_product(payload.product_product, {
             draftPackLotLines,
             quantity,
             descripcion,
             price_extra
         });
-        this.trigger('close-temp-screen');
         NumberBuffer.reset();
     }
 }

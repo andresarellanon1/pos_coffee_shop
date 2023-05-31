@@ -9,16 +9,7 @@
                     </div>
                     <div class="rightpane">
                         <ProductTemplateWidget />
-                     <div class="pads">
-                        <t t-if="isClientPos">
-                            <!-- <ClientActionpadWidget partner="partner" /> -->
-                            aqui va el client action pad widget
-                        </t>
-                        <t t-else="">
-                            <!-- <UserActionpadWidget partner="partner" /> -->
-                            aqui va el use actionpad widget
-                        </t>
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
