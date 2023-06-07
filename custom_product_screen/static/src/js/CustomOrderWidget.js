@@ -2,24 +2,24 @@
 
 import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
-import { useRef,useState } from '@odoo/owl'
+import { useRef } from '@odoo/owl'
 
 class CustomOrderWidget extends PosComponent {
-    setup(){
+    setup() {
         super.setup();
         this.scrollableRef = useRef('scrollable');
     }
-    get order(){
+    get order() {
         return this.env.pos.get_order();
     }
     // TODO: cambiar filtro para filtrar por id
-    get orderlinesArray(){
+    get orderlinesArray() {
         let orderlines = this.order ? this.order.get_orderlines() : [];
         let result = orderlines.filter(or => this.isParentProductOrderline(or.product.id))
         return result;
     }
-    isParentProductOrderline(product_id){
-       if(this.env.pos.db.products_extra_by_product_id.find(pe => pe.parent_product_id === product_id))
+    isParentProductOrderline(product_id) {
+        if (this.env.pos.db.products_extra_by_product_id.find(pe => pe.parent_product_id === product_id))
             return true;
         return false;
     }

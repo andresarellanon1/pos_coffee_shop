@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import PosComponent  from 'point_of_sale.PosComponent';
+import PosComponent from 'point_of_sale.PosComponent';
 import Registries from 'point_of_sale.Registries'
 
 class ProductTemplateItem extends PosComponent {
-    setup(){
+    setup() {
         super.setup()
     }
     get imageUrl() {

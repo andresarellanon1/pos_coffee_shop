@@ -13,7 +13,7 @@ class ProductSpawnerScreen extends PosComponent {
         useListener('spawn-product', this.spawnProduct)
     }
     spawnProduct(event) {
-        let selected_attributes = []; 
+        let selected_attributes = [];
         let draftPackLotLines, quantity;
         let price_extra = 0.0;
         this.env.attribute_components.forEach((attribute_component) => {
@@ -34,21 +34,21 @@ class ProductSpawnerScreen extends PosComponent {
         console.warn('spawn product added product to order with line:');
         this.env.extras_components.forEach((extra_component) => {
             let payload = extra_component.getValue();
-            let options = { 
+            let options = {
                 draftPackLotLines,
-                quantity,                
+                quantity,
                 price_extra: payload.lst_price,
                 description: payload.display_name
             };
             this.env.pos.get_order().add_product(payload.extra, options);
-            this.env.pos.db.add_child_product(line.id,product.id,payload.extra);
+            this.env.pos.db.add_child_product(line.id, product.id, payload.extra);
         });
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');
     }
-    get getDisplayExtras(){
+    get getDisplayExtras() {
         let categ_id = this.env.pos.db.get_categ_by_name('Extra');
-        return this.env.pos.db.get_product_by_category(categ_id); 
+        return this.env.pos.db.get_product_by_category(categ_id);
     }
 }
 ProductSpawnerScreen.template = 'custom_product_screen.ProductSpawnerScreen';

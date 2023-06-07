@@ -11,7 +11,7 @@ class ExtraItem extends PosComponent {
         this.extra = this.props.extra;
         this.limit = 5;
         this.state = useState({
-            count: 0, 
+            count: 0,
             price_extra: 0.0,
         });
     }
@@ -24,25 +24,25 @@ class ExtraItem extends PosComponent {
         };
     }
 
-    addExtra(){
-        if(this.state.count < this.limit){
+    addExtra() {
+        if (this.state.count < this.limit) {
             this.state.count += 1;
             this.state.price_extra += this.extra.lst_price;
         }
     }
 
-    removeExtra(){
-        if(this.state.count > 0){
+    removeExtra() {
+        if (this.state.count > 0) {
             this.state.count -= 1;
             this.state.price_extra -= this.extra.lst_price;
         }
     }
 
-    get getCount(){
+    get getCount() {
         return this.state.count;
     }
 
-    get getPriceExtra(){
+    get getPriceExtra() {
         return this.state.price_extra;
     }
 }
