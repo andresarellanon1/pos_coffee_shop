@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="custom_product_screen.ProductSpawnerActionpad" 
+        owl="1" >
+        <div>
+            <button t-on-click="() => this.trigger('close-temp-screen')">
+               Cancelar 
+            </button>
+            <button t-on-click="() => this.trigger('spawn-product')">
+                Aceptar
+            </button>
+        </div>
+   </t>
+</templates>

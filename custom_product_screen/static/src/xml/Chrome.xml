@@ -4,9 +4,9 @@
     <t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension"  owl="1">
         <xpath expr="//div[hasclass('pos-topheader')]" position="replace">
             <div class="">
-                Custom top header buttons
-                <HeaderButton/>
+                Client Logo 
             </div>
+                <HeaderButton/>
         </xpath>
     </t>
 </templates>

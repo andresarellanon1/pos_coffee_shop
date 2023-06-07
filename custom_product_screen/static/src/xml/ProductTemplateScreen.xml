@@ -5,7 +5,13 @@
             <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
                 <div class="screen-full-width">
                     <div class="leftpane pane-border">
-                        <OrderWidget/>
+                        <CustomOrderWidget/>
+                        <button t-on-click="this.trigger('clear-order')" >
+                           Cancelar 
+                        </button>
+                        <button t-on-click="this.trigger('click-pay')" >
+                          Terminar pedido
+                        </button>
                     </div>
                     <div class="rightpane">
                         <ProductTemplateWidget />

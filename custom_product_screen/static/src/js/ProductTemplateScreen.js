@@ -3,15 +3,16 @@
 import PosComponent from 'point_of_sale.PosComponent'
 import ControlButtonsMixin from 'point_of_sale.ControlButtonsMixin'
 import Registries from 'point_of_sale.Registries'
-import { onMounted } from '@odoo/owl'
+import { onMounted, useExternalListener } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
 import NumberBuffer from 'point_of_sale.NumberBuffer'
 
 class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     setup() {
         super.setup();
-        useListener('product-spawned', this.productSpawned)
-        useListener('click-product', this._clickProduct)
+        useExternalListener(window,'product-spawned', this.productSpawned);
+        useListener('click-product', this._clickProduct);
+        useListener('clear-order', this._clearOrder);
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
             triggerAtInput: 'update-selected-orderline',
@@ -25,31 +26,23 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _clickProduct(event) {
         let productTemplate = event.detail;
-        // Filter attributes per product template attribute line
         let attributes = _.map(productTemplate.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
-        //console.warn(productTemplate);
-        console.warn('Product Template Attributes by PTAL_ID');
-        console.warn(attributes);
+        this.trigger('close-temp-screen');
         await this.showTempScreen("ProductSpawnerScreen",{
             product: productTemplate,
             attributes: attributes,
-        })
+        });
     }
     get currentOrder(){
-        return ths.env.pos.get_order();
+        return this.env.pos.get_order();
     }
     async productSpawned(event){
-        console.warn('Product Product');
-        let payload = event.detail;
-        console.warn(payload);
-        await this.currentOrder.add_product(payload.product_product, {
-            draftPackLotLines,
-            quantity,
-            descripcion,
-            price_extra
-        });
         NumberBuffer.reset();
+    }
+    _clearOrder(event){
+        let order = this.currentOrder;
+        this.env.pos.removeOrder(order);
     }
 }
 ProductTemplateScreen.template = 'custom_product_screen.ProductTemplateScreen';

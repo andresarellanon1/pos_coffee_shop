@@ -14,15 +14,10 @@ class BaseAttribute extends PosComponent {
             selected_value: parseFloat(this.values[0].id),
             custom_value: '',
         });
-        console.warn('radio for attriubute:');
-        console.warn(this.attribute);
-        console.warn(this.values);
     }
 
     getValue() {
-        let selected_value = this.values.find((val) => val.id === parseFloat(this.state.selected_value));
-        console.log(selected_value);
-        return selected_value;
+        return this.values.find((val) => val.id === parseFloat(this.state.selected_value));
     }
 }
 

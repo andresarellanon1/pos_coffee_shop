@@ -12,9 +12,6 @@
                 <div class="product-name" t-attf-id="article_product_{{props.product.id}}">
                     <t t-esc="props.product.display_name" />
                 </div>
-                <span class="price-tag">
-                    <t t-esc="price" />
-                </span>
             </div>
         </article>
     </t>

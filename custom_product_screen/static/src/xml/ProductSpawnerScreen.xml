@@ -5,16 +5,23 @@
         <div class="product-screen screen">
             <div class="screen-full-width">
                 <div class="leftpane pane-border">
-                    <OrderWidget/>
+                    <CustomOrderWidget/>
                 </div>
                 <div class="rightpane">
+                    <div class="product-list">
+                        <ProductTemplateItem product="props.product"/>
+                    </div>
                     <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
                         <div class="attribute_name" t-esc="attribute.name"/>
                         <CustomRadioProductAttribute attribute="attribute"/>
                     </div> 
+                    <div class="panel_extras">
+                        <div t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" class="attribute">
+                            <ExtraItem extra="extra"/>
+                        </div>
+                    </div>
                     <div class="pads">
-                        <ClientActionpadWidget /> 
-                        <ActionpadWidget /> 
+                        <ProductSpawnerActionpad /> 
                     </div>
                 </div>
             </div>

@@ -9,7 +9,6 @@ class ProductTemplateItem extends PosComponent {
     }
     get imageUrl() {
         let product = this.props.product;
-        console.warn(`/web/image?model=product.template&id=${product.id}&field=image_128&unique=${product.__last_update}`);
         return `/web/image?model=product.template&id=${product.id}&field=image_128&unique=${product.__last_update}`;
     }
 }
