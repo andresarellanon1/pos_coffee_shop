@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patch } from 'web.utils'
-import { PosGlobalState, Product, Order } from 'point_of_sale.models'
+import { PosGlobalState, Product, Order, Orderline } from 'point_of_sale.models'
 
 patch(PosGlobalState.prototype, "prototype patch", {
     _processData: async function(loadedData) {
@@ -15,13 +15,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
 
 patch(Order.prototype, "prototype patch", {
     add_product: function(product, options) {
-        if (this.pos.doNotAllowRefundAndSales() && this.orderlines[0] && this.orderlines[0].refunded_orderline_id) {
-            Gui.showPopup('ErrorPopup', {
-                title: _t('Refund and Sales not allowed'),
-                body: _t('It is not allowed to mix refunds and sales')
-            });
-            return;
-        }
         if (this._printed) {
             // when adding product with a barcode while being in receipt screen
             this.pos.removeOrder(this);

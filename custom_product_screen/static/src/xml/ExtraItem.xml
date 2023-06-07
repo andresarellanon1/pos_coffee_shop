@@ -3,12 +3,22 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="custom_product_screen.ExtraItem" owl="1" >
-        <div class="product-name" t-attf-id="extra_item_{{props.extra.id}}">
-            <t t-esc="props.extra.display_name"/>
-            <button t-on-click="() => this.removeExtra()"> - </button>
-            <t t-esc="getCount" />
+        <div class="extra_row" t-attf-id="extra_item_{{props.extra.id}}">
+            <div class="price-tag">
+                <t t-esc="props.extra.display_name"/>
+            </div>
+            <div class="price-tag">
+                <button t-on-click="() => this.removeExtra()"> - </button>
+            </div>
+            <div class="price-tag">
+                <t t-esc="getCount" />
+            </div>
+            <div class="price-tag">
             <button t-on-click="() => this.addExtra()"> + </button>    
+            </div>
+            <div class="price-tag">
             <span>($<t t-esc="getPriceExtra"/>)</span>
+            </div>
         </div>
     </t>
     

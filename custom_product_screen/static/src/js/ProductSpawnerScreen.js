@@ -30,18 +30,19 @@ class ProductSpawnerScreen extends PosComponent {
         };
         console.warn('product by attr');
         console.log(product);
-        let line = this.env.pos.get_order().add_product(product, options);
+        let parent_orderline = this.env.pos.get_order().add_product(product, options);
         console.warn('spawn product added product to order with line:');
+        console.log(parent_orderline);
         this.env.extras_components.forEach((extra_component) => {
             let payload = extra_component.getValue();
             let options = {
                 draftPackLotLines,
-                quantity,
+                quantity: payload.count,
                 price_extra: payload.lst_price,
-                description: payload.display_name
+                description: payload.display_name,
             };
-            this.env.pos.get_order().add_product(payload.extra, options);
-            this.env.pos.db.add_child_product(line.id, product.id, payload.extra);
+            let child_line = this.env.pos.get_order().add_product(payload.extra, options);
+            this.env.pos.db.add_child_product(parent_orderline.id, product.id, payload.extra);
         });
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');

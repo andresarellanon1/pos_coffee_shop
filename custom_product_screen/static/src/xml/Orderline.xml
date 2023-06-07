@@ -5,9 +5,9 @@
     <xpath expr="//li[hasclass('orderline')]" position="after">
         <div class="line">
             Extra:
-            <div class="value" t-foreach="childOrderlines" t-as="cline" t-key="cline.child_product.id">
+            <div class="value" t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
                 <div class="subentry">
-                    <t t-esc="cline.child_product.display_name"/>
+                    <t t-esc="cline.product.display_name"/>
                     (<t t-esc="cline.quantity"/>)
                 </div>
             </div>

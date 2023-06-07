@@ -15,7 +15,11 @@ class CustomOrderWidget extends PosComponent {
     // TODO: cambiar filtro para filtrar por id
     get orderlinesArray() {
         let orderlines = this.order ? this.order.get_orderlines() : [];
+        console.warn('orderlines');
+        console.log(orderlines);
         let result = orderlines.filter(or => this.isParentProductOrderline(or.product.id))
+        console.warn('filtered orderlines');
+        console.log(result);
         return result;
     }
     isParentProductOrderline(product_id) {

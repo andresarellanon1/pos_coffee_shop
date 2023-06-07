@@ -55,10 +55,10 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return categ_id;
     },
-    add_child_product: function(orderline_id, product, childProduct) {
+    add_child_product: function(orderline_id, product_id, childProduct) {
         this.products_extra_by_product_id.push({
             orderline_id: orderline_id,
-            parent_product_id: product.id,
+            parent_product_id: product_id,
             child_product: childProduct,
         });
     },
@@ -66,9 +66,8 @@ patch(PosDB.prototype, "prototype patch", {
         let child_orderlines = [];
         let parent_orderline = orderlines.find(or => or.id === orderline_id);
         for (let j = 0; j < this.products_extra_by_product_id.length; j++) {
-            if (this.products_extra_by_product_id[j].parent_product_id !== parent_orderline.product.id) continue;
-            if (this.products_extra_by_product_id[j].orderline_id !== orderline_id) continue;
-            child_orderlines.push(orderlines.find(or => or.id === orderline_id);
+            if (this.products_extra_by_product_id[j].orderline_id === orderline_id) 
+                child_orderlines.push(orderlines.find(or => or.product.id === this.products_extra_by_product_id[j].child_product.id));
         }
         return child_orderlines;
     },
