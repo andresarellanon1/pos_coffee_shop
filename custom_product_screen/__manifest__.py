@@ -12,6 +12,7 @@
             'custom_product_screen/static/src/xml/*.xml',
             'custom_product_screen/static/src/js/*.js',
             'custom_product_screen/static/src/css/*.css',
+            'custom_product_screen/static/src/css/*.scss',
         ]
     }
 }
