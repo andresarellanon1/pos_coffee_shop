@@ -1,0 +1,36 @@
+.form-control-row {
+    display: flex;
+    padding: 2px 2px;
+    justify-content: center;
+    justify-items: center;
+    background: white;
+    width: 100%;
+}
+.form-control {
+    padding: 6px;
+}
+.checkmark-container {
+    display: inline-block;
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+    position: relative;
+    background-color: #ddd;
+    padding: 4px 11px;
+    margin-left: 4px;
+    margin-rigth: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+.checkmark-container label {
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+}
+.checkmark-container input {
+    display: none;
+}
+.checkmark-container input[type="radio"]:checked {
+    background: #bbb;
+}
