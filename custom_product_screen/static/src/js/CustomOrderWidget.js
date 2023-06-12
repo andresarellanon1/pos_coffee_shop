@@ -19,7 +19,7 @@ class CustomOrderWidget extends PosComponent {
         let result = orderlines.filter((orderline) => {
             console.log(orderline);
             let childs = this.env.pos.db.get_child_orderlines(orderline.id, orderlines)
-            if(childs.length && childs.length > 0) return true;
+            if (childs.length && childs.length > 0) return true;
             return false;
         });
         console.warn('filtered orderlines');

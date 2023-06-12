@@ -11,10 +11,12 @@
                 <div class="price">
                     <t t-esc="env.pos.format_currency(props.line.get_display_price())"/>
                 </div>
-                <div class="subentry" t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
+                <t t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
+                <div class="subentry">
                     <t t-esc="cline.product.display_name"/>
                     (<t t-esc="cline.quantity"/>)
                 </div>
+                </t>
             </div>
         </div>
     </xpath>

@@ -6,7 +6,7 @@ import PosDB from 'point_of_sale.DB'
 patch(PosDB.prototype, "prototype patch", {
     init(options) {
         this.products_template_by_id = {}
-        this.products_extra_by_orderline = {} 
+        this.products_extra_by_orderline = {}
         this._super(options)
     },
     add_products_templates: function(products) {
@@ -65,8 +65,8 @@ patch(PosDB.prototype, "prototype patch", {
     },
     get_child_orderlines: function(orderline_id, orderlines) {
         let child_orderlines = [];
-        for (let key in this.products_extra_by_orderline){
-            if (this.products_extra_by_orderline[key].parent_orderline_id === orderline_id) 
+        for (let key in this.products_extra_by_orderline) {
+            if (this.products_extra_by_orderline[key].parent_orderline_id === orderline_id)
                 child_orderlines.push(orderlines.find(or => or.id === orderline_id));
         }
         return child_orderlines;
