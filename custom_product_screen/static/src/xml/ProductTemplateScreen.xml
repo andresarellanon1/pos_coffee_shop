@@ -6,12 +6,14 @@
                 <div class="screen-full-width">
                     <div class="leftpane pane-border">
                         <CustomOrderWidget/>
-                        <button t-on-click="this.trigger('clear-order')" >
-                           Cancelar 
-                        </button>
-                        <button t-on-click="this.trigger('click-pay')" >
-                          Terminar pedido
-                        </button>
+                        <div class="form-control-col justify-end">
+                            <button t-on-click="this.trigger('clear-order')" >
+                               Cancelar 
+                            </button>
+                            <button t-on-click="this.trigger('click-pay')" >
+                              Terminar pedido
+                            </button>
+                        </div>
                     </div>
                     <div class="rightpane">
                         <ProductTemplateWidget />

@@ -2,11 +2,16 @@
 <templates id="template" xml:space="preserve">
     
     <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension"  owl="1">
-    <xpath expr="//li[hasclass('orderline')]" position="after">
-        <div class="line">
-            Extra:
-            <div class="value" t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
-                <div class="subentry">
+    <xpath expr="//li[hasclass('orderline')]" position="replace">
+        <div class="form-control-row">
+            <div class="form-control-col">
+                <div class="product-name">
+                    <t t-esc="props.line.get_full_product_name()"/>
+                </div>
+                <div class="price">
+                    <t t-esc="env.pos.format_currency(props.line.get_display_price())"/>
+                </div>
+                <div class="subentry" t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
                     <t t-esc="cline.product.display_name"/>
                     (<t t-esc="cline.quantity"/>)
                 </div>

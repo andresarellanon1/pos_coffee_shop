@@ -12,7 +12,7 @@
                         <ProductTemplateItem product="props.product"/>
                     </div>
                     <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
-                        <div class="attribute_name" t-esc="attribute.name"/>
+                        <div class="attribute_name form-control-row" t-esc="attribute.name"/>
                         <CustomRadioProductAttribute attribute="attribute"/>
                     </div> 
                     <div class="panel_extras">

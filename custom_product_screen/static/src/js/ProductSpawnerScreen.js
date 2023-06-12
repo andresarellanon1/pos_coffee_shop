@@ -26,7 +26,7 @@ class ProductSpawnerScreen extends PosComponent {
             draftPackLotLines,
             quantity,
             price_extra: price_extra,
-            description: "TODO: Generate description" // TODO: GENERATE DESCRIPTION
+            description: "" // TODO: GENERATE DESCRIPTION
         };
         console.warn('product by attr');
         console.log(product);
@@ -42,7 +42,7 @@ class ProductSpawnerScreen extends PosComponent {
                 description: payload.display_name,
             };
             let child_line = this.env.pos.get_order().add_product(payload.extra, options);
-            this.env.pos.db.add_child_product(parent_orderline.id, product.id, payload.extra);
+            this.env.pos.db.add_child_orderline(parent_orderline.id,child_line.id, product.id, payload.extra);
         });
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');

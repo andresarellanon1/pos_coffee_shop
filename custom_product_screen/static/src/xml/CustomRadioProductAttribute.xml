@@ -2,29 +2,29 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="custom_product_screen.CustomRadioProductAttribute" owl="1">
-                    <div class="form-control-row">
-                <t t-foreach="values" t-as="value" t-key="value.id">
-                        <div class="checkmark-container">
-                            <input type="radio" t-model="state.selected_value" t-att-name="attribute.id" 
+        <div class="form-control-row">
+            <t t-foreach="values" t-as="value" t-key="value.id">
+                <div class="checkmark-container">
+                    <input type="radio" t-model="state.selected_value" t-on-click="($event) => this.setChecked($event)" t-att-name="attribute.id" 
                                    t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
-                            <label t-attf-for="{{ attribute.id }}_{{ value.id }}">
-                                <t t-esc="value.name"/>
-                            </label>
-                        </div>
-                    <div t-if="value.price_extra" class="price-extra-cell">
-                        <label t-attf-for="{{ attribute.id }}_{{ value.id }}">
-                            <span class="price_extra">
-                                + <t t-esc="env.pos.format_currency(value.price_extra)"/>
-                            </span>
-                        </label>
+                    <label t-attf-for="{{ attribute.id }}_{{ value.id }}">
+                        <t t-esc="value.name"/>
+                    </label>
+                </div>
+                <div t-if="value.price_extra" class="price-extra-cell">
+                    <label t-attf-for="{{ attribute.id }}_{{ value.id }}">
+                        <span class="price_extra">
+                            + <t t-esc="env.pos.format_currency(value.price_extra)"/>
+                        </span>
+                    </label>
+                </div>
+                <div t-if="value.id == state.selected_value &amp;&amp; value.is_custom" class="custom-value-cell">
+                    <label t-attf-for="{{ attribute.id }}_{{ value.id }}">
+                        <input class="custom_value" type="text" t-model="state.custom_value"/>
+                    </label>
                     </div>
-                    <div t-if="value.id == state.selected_value &amp;&amp; value.is_custom" class="custom-value-cell">
-                        <label t-attf-for="{{ attribute.id }}_{{ value.id }}">
-                            <input class="custom_value" type="text" t-model="state.custom_value"/>
-                        </label>
-                    </div>
-                    </div>
-                </t>
+                </div>
+            </t>
         </div>
     </t>
 </templates>

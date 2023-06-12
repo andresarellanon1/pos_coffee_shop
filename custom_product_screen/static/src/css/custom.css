@@ -1,10 +1,21 @@
 .form-control-row {
     display: flex;
-    padding: 2px 2px;
+    flex-direction: row;
+        padding: 2px 2px 16px 16px;
     justify-content: center;
     justify-items: center;
     background: white;
-    width: 100%;
+}
+.form-control-col {
+    display: flex;
+    flex-direction: column;
+    padding: 2px 2px 2px 2px;
+    justify-content: center;
+    justify-items: center;
+    background: white;
+}
+.form-control-title {
+
 }
 .form-control {
     padding: 6px;
@@ -16,9 +27,8 @@
     text-align: center;
     position: relative;
     background-color: #ddd;
-    padding: 4px 11px;
     margin-left: 4px;
-    margin-rigth: 4px;
+    margin-right: 4px;
     cursor: pointer;
     width: 100%;
 }
@@ -26,11 +36,12 @@
     display: inline-block;
     text-align: center;
     cursor: pointer;
+    width: 100%;
+    padding: 8px 2px;
+    text-color: black;
     font-size: 16px;
 }
 .checkmark-container input {
     display: none;
 }
-.checkmark-container input[type="radio"]:checked {
-    background: #bbb;
-}
+

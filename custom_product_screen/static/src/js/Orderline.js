@@ -5,10 +5,7 @@ import Orderline from 'point_of_sale.Orderline'
 
 patch(Orderline.prototype, "getter/setter patch", {
     get childOrderlines() {
-        console.warn('child orderlines:');
         let orderlines = this.env.pos.get_order().get_orderlines();
-        let result = this.env.pos.db.get_child_orderlines(this.props.line.id, orderlines);
-        console.log(result);
-        return result;
+        return this.env.pos.db.get_child_orderlines(this.props.line.id, orderlines);
     }
 });

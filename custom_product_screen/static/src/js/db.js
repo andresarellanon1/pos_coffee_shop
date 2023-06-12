@@ -6,7 +6,7 @@ import PosDB from 'point_of_sale.DB'
 patch(PosDB.prototype, "prototype patch", {
     init(options) {
         this.products_template_by_id = {}
-        this.products_extra_by_product_id = []
+        this.products_extra_by_orderline = {} 
         this._super(options)
     },
     add_products_templates: function(products) {
@@ -55,19 +55,19 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return categ_id;
     },
-    add_child_product: function(orderline_id, product_id, childProduct) {
-        this.products_extra_by_product_id.push({
+    add_child_orderline: function(parent_orderline_id, orderline_id, product_id, childProduct) {
+        this.products_extra_by_orderline[orderline_id] = {
             orderline_id: orderline_id,
+            parent_orderline_id: parent_orderline_id,
             parent_product_id: product_id,
             child_product: childProduct,
-        });
+        };
     },
     get_child_orderlines: function(orderline_id, orderlines) {
         let child_orderlines = [];
-        let parent_orderline = orderlines.find(or => or.id === orderline_id);
-        for (let j = 0; j < this.products_extra_by_product_id.length; j++) {
-            if (this.products_extra_by_product_id[j].orderline_id === orderline_id) 
-                child_orderlines.push(orderlines.find(or => or.product.id === this.products_extra_by_product_id[j].child_product.id));
+        for (let key in this.products_extra_by_orderline){
+            if (this.products_extra_by_orderline[key].parent_orderline_id === orderline_id) 
+                child_orderlines.push(orderlines.find(or => or.id === orderline_id));
         }
         return child_orderlines;
     },
