@@ -7,10 +7,10 @@
                     <div class="leftpane pane-border">
                         <CustomOrderWidget/>
                         <div class="form-control-col justify-end">
-                            <button t-on-click="this.trigger('clear-order')" >
+                            <button t-on-click="() => this.trigger('clear-order')" >
                                Cancelar 
                             </button>
-                            <button t-on-click="this.trigger('click-pay')" >
+                            <button t-on-click="() => this.trigger('click-pay')" >
                               Terminar pedido
                             </button>
                         </div>

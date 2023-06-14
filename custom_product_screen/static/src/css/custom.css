@@ -1,10 +1,13 @@
 .form-control-row {
     display: flex;
     flex-direction: row;
-        padding: 2px 2px 16px 16px;
-    justify-content: center;
+    justify-content: between;
     justify-items: center;
     background: white;
+    width: 100%;
+}
+.form-control-padding {
+    padding: 2px 2px 16px 16px;
 }
 .form-control-col {
     display: flex;
@@ -14,11 +17,32 @@
     justify-items: center;
     background: white;
 }
+.orderline-control-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: between;
+    justify-items: center;
+    width: 100%;
+}
+.justify-end {
+    justify-content: end;
+    justify-items: bottom;
+}
+.orderline-control-row {
+    border-bottom: solid 1px #bbb;
+}
 .form-control-title {
-
+    text-size: 16px;
+    font-style: oblique;
+}
+.form-control-subtitle {
+    text-size: 12px;
+    font-style: italic;   
 }
 .form-control {
-    padding: 6px;
+    display: flex;
+    flex-direction: row;
+    justify-content: between;
 }
 .checkmark-container {
     display: inline-block;

@@ -48,8 +48,6 @@ patch(PosDB.prototype, "prototype patch", {
     get_categ_by_name: function(name) {
         let categ_id;
         for (let key in this.category_by_id) {
-            //console.warn('for key in category');
-            //console.log(this.category_by_id[key]);
             if (this.category_by_id[key].name !== name) continue;
             categ_id = this.category_by_id[key].id;
         }
@@ -62,13 +60,5 @@ patch(PosDB.prototype, "prototype patch", {
             parent_product_id: product_id,
             child_product: childProduct,
         };
-    },
-    get_child_orderlines: function(orderline_id, orderlines) {
-        let child_orderlines = [];
-        for (let key in this.products_extra_by_orderline) {
-            if (this.products_extra_by_orderline[key].parent_orderline_id === orderline_id)
-                child_orderlines.push(orderlines.find(or => or.id === orderline_id));
-        }
-        return child_orderlines;
     },
 });

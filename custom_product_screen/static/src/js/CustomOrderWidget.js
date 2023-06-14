@@ -12,17 +12,17 @@ class CustomOrderWidget extends PosComponent {
     get order() {
         return this.env.pos.get_order();
     }
-    get orderlinesArray() {
+    get _orderlinesArray() {
         let orderlines = this.order ? this.order.get_orderlines() : [];
-        console.warn('orderlines');
+        let parent_orderlines_id = [];
+        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline;
+        console.warn('all orderlines array');
         console.log(orderlines);
-        let result = orderlines.filter((orderline) => {
-            console.log(orderline);
-            let childs = this.env.pos.db.get_child_orderlines(orderline.id, orderlines)
-            if (childs.length && childs.length > 0) return true;
-            return false;
-        });
-        console.warn('filtered orderlines');
+        for (let key in product_extra_by_orderline) { 
+                parent_orderlines_id.push(product_extra_by_orderline[key].parent_orderline_id );  
+        }
+        let result = orderlines.filter(or => parent_orderlines_id.includes(or.id));
+        console.warn('parent orderlines array');
         console.log(result);
         return result;
     }

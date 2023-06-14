@@ -15,11 +15,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
 
 patch(Order.prototype, "prototype patch", {
     add_product: function(product, options) {
-        if (this._printed) {
-            // when adding product with a barcode while being in receipt screen
-            this.pos.removeOrder(this);
-            return this.pos.add_new_order().add_product(product, options);
-        }
         this.assert_editable();
         options = options || {};
         var line = Orderline.create({}, { pos: this.pos, order: this, product: product });
@@ -47,3 +42,8 @@ patch(Order.prototype, "prototype patch", {
         return line;
     }
 });
+
+class Production extends PosModel {
+
+}
+

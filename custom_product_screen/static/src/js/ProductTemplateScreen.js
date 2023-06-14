@@ -12,6 +12,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         super.setup();
         useExternalListener(window,'product-spawned', this.productSpawned);
         useListener('click-product', this._clickProduct);
+        useListener('click-pay', this._onClickPay);
         useListener('clear-order', this._clearOrder);
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
@@ -43,6 +44,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     _clearOrder(event){
         let order = this.currentOrder;
         this.env.pos.removeOrder(order);
+    }
+    _onClickPay(){
+        this.showScreen('PaymentScreen');
     }
 }
 ProductTemplateScreen.template = 'custom_product_screen.ProductTemplateScreen';
