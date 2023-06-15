@@ -16,9 +16,8 @@ class CustomOrderWidget extends PosComponent {
         let orderlines = this.order ? this.order.get_orderlines() : [];
         let parent_orderlines_id = [];
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline;
-        console.warn('all orderlines array');
-        console.log(orderlines);
         for (let key in product_extra_by_orderline) { 
+                console.log(product_extra_by_orderline[key]);
                 parent_orderlines_id.push(product_extra_by_orderline[key].parent_orderline_id );  
         }
         let result = orderlines.filter(or => parent_orderlines_id.includes(or.id));

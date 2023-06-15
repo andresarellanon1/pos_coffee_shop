@@ -12,7 +12,7 @@ class ProductSpawnerScreen extends PosComponent {
         useSubEnv({ attribute_components: [], extras_components: [] });
         useListener('spawn-product', this.spawnProduct)
     }
-    spawnProduct(event) {
+    async spawnProduct(event) {
         let selected_attributes = [];
         let draftPackLotLines, quantity;
         let price_extra = 0.0;
@@ -28,12 +28,10 @@ class ProductSpawnerScreen extends PosComponent {
             price_extra: price_extra,
             description: "" // TODO: GENERATE DESCRIPTION
         };
-        console.warn('product by attr');
-        console.log(product);
-        let parent_orderline = this.env.pos.get_order().add_product(product, options);
+        let parent_orderline = await this._addProduct(product, options);
         console.warn('spawn product added product to order with line:');
         console.log(parent_orderline);
-        this.env.extras_components.forEach((extra_component) => {
+        for(let extra_component of this.env.extras_components) {
             let payload = extra_component.getValue();
             let options = {
                 draftPackLotLines,
@@ -41,12 +39,21 @@ class ProductSpawnerScreen extends PosComponent {
                 price_extra: payload.lst_price,
                 description: payload.display_name,
             };
-            let child_line = this.env.pos.get_order().add_product(payload.extra, options);
-            this.env.pos.db.add_child_orderline(parent_orderline.id,child_line.id, product.id, payload.extra);
-        });
+            let child_orderline = await this._addProduct(payload.extra, options);
+            this.env.pos.db.add_child_orderline(parent_orderline.id,child_orderline.id, product.id, payload.extra);
+        };
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');
     }
+
+    async _addProduct(product,options) {
+        return await this.currentOrder.add_product_but_well_done(product,options);
+    }
+
+    get currentOrder() {
+        return this.env.pos.get_order();
+    }
+
     get getDisplayExtras() {
         let categ_id = this.env.pos.db.get_categ_by_name('Extra');
         return this.env.pos.db.get_product_by_category(categ_id);

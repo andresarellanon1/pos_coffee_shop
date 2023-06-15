@@ -38,7 +38,7 @@ patch(PosDB.prototype, "prototype patch", {
         let words = selected_attributes.map((value) => { return value.name });
         for (let key in this.product_by_id) {
             if (this.product_by_id[key].product_tmpl_id !== product_template_id) continue;
-            if (words.every((el) => { return this.product_by_id[key].display_name.match(new RegExp(el, "i")) })) {
+            if (words.every(el => this.product_by_id[key].display_name.match(new RegExp(el, "i")) )) {
                 product = this.product_by_id[key];
                 break;
             }
@@ -54,11 +54,14 @@ patch(PosDB.prototype, "prototype patch", {
         return categ_id;
     },
     add_child_orderline: function(parent_orderline_id, orderline_id, product_id, childProduct) {
-        this.products_extra_by_orderline[orderline_id] = {
+        console.error('adding child orderline');
+        let value = {
             orderline_id: orderline_id,
             parent_orderline_id: parent_orderline_id,
             parent_product_id: product_id,
             child_product: childProduct,
         };
+        console.log(value);
+        this.products_extra_by_orderline[orderline_id] = value;
     },
 });

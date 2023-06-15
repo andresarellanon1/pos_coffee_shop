@@ -14,36 +14,16 @@ patch(PosGlobalState.prototype, "prototype patch", {
 });
 
 patch(Order.prototype, "prototype patch", {
-    add_product: function(product, options) {
+    add_product_but_well_done: async function(product, options) {
         this.assert_editable();
         options = options || {};
         var line = Orderline.create({}, { pos: this.pos, order: this, product: product });
         this.fix_tax_included_price(line);
-
         this.set_orderline_options(line, options);
-
-        var to_merge_orderline;
-        for (var i = 0; i < this.orderlines.length; i++) {
-            if (this.orderlines.at(i).can_be_merged_with(line) && options.merge !== false) {
-                to_merge_orderline = this.orderlines.at(i);
-            }
-        }
-        if (to_merge_orderline) {
-            to_merge_orderline.merge(line);
-            this.select_orderline(to_merge_orderline);
-        } else {
-            this.add_orderline(line);
-            this.select_orderline(this.get_last_orderline());
-        }
-
-        if (options.draftPackLotLines) {
-            this.selected_orderline.setPackLotLines(options.draftPackLotLines);
-        }
-        return line;
+        // NOTE: do not merge the lines...
+        this.add_orderline(line);
+        this.select_orderline(this.get_last_orderline());
+        return Promise.resolve(line);
     }
 });
-
-class Production extends PosModel {
-
-}
 
