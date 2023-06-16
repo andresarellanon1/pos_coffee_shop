@@ -1,4 +1,4 @@
-{
+{    
     'name': 'Coffe shop',
     'version': '16.0.0.13',
     'category': '',
