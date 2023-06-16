@@ -1,6 +1,6 @@
 from itertools import groupby
-from odoo import models, _
-from odoo import api, fields, models, _, Command
+from odoo import models
+
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
@@ -38,7 +38,7 @@ class PosSession(models.Model):
         product_attributes_by_id = {product_attribute.id: product_attribute for product_attribute in product_attributes}
         domain = [('attribute_id', 'in', product_attributes.mapped('id'))]
         product_template_attribute_values = self.env['product.template.attribute.value'].search(domain)
-        key = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
+        def key(ptav): return (ptav.attribute_line_id.id, ptav.attribute_id.id)
         res = {}
         for key, group in groupby(sorted(product_template_attribute_values, key=key), key=key):
             attribute_line_id, attribute_id = key
@@ -59,13 +59,13 @@ class PosSession(models.Model):
         products = self.env['product.template'].search_read(**params['search_params'])
         return products
 
-    #def _process_pos_ui_product_template(self, products):
-        #if self.config_id.currency_id != self.company_id.currency_id:
+    # def _process_pos_ui_product_template(self, products):
+        # if self.config_id.currency_id != self.company_id.currency_id:
         #    for product in products:
         #        product['lst_price'] = self.company_id.currency_id._convert(product['lst_price'], self.config_id.currency_id, self.company_id, fields.Date.today())
-        #categories = self._get_pos_ui_product_category(self._loader_params_product_category())
-        #product_category_by_id = {category['id']: category for category in categories }
-        #for product in products:
+        # categories = self._get_pos_ui_product_category(self._loader_params_product_category())
+        # product_category_by_id = {category['id']: category for category in categories }
+        # for product in products:
         #    product['categ'] = product_category_by_id[product['categ_id'][0]]
         #    product['image_128'] = bool(product['image_128'])
 

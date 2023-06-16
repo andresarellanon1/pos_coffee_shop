@@ -10,7 +10,7 @@ import NumberBuffer from 'point_of_sale.NumberBuffer'
 class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     setup() {
         super.setup();
-        useExternalListener(window,'product-spawned', this.productSpawned);
+        useExternalListener(window, 'product-spawned', this.productSpawned);
         useListener('click-product', this._clickProduct);
         useListener('click-pay', this._onClickPay);
         useListener('clear-order', this._clearOrder);
@@ -18,11 +18,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             nonKeyboardInputEvent: 'numpad-click-input',
             triggerAtInput: 'update-selected-orderline',
             useWithBarcode: true,
-        }); 
+        });
         onMounted(this.onMounted);
         onMounted(() => NumberBuffer.reset());
     }
-    onMounted(){
+    onMounted() {
         this.env.posbus.trigger('start-cash-control');
     }
     async _clickProduct(event) {
@@ -30,22 +30,22 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let attributes = _.map(productTemplate.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
         this.trigger('close-temp-screen');
-        await this.showTempScreen("ProductSpawnerScreen",{
+        await this.showTempScreen("ProductSpawnerScreen", {
             product: productTemplate,
             attributes: attributes,
         });
     }
-    get currentOrder(){
+    get currentOrder() {
         return this.env.pos.get_order();
     }
-    async productSpawned(event){
+    async productSpawned(event) {
         NumberBuffer.reset();
     }
-    _clearOrder(event){
+    _clearOrder(event) {
         let order = this.currentOrder;
         this.env.pos.removeOrder(order);
     }
-    _onClickPay(){
+    _onClickPay() {
         this.showScreen('PaymentScreen');
     }
 }

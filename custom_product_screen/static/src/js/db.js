@@ -38,7 +38,7 @@ patch(PosDB.prototype, "prototype patch", {
         let words = selected_attributes.map((value) => { return value.name });
         for (let key in this.product_by_id) {
             if (this.product_by_id[key].product_tmpl_id !== product_template_id) continue;
-            if (words.every(el => this.product_by_id[key].display_name.match(new RegExp(el, "i")) )) {
+            if (words.every(el => this.product_by_id[key].display_name.match(new RegExp(el, "i")))) {
                 product = this.product_by_id[key];
                 break;
             }
