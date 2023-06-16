@@ -9,8 +9,8 @@ class MrpProduction(models.Model):
         if not products:
             return
         for prod in products:
-            # print("=======================")
-            # print(prod)
+            print("=======================")
+            print(prod)
             if not self.env['product.product'].browse(int(prod['id'])).pos_production:
                 break
             # NOTE: for the coffeshop use case
@@ -22,10 +22,13 @@ class MrpProduction(models.Model):
             # NOTE: do not remove this block to define the bom
             # it looks time consuming to justify wheter or not to discriminate mrp.bom(s) without product_id
             # NOTE: ps by default it will give priority to bom_prod
-            bom_count = self.env['mrp.bom'].search([('product_tmpl_id', '=', prod['product_tmpl_id'])])
+            bom_count = self.env['mrp.bom'].search(
+                [('product_tmpl_id', '=', prod['product_tmpl_id'])])
             if bom_count:
-                bom_temp = self.env['mrp.bom'].search([('product_tmpl_id', '=', prod['product_tmpl_id']), ('product_id', '=', False)])
-                bom_prod = self.env['mrp.bom'].search([('product_id', '=', prod['id'])])
+                bom_temp = self.env['mrp.bom'].search(
+                    [('product_tmpl_id', '=', prod['product_tmpl_id']), ('product_id', '=', False)])
+                bom_prod = self.env['mrp.bom'].search(
+                    [('product_id', '=', prod['id'])])
             if bom_prod:
                 bom = bom_prod[0]  # priority
             elif bom_temp:
@@ -34,6 +37,8 @@ class MrpProduction(models.Model):
                 bom = []
             if not bom:
                 break
+            print('bom')
+            print(bom)
             vals = {
                 'origin': 'POS-' + prod['pos_reference'],
                 'state': 'confirmed',
@@ -46,8 +51,10 @@ class MrpProduction(models.Model):
             mrp_order = self.sudo().create(vals)
             components = []
             for bom_line in mrp_order.bom_id.bom_line_ids:
-                bom_line_qty = self.env['mrp.bom'].search([("product_tmpl_id", "=", prod['product_tmpl_id'])]).product_qty  # default qty of BoM
-                _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(prod['components'])))  # check if bom_line is in components
+                bom_line_qty = self.env['mrp.bom'].search(
+                    [("product_tmpl_id", "=", prod['product_tmpl_id'])]).product_qty  # default qty of BoM
+                _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
+                    prod['components'])))  # check if bom_line is in components
                 if len(_prodComp) > 0:
                     bom_line_qty = _prodComp[0]['qty']
                 components.append((0, 0, {
@@ -77,6 +84,9 @@ class MrpProduction(models.Model):
                 'group_id': mrp_order.procurement_group_id.id,
                 'propagate_cancel': mrp_order.propagate_cancel,
             }
+            print('bom')
+            print(bom)
+
             mrp_order.update({
                 'move_raw_ids': components,
                 'move_finished_ids': [(0, 0, mrp_production)]
