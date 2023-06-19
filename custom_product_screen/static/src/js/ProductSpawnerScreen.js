@@ -56,7 +56,11 @@ class ProductSpawnerScreen extends PosComponent {
 
     get getDisplayExtras() {
         let categ_id = this.env.pos.db.get_categ_by_name('Extra');
-        return this.env.pos.db.get_product_by_category(categ_id);
+        let result = this.env.pos.db.get_product_by_category(categ_id);
+        console.warn('get display extras');
+        console.log(result);
+        //TODO: use this.product_template_id to fetch the bom and filter only extras aplicable to prod tmpl bom
+        return result;
     }
 }
 ProductSpawnerScreen.template = 'custom_product_screen.ProductSpawnerScreen';

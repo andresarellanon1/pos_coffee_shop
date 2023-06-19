@@ -101,7 +101,7 @@ class ProductTemplate(models.Model):
                                     help="Check if the product should be manufactured when sold in POS")
 
     @ api.onchange('pos_production')
-    def onchange_to_make_mrp(self):
+    def onchange_pos_production(self):
         if self.pos_production:
             if not self.bom_count:
                 raise ValidationError(
