@@ -6,6 +6,7 @@ import Registries from 'point_of_sale.Registries'
 import { onMounted, useExternalListener } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
 import NumberBuffer from 'point_of_sale.NumberBuffer'
+import rpc from 'web.rpc'
 
 class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     setup() {
@@ -46,12 +47,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         this.env.pos.removeOrder(order);
     }
     _onClickPay() {
-        //this.showScreen('PaymentScreen');
         this.createProductionSingle();
         this.sendCurrentOrderToMainPoS();
+        this.env.pos.removeOrder(this.currentOrder)
     }
     createProductionSingle() {
-        // console.warn('creating production single:');
         let list_product = []
         let child_orderline = [];
         let order = this.currentOrder;
@@ -62,8 +62,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         for (let key in product_extra_by_orderline) {
             parent_orderlines_id.push(product_extra_by_orderline[key].parent_orderline_id);
         }
-        // console.warn('Full orderlines');
-        // console.log(orderlines);
         // get child product list
         for (let index in orderlines) {
             for (let key in product_extra_by_orderline) {
@@ -74,12 +72,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     });
             }
         }
-        // console.warn('extras orderlines');
-        // console.log(child_orderline);
         // get parent product list
         orderlines = orderlines.filter(or => parent_orderlines_id.includes(or.id));
-        // console.warn('product orderlines');
-        // console.log(orderlines);
         for (let i in orderlines) {
             // NOTE: inner loop is to ensure product spliting, in theory the orderlines are not merged ergo it should work without this
             // but we opted to keep it in case somehow multiple products end up in the same orderline (merged)
@@ -99,8 +93,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 });
             }
         }
-        // console.warn('product orderlines');
-        // console.log(list_product);
         if (list_product.length == 0)
             return        
         rpc.query({
@@ -109,12 +101,28 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             args: [1, list_product],
         });
     }
-    sendCurrentOrderToMainPoS(){
+    async sendCurrentOrderToMainPoS(){
         let order = this.currentOrder;
-        // console.log(order);
+        let orderlines = order.get_orderlines();
+        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline;
+        // Remove child orderlines
+        for (let index in orderlines) {
+            for (let key in product_extra_by_orderline) {
+                if (product_extra_by_orderline[key].orderline_id === orderlines[index].id)
+                    order.remove_orderline(product_extra_by_orderline[key].orderline_id)
+            }
+        }
+        let response = await fetch("http://127.0.0.1:8080/order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(order)
+        }) 
+        console.warn('pos sessions sync');
+        console.log(response);
         // TODO: remove child orderlines from current order
         // Gotta make sure to add the extra price to the product extra_price before sending to cashier PoS session otherwise the extras won't be paid
-        console.error("Not yet implemented");
     }
 }
 ProductTemplateScreen.template = 'custom_product_screen.ProductTemplateScreen';

@@ -29,16 +29,16 @@ class ProductSpawnerScreen extends PosComponent {
             description: "" // TODO: GENERATE DESCRIPTION
         };
         let parent_orderline = await this._addProduct(product, options);
-        console.warn('spawn product added product to order with line:');
-        console.log(parent_orderline);
         for (let extra_component of this.env.extras_components) {
             let payload = extra_component.getValue();
+            if(payload.count <= 0 || payload.count > 5) continue
             let options = {
                 draftPackLotLines,
                 quantity: payload.count,
-                price_extra: payload.lst_price,
+                price_extra: 0.0,
                 description: payload.display_name,
             };
+            price_extra += payload.lst_price;
             let child_orderline = await this._addProduct(payload.extra, options);
             this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, payload.extra);
         };
@@ -57,8 +57,6 @@ class ProductSpawnerScreen extends PosComponent {
     get getDisplayExtras() {
         let categ_id = this.env.pos.db.get_categ_by_name('Extra');
         let result = this.env.pos.db.get_product_by_category(categ_id);
-        console.warn('get display extras');
-        console.log(result);
         //TODO: use this.product_template_id to fetch the bom and filter only extras aplicable to prod tmpl bom
         return result;
     }
