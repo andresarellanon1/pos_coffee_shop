@@ -49,7 +49,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     _onClickPay() {
         this.createProductionSingle();
         this.sendCurrentOrderToMainPoS();
-        this.env.pos.removeOrder(this.currentOrder)
     }
     createProductionSingle() {
         let list_product = []
@@ -66,7 +65,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         for (let index in orderlines) {
             for (let key in product_extra_by_orderline) {
                 if (product_extra_by_orderline[key].orderline_id === orderlines[index].id)
-                    child_orderline.push({
+                    if(orderlines[index].quantity > 0)
+                        child_orderline.push({
                         'id': orderlines[index].product.id,
                         'qty': orderlines[index].quantity,
                     });
@@ -104,23 +104,21 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async sendCurrentOrderToMainPoS(){
         let order = this.currentOrder;
         let orderlines = order.get_orderlines();
-        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline;
-        // Remove child orderlines
-        for (let index in orderlines) {
-            for (let key in product_extra_by_orderline) {
-                if (product_extra_by_orderline[key].orderline_id === orderlines[index].id)
-                    order.remove_orderline(product_extra_by_orderline[key].orderline_id)
-            }
-        }
+        let parent_orderlines_id = [];
+        let products_sync = this.env.pos.db.products_to_sync;
+        console.warn('cleaned order');
+        console.log(products_sync);
         let response = await fetch("http://127.0.0.1:8080/order", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(order)
-        }) 
+            body: JSON.stringify(products_sync)
+        }); 
         console.warn('pos sessions sync');
         console.log(response);
+        if(response.status == 200)
+            this.env.pos.removeOrder(this.currentOrder)
         // TODO: remove child orderlines from current order
         // Gotta make sure to add the extra price to the product extra_price before sending to cashier PoS session otherwise the extras won't be paid
     }
