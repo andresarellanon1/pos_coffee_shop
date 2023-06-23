@@ -4,23 +4,23 @@ from odoo import models, fields
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
-    sender_session_id = fields.Many2one(
-        'pos.session', string='Sender session id',
-        required=False,
-        index=False,
-        readonly=False,
-        default='',
-        ondelete='restrict')
-
-    receiver_session_id = fields.Many2one(
-        'pos.session', string='Receiver session id',
-        required=False,
-        index=False,
-        readonly=False,
-        states={'opening_control': [('readonly', False)]},
-        default='',
-        ondelete='restrict')
-
+    # sender_session_id = fields.Many2one(
+    #     'pos.session', string='Sender session id',
+    #     required=False,
+    #     index=False,
+    #     readonly=False,
+    #     default='',
+    #     ondelete='restrict')
+    #
+    # receiver_session_id = fields.Many2one(
+    #     'pos.session', string='Receiver session id',
+    #     required=False,
+    #     index=False,
+    #     readonly=False,
+    #     states={'opening_control': [('readonly', False)]},
+    #     default='',
+    #     ondelete='restrict')
+    #
     def _pos_ui_models_to_load(self):
         models_to_load = [
             'res.company',

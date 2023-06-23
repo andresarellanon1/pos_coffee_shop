@@ -112,7 +112,7 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     @ api.onchange('pos_production')
-    def onchange_to_make_mrp(self):
+    def onchange_pos_production(self):
         if self.pos_production:
             if not self.bom_count:
                 raise Warning('Required Bill of Material for this product.')
