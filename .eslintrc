@@ -1,0 +1,8 @@
+{
+    "plugins": [
+        "nuxt3-auto-import"
+    ],
+    "env": {
+        "nuxt3-auto-import/nuxt": true
+    }
+}
