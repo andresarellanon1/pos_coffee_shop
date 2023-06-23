@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const col_a_text = () => useState('col_a')
-const { data: response } = await useFetch('/api/count')
+const { data: response } = await useFetch('https://0.0.0.0/version')
 
 </script>
 
