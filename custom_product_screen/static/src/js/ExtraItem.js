@@ -7,7 +7,7 @@ import { useState } from '@odoo/owl'
 class ExtraItem extends PosComponent {
     setup() {
         super.setup();
-        this.env.extras_components.push(this);
+        this.env.extra_components.push(this);
         this.extra = this.props.extra;
         this.limit = 5;
         this.state = useState({

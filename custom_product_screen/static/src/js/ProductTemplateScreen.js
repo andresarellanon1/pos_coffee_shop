@@ -14,6 +14,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useExternalListener(window, 'product-spawned', this.productSpawned);
         useListener('click-product', this._clickProduct);
         useListener('click-pay', this._onClickPay);
+        useListener('click-send', this._onClickSend);
         useListener('clear-order', this._clearOrder);
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
@@ -48,7 +49,15 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     _onClickPay() {
         this.createProductionSingle();
+        this.showScreen('PaymentScreen'); 
+    }
+    _onClickSend(){
+        this.createProductionSingle();
         this.sendCurrentOrderToMainPoS();
+    }
+    _onClickNext(){
+        this.env.pos.removeOrder(this.currentOrder);
+        this.fetchNextOrderFromQueue();
     }
     createProductionSingle() {
         let list_product = []
@@ -105,23 +114,50 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let order = this.currentOrder;
         let orderlines = order.get_orderlines();
         let parent_orderlines_id = [];
-        let products_sync = this.env.pos.db.products_to_sync;
-        console.warn('cleaned order');
-        console.log(products_sync);
+        let extra_components_sync = this.env.pos.db.components_to_sync;
+        let product_sync = this.env.pos.db.products_to_sync;
         let response = await fetch("http://127.0.0.1:8080/order", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(products_sync)
+            body: JSON.stringify(product_sync)
         }); 
-        console.warn('pos sessions sync');
-        console.log(response);
-        if(response.status == 200)
-            this.env.pos.removeOrder(this.currentOrder)
-        // TODO: remove child orderlines from current order
-        // Gotta make sure to add the extra price to the product extra_price before sending to cashier PoS session otherwise the extras won't be paid
+        if(response.status === 200){
+        this.env.pos.removeOrder(this.currentOrder);
+        this.env.pos.db.products_to_sync = [];
+        } 
     }
+    async fetchNextOrderFromQueue(){
+        let response = await fetch("http://127.0.0.1:8080/order", { 
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if(response.status === 200){
+            let payload = await response.json();
+            this.loadRemoteOrder(payload);        
+        }
+    }
+    loadRemoteORder(payload){
+        let product = this.env.pos.db.products_by_id[payload.product_id];
+        let parent_orderline = await this._addProduct(product, payload.options);
+        for (let component of payload.components) {
+            let extra = this.env.pos.db.products_by_id[component.product_id];
+            let options = {
+                draftPackLotLines,
+                quantity: component.qty,
+                price_extra: 0.0,
+                description: extra.display_name,
+            };
+            let child_orderline = await this._addProduct(extra, options);
+            this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, extra);
+        }
+        this.trigger('product-spawned');
+        this.trigger('close-temp-screen');
+    }
+
 }
 ProductTemplateScreen.template = 'custom_product_screen.ProductTemplateScreen';
 Registries.Component.add(ProductTemplateScreen);

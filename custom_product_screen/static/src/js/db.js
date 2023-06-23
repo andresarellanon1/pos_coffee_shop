@@ -7,7 +7,8 @@ patch(PosDB.prototype, "prototype patch", {
     init(options) {
         this.products_template_by_id = {}
         this.products_extra_by_orderline = {}
-        this.products_to_sync = {}
+        this.products_to_sync = [] 
+        this.components_to_sync = []
         this._super(options)
     },
     add_products_templates: function(products) {
@@ -26,8 +27,6 @@ patch(PosDB.prototype, "prototype patch", {
         if (this.products_template_by_id) {
             for (let key in this.products_template_by_id) {
                 let product = this.products_template_by_id[key];
-                //console.warn('for keyproducts template by id');
-                //console.log(product);
                 if (!(product.active && product.available_in_pos && product.pos_categ_id[0] === categ_id)) continue;
                 list.push(product);
             }
@@ -63,19 +62,11 @@ patch(PosDB.prototype, "prototype patch", {
         };
         this.products_extra_by_orderline[orderline_id] = value;
     },
-    product_to_sync: function(orderline_id, product, options){
-        this.products_to_sync[orderline_id] ={
-            orderline: orderline_id,
-            product: product,
-            options: options
-        }
-    },
-    component_to_sync: function(parent_ordrline_id, orderline_id, product_id, qty){
-        this.components_to_sync[orderline_id] ={
-            parent_orderline_id: parent_orderline_id,
-            orderline_id: orederline_id,
+    add_product_to_sync: function(product_id,options,extra_components){
+        this.products_to_sync.push({
             product_id: product_id,
-            qty: qty
-        }
-    }
+            options: options,
+            extra_components: extra_components
+        })
+    },
 });

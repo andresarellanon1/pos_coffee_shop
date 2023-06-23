@@ -9,59 +9,54 @@ class ProductSpawnerScreen extends PosComponent {
     setup(options) {
         super.setup();
         this.product_template_id = this.props.product.id;
-        useSubEnv({ attribute_components: [], extras_components: [] });
+        useSubEnv({ attribute_components: [], extra_components: [] });
         useListener('spawn-product', this.spawnProduct)
     }
     async spawnProduct(event) {
         let selected_attributes = [];
         let component_products = [];
+        let extra_components = [];
         let draftPackLotLines, quantity;
         let price_extra = 0.0;
-        // Collect attrbiutes from UI 
-        this.env.attribute_components.forEach((attribute_component) => {
+        for(let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue();
             selected_attributes.push(attribute);
             price_extra += attribute.price_extra;
-        });
-        // Locate product.product by attributes
+        };
+        for (let extra_component of this.env.extra_components) {
+            let payload = extra_component.getValue();
+            // ignore if component is 0 on UI
+            if(payload.count <= 0 || payload.count > 5) continue
+            component_products.push(payload);
+            // accumulate extra component price on the main product
+            price_extra += payload.lst_price;
+        };
         let product = this.env.pos.db.get_product_by_attr(selected_attributes, this.product_template_id);
-        // define options, quantity should always be 1
+        // enforce 1 quantity created at a time
         let options = {
             draftPackLotLines,
             quantity:1,
             price_extra: price_extra,
-            description: "" // TODO: GENERATE DESCRIPTION
+            description: "" 
         };
-        // Collect extra components from UI and iterate 
-        for (let extra_component of this.env.extras_components) {
-            let payload = extra_component.getValue();
-            // ignore if components is 0 on UI
-            if(payload.count <= 0 || payload.count > 5) continue
-            component_products.push(payload);
-            // add extra component price here to the main product
-            price_extra += payload.lst_price;
-        };
-        // add orderline to order
         let parent_orderline = await this._addProduct(product, options);
-        // TODO: if this session is sender prepare product to sync
-        this.env.pos.db.product_to_sync(parent_orderline.id, product.id, options);
-        // iterate again over components now with the parent orderline created
         // NOTE: I can not think of another way to accumulate the price_extra on the product before creating the orderline
         // and at the same iteration add the child orderline because the child orderline requieres the parent orderline which is to wait until the price_extra of all componentes accumulates to be created
-        for (let product_component of component_products) {
-            // orderline should not increase the order final price on it's own
+        for (let component of component_products) {
+            // extra component orderline should not increase the order final price on it's own
             let options = {
                 draftPackLotLines,
-                quantity: product_component.count,
+                quantity: component.count,
                 price_extra: 0.0,
-                description: product_component.display_name,
+                description: component.display_name,
             };
-            let child_orderline = await this._addProduct(product_component.extra, options);
-            this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, product_component.extra);
-            // TODO: if this session is sender prepare product to sync
-            this.env.pos.db.component_to_sync(parent_orderline.id, product.id, product_component.count);
+            let child_orderline = await this._addProduct(component.extra, options);
+            extra_components.push({product_id: component.extra.id, qty: component.count});
+            this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, component.extra);
         }
-                this.trigger('product-spawned');
+        // TODO: check if this session is sender prepare product to sync
+        this.env.pos.db.add_product_to_sync(product.id, options, extra_components);
+        this.trigger('product-spawned');
         this.trigger('close-temp-screen');
     }
 
