@@ -12,6 +12,13 @@
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.7.2",
     "@types/node": "^18",
-    "nuxt": "^3.5.2"
+    "eslint": "^8.43.0",
+    "eslint-plugin-nuxt3-auto-import": "github:LuckyWindsck/eslint-plugin-nuxt3-auto-import",
+    "ionicons": "^7.1.2",
+    "nuxt": "^3.5.2",
+    "typescript": "^5.1.0"
+  },
+  "dependencies": {
+    "swiper": "^9.4.1"
   }
 }

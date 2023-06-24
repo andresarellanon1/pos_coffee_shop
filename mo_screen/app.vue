@@ -1,10 +1,37 @@
 <script lang="ts" setup>
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
+import 'swiper/css'
 const col_a_text = () => useState('col_a')
+<<<<<<< HEAD
 const { data: response } = await useFetch('https://0.0.0.0:8080/version')
+=======
+const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
+const productionQueue = ref<{ el: any; delta: number }[]>([])
+const { data: version } = await useFetch('http://158.69.63.47:8080/version')
+const { data: production } = await useFetch<[]>('http://158.69.63.47:8080/production')
+setInterval(async () => {
+  if (version) {
+    const { data: production } = await useFetch<[]>('http://158.69.63.47:8080/production')
+    if (production)
+      production.value!!.forEach((el) => {
+        if (!productionQueue.value.find(va => va.el.id === el.id))
+          productionQueue.value.push({ el, delta: 180000 })
+      })
+  }
+}, 1000)
+setInterval(() => {
+  productionQueue.value.forEach((el) => {
+    el.delta -= 1000
+  })
+  productionQueue.value = productionQueue.value.filter(el => el.delta >= 1000)
+}, 1000)
+>>>>>>> a7282aa4d3081dc6a2de3cc4bff9cd39ee6ba345
 
 </script>
 
 <template>
+<<<<<<< HEAD
   <div class="flex space-x-12 p-12 justify-between">
     <div class="flex flex-col w-full h-full bg-rose-200">
       col a
@@ -15,6 +42,33 @@ const { data: response } = await useFetch('https://0.0.0.0:8080/version')
     </div>
     <div class="flex flex-col w-full h-full bg-emerald-200">
       col c
+=======
+  <div class="flex flex-col w-screen h-screen bg-gray-100 ">
+    <div class="flex w-full h-auto text-2xl justify-center pt-8">
+      <div>Ordenes en fila: </div>
+      <div class="font-bold px-2">
+        {{ productionQueue?.length }}
+      </div>
+>>>>>>> a7282aa4d3081dc6a2de3cc4bff9cd39ee6ba345
     </div>
+    <Swiper :modules="modules" :slides-per-view="3" :space-between="50" navigation :scrollbar="{ draggable: true }"
+      :pagination="{ clickable: true }" class="flex w-full h-full space-x-12 p-12 justify-between">
+      <SwiperSlide v-for="prod in productionQueue" :key="prod.el.id"
+        class="flex flex-col w-full h-full p-8 bg-amber-200 border border-amber-300 shadow-amber-300 shadow-lg text-center font-bold text-4xl hover:bg-amber-100 cursor-pointer">
+        <div class="text-dark-200 h-1/2 w-full">
+          <div class="py-2 font-bold border border-black">
+            {{ prod.delta / 1000 }}
+          </div>
+          <div class="w-full py-2 border-b border-black">
+            {{ prod.el.product_id[1] }}
+          </div>
+        </div>
+        <div class="text-gray-600 h-1/2 w-full h-full">
+          <div class="w-full py-2">
+            Extras:
+          </div>
+        </div>
+      </SwiperSlide>
+    </Swiper>
   </div>
 </template>
