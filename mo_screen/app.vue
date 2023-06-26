@@ -3,9 +3,6 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
 import 'swiper/css'
 const col_a_text = () => useState('col_a')
-<<<<<<< HEAD
-const { data: response } = await useFetch('https://0.0.0.0:8080/version')
-=======
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
 const productionQueue = ref<{ el: any; delta: number }[]>([])
 const { data: version } = await useFetch('http://158.69.63.47:8080/version')
@@ -26,30 +23,14 @@ setInterval(() => {
   })
   productionQueue.value = productionQueue.value.filter(el => el.delta >= 1000)
 }, 1000)
->>>>>>> a7282aa4d3081dc6a2de3cc4bff9cd39ee6ba345
 
 </script>
 
 <template>
-<<<<<<< HEAD
-  <div class="flex space-x-12 p-12 justify-between">
-    <div class="flex flex-col w-full h-full bg-rose-200">
-      col a
-      {{ data }}
-    </div>
-    <div class="flex flex-col w-full h-full bg-amber-200">
-      col b
-    </div>
-    <div class="flex flex-col w-full h-full bg-emerald-200">
-      col c
-=======
   <div class="flex flex-col w-screen h-screen bg-gray-100 ">
-    <div class="flex w-full h-auto text-2xl justify-center pt-8">
-      <div>Ordenes en fila: </div>
-      <div class="font-bold px-2">
-        {{ productionQueue?.length }}
-      </div>
->>>>>>> a7282aa4d3081dc6a2de3cc4bff9cd39ee6ba345
+    <div>Ordenes en fila: </div>
+    <div class="font-bold px-2">
+      {{ productionQueue?.length }}
     </div>
     <Swiper :modules="modules" :slides-per-view="3" :space-between="50" navigation :scrollbar="{ draggable: true }"
       :pagination="{ clickable: true }" class="flex w-full h-full space-x-12 p-12 justify-between">
