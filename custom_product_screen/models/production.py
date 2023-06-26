@@ -41,8 +41,6 @@ class MrpProduction(models.Model):
                 bom = []
             if not bom:
                 break
-            print('bom')
-            print(bom)
             vals = {
                 'origin': 'POS-' + prod['pos_reference'],
                 'state': 'confirmed',
@@ -88,9 +86,6 @@ class MrpProduction(models.Model):
                 'group_id': mrp_order.procurement_group_id.id,
                 'propagate_cancel': mrp_order.propagate_cancel,
             }
-            print('bom')
-            print(bom)
-
             mrp_order.update({
                 'move_raw_ids': components,
                 'move_finished_ids': [(0, 0, mrp_production)]
