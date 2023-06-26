@@ -5,6 +5,10 @@ from odoo.exceptions import ValidationError
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+    def markAsDone(self,id):
+        production = self.env['mrp.production'].search([('id', '=', id)])
+        production.button_mark_done()
+    
     def create_single_from_list(self, products):
         if not products:
             return

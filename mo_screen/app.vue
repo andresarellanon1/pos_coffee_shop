@@ -2,28 +2,53 @@
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
 import 'swiper/css'
-const col_a_text = () => useState('col_a')
+import { ref, useFetch, useState } from '.nuxt/imports';
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
-const productionQueue = ref<{ el: any; delta: number }[]>([])
-const { data: version } = await useFetch('http://158.69.63.47:8080/version')
-const { data: production } = await useFetch<[]>('http://158.69.63.47:8080/production')
+const PRODUCTION_DELTA_MAX = 180000
+const SYNC_TIMEOUT_MAX = 10000
+interface Production {
+  id: number
+  display_name: string
+  move_raw_ids: {
+    id: number
+    qty: number
+  }
+  product_id: []
+  state: string
+  priority: string
+}
+const productionQueue = ref<{ el: Production; delta: number }[]>([])
+const done_ids = ref<number[]>([])
 setInterval(async () => {
-  if (version) {
-    const { data: production } = await useFetch<[]>('http://158.69.63.47:8080/production')
-    if (production)
-      production.value!!.forEach((el) => {
-        if (!productionQueue.value.find(va => va.el.id === el.id))
-          productionQueue.value.push({ el, delta: 180000 })
-      })
+  const { data: version } = await useFetch('http://127.0.0.1:8080/version')
+  if (version.value) {
+    const { data: production } = await useFetch<Production>('http://127.0.0.1:8080/production')
+    if (production.value)
+      if (!productionQueue.value.find(va => va.el.id === production.value?.id))
+        productionQueue.value.push({ el: production.value, delta: PRODUCTION_DELTA_MAX })
+  }
+}, SYNC_TIMEOUT_MAX)
+setInterval(async () => {
+  for (let el of productionQueue.value) {
+    if (el.delta <= 1000) {
+      let done = await markAsDone(el.el.id)
+      if (done)
+        done_ids.value.push(el.el.id)
+    }
+    else
+      el.delta -= 1000
   }
 }, 1000)
 setInterval(() => {
-  productionQueue.value.forEach((el) => {
-    el.delta -= 1000
+  productionQueue.value.filter(el => done_ids.value.includes(el.el.id))
+}, 3000)
+const markAsDone = async (id: Number) => {
+  const { data: done } = await useFetch(`http://127.0.0.1:8080/production`, {
+    method: 'POST',
+    body: { id: id },
   })
-  productionQueue.value = productionQueue.value.filter(el => el.delta >= 1000)
-}, 1000)
-
+  return done.value
+}
 </script>
 
 <template>
@@ -34,7 +59,7 @@ setInterval(() => {
     </div>
     <Swiper :modules="modules" :slides-per-view="3" :space-between="50" navigation :scrollbar="{ draggable: true }"
       :pagination="{ clickable: true }" class="flex w-full h-full space-x-12 p-12 justify-between">
-      <SwiperSlide v-for="prod in productionQueue" :key="prod.el.id"
+      <SwiperSlide v-for="prod in productionQueue" :key="prod.el?.id"
         class="flex flex-col w-full h-full p-8 bg-amber-200 border border-amber-300 shadow-amber-300 shadow-lg text-center font-bold text-4xl hover:bg-amber-100 cursor-pointer">
         <div class="text-dark-200 h-1/2 w-full">
           <div class="py-2 font-bold border border-black">
