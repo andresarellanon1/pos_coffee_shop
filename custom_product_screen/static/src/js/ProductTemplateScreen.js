@@ -140,7 +140,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.loadRemoteOrder(payload);        
         }
     }
-    loadRemoteORder(payload){
+    async loadRemoteOrder(payload){
         let product = this.env.pos.db.products_by_id[payload.product_id];
         let parent_orderline = await this._addProduct(product, payload.options);
         for (let component of payload.components) {

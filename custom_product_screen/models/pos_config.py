@@ -8,8 +8,32 @@ class pos_config(models.Model):
     module_pos_mor = fields.Boolean("Is manufacturing order receiver")
     module_pos_mos = fields.Boolean("Is manufacturing order sender")
     
+    
+    def type_user():
+        usuario = self.env['pos.session'].search([('id', '=', self.current_session_id.id)])
+        user = self.env['res.users'].search([('id', '=', usuario.user_id.id)])
+        type =  user.employee_type
+        
+        if type == "employee"
+        
     def open_ui(self):
-        raise ValidationError("prb")
+        
+        self.type_user()
+        
+        print('OPEN UI')
+        print('SESION:' + str(self.current_session_id))
+        
+        usuario = self.env['pos.session'].search([('id', '=', self.current_session_id.id)])
+        print('id de usuario:')
+        print(usuario.user_id.id)
+        
+        user = self.env['res.users'].search([('id', '=', usuario.user_id.id)])
+        print('usuario:')
+        print(user.name)
+        tipo =  user.employee_type
+        print('tipo:')
+        print(tipo)
+        
         """Open the pos interface with config_id as an extra argument.
 
         In vanilla PoS each user can only have one active session, therefore it was not needed to pass the config_id
@@ -26,6 +50,7 @@ class pos_config(models.Model):
         domain = [('available_in_pos', '=', True)]
         if self.limit_categories and self.iface_available_categ_ids:
             domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
+            
         if not self.env['product.product'].search(domain):
             return {
                 'name': _("There is no product linked to your PoS"),
