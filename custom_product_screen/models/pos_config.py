@@ -9,8 +9,9 @@ class pos_config(models.Model):
     module_pos_mos = fields.Boolean("Is manufacturing order sender")
     
     def open_ui(self):
-        raise ValidationError("No pos miau")
+        raise ValidationError("prb")
         res = super(pos_config, self).open_ui()
+        return res
         
         
         

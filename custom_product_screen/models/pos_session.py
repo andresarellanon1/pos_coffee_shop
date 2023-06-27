@@ -25,12 +25,9 @@ class PosSession(models.Model):
     
     @api.model_create_multi
     def create(self, vals_list):
-        
+        raise ValidationError("Prueba")
         res = super(PosSession, self).create()
-        valor = pos_config
-        
-        raise ValidationError("config_id: %s", valor)
-    
+            
         return res
     def _pos_ui_models_to_load(self):
         models_to_load = [
