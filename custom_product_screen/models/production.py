@@ -6,7 +6,9 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     def markAsDone(self,id):
+        print("=======================")
         production = self.env['mrp.production'].search([('id', '=', id)])
+        print(production)
         production.button_mark_done()
     
     def create_single_from_list(self, products):
@@ -86,6 +88,11 @@ class MrpProduction(models.Model):
                 'group_id': mrp_order.procurement_group_id.id,
                 'propagate_cancel': mrp_order.propagate_cancel,
             }
+            print("move_finished_ids")
+            print(mrp_production)
+            print("move_raw_ids")
+            print(components)
+            print("=======================")
             mrp_order.update({
                 'move_raw_ids': components,
                 'move_finished_ids': [(0, 0, mrp_production)]

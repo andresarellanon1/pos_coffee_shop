@@ -49,7 +49,7 @@ setInterval(async () => {
   productionQueue.value = productionQueue.value.filter(item => !done_ids.value.includes(item.item.id))
 }, 1000)
 async function markAsDone(id: Number) {
-  const { data: done } = await useFetch(`http://158.69.63.47:8080/production`, {
+  const { data: done } = await useFetch('http://158.69.63.47:8080/production', {
     method: 'POST',
     body: { id: id },
   })
