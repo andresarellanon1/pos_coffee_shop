@@ -4,23 +4,7 @@ from odoo import models, fields, api
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
-    # sender_session_id = fields.Many2one(
-    #     'pos.session', string='Sender session id',
-    #     required=False,
-    #     index=False,
-    #     readonly=False,
-    #     default='',
-    #     ondelete='restrict')
-    #
-    # receiver_session_id = fields.Many2one(
-    #     'pos.session', string='Receiver session id',
-    #     required=False,
-    #     index=False,
-    #     readonly=False,
-    #     states={'opening_control': [('readonly', False)]},
-    #     default='',
-    #     ondelete='restrict')
-    #
+   
     
     
     @api.model_create_multi
