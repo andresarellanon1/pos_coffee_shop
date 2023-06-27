@@ -1,6 +1,6 @@
 {    
     'name': 'Coffe shop',
-    'version': '16.0.0.13',
+    'version': '16.0.0.14',
     'category': 'point_of_sale',
     'description': 'Sobre escribe estilos y funcionalidad de componentes del punto de venta y agrega soporte para multiples pantallas (lectura-escritura y solo lectura)',
     'author': 'Quadro Soluciones',
