@@ -1,5 +1,5 @@
 from itertools import groupby
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class PosSession(models.Model):
