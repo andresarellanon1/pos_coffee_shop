@@ -21,6 +21,17 @@ class PosSession(models.Model):
     #     default='',
     #     ondelete='restrict')
     #
+    
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        
+        res = super(PosSession, self).create()
+        valor = pos_config
+        
+        raise ValidationError("config_id: %s", valor)
+    
+        return res
     def _pos_ui_models_to_load(self):
         models_to_load = [
             'res.company',
