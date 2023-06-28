@@ -4,34 +4,34 @@ from odoo import models, fields, api
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
-            
+
     def _pos_ui_models_to_load(self):
         models_to_load = [
             'res.company',
-             'decimal.precision',
-             'uom.uom',
-             'res.country.state',
-             'res.country',
-             'res.lang',
-             'account.tax',
-             'pos.session',
-             'pos.config',
-             'pos.bill',
-             'res.partner',
-             'stock.picking.type',
-             'res.users',
-             'product.pricelist',
-             'res.currency',
-             'pos.category',
-             'product.product',
-             'product.template',
-             'product.packaging',
-             'account.cash.rounding',
-             'pos.payment.method',
-             'account.fiscal.position',
-         ]
+            'decimal.precision',
+            'uom.uom',
+            'res.country.state',
+            'res.country',
+            'res.lang',
+            'account.tax',
+            'pos.session',
+            'pos.config',
+            'pos.bill',
+            'res.partner',
+            'stock.picking.type',
+            'res.users',
+            'product.pricelist',
+            'res.currency',
+            'pos.category',
+            'product.product',
+            'product.template',
+            'product.packaging',
+            'account.cash.rounding',
+            'pos.payment.method',
+            'account.fiscal.position',
+        ]
 
-         return models_to_load
+        return models_to_load
 
     def _get_attributes_by_ptal_id(self):
         product_attributes = self.env['product.attribute'].search(
