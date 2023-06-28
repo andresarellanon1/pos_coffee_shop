@@ -9,30 +9,38 @@ class pos_config(models.Model):
     module_pos_mos = fields.Boolean("Is manufacturing order sender")
     
     
-    def type_user():
-        usuario = self.env['pos.session'].search([('id', '=', self.current_session_id.id)])
-        user = self.env['res.users'].search([('id', '=', usuario.user_id.id)])
-        type =  user.employee_type
-        
-        if type == "employee"
-        
-    def open_ui(self):
-        
-        self.type_user()
-        
-        print('OPEN UI')
-        print('SESION:' + str(self.current_session_id))
-        
-        usuario = self.env['pos.session'].search([('id', '=', self.current_session_id.id)])
+    def type_user(self):
+        bandera = False
+        user = self.env['pos.session'].search([('id', '=', self.current_session_id.id)])
         print('id de usuario:')
-        print(usuario.user_id.id)
+        print(user.user_id.id)
         
-        user = self.env['res.users'].search([('id', '=', usuario.user_id.id)])
+        user_res = self.env['res.users'].search([('id', '=', user.user_id.id)])
         print('usuario:')
-        print(user.name)
-        tipo =  user.employee_type
+        print(user_res.name)
+        tipo =  user_res.employee_type
         print('tipo:')
         print(tipo)
+        
+        return bandera
+        
+    def open_ui(self):
+        # usuario = self.env['pos.session'].search([('id', '=', self.current_session_id.id)])
+        valors = self.type_user()
+        print(valors)
+        # print('OPEN UI')
+        # print('SESION:' + str(self.current_session_id))
+        
+        # usuario = self.env['pos.session'].search([('id', '=', self.current_session_id.id)])
+        # print('id de usuario:')
+        # print(usuario.user_id.id)
+        
+        # user = self.env['res.users'].search([('id', '=', usuario.user_id.id)])
+        # print('usuario:')
+        # print(user.name)
+        # tipo =  user.employee_type
+        # print('tipo:')
+        # print(tipo)
         
         """Open the pos interface with config_id as an extra argument.
 
