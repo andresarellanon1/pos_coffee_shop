@@ -4,55 +4,34 @@ from odoo import models, fields, api
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
-   
-    
-    
-    # def create(self, vals_list):
-    #     print('HOLAAAA')
-    #     res = super(PosSession, self).create()
-        
-    # def action_pos_session_open(self):
-    #     # we only open sessions that haven't already been opened
-    #     for session in self.filtered(lambda session: session.state == 'opening_control'):
-    #         session
-    #         values = {}
-    #         if not session.start_at:
-    #             values['start_at'] = fields.Datetime.now()
-    #         if session.config_id.cash_control and not session.rescue:
-    #             last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
-    #             session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
-    #         else:
-    #             values['state'] = 'opened'
-    #         session.write(values)
-    #     return True
             
-    def _pos_ui_models_to_load(self):
-        models_to_load = [
-            'res.company',
-            'decimal.precision',
-            'uom.uom',
-            'res.country.state',
-            'res.country',
-            'res.lang',
-            'account.tax',
-            'pos.session',
-            'pos.config',
-            'pos.bill',
-            'res.partner',
-            'stock.picking.type',
-            'res.users',
-            'product.pricelist',
-            'res.currency',
-            'pos.category',
-            'product.product',
-            'product.template',
-            'product.packaging',
-            'account.cash.rounding',
-            'pos.payment.method',
-            'account.fiscal.position',
-        ]
+    # def _pos_ui_models_to_load(self):
+    #     models_to_load = [
+    #         'res.company',
+    #         'decimal.precision',
+    #         'uom.uom',
+    #         'res.country.state',
+    #         'res.country',
+    #         'res.lang',
+    #         'account.tax',
+    #         'pos.session',
+    #         'pos.config',
+    #         'pos.bill',
+    #         'res.partner',
+    #         'stock.picking.type',
+    #         'res.users',
+    #         'product.pricelist',
+    #         'res.currency',
+    #         'pos.category',
+    #         'product.product',
+    #         'product.template',
+    #         'product.packaging',
+    #         'account.cash.rounding',
+    #         'pos.payment.method',
+    #         'account.fiscal.position',
+    #     ]
 
-        return models_to_load
+    #     return models_to_load
 
     def _get_attributes_by_ptal_id(self):
         product_attributes = self.env['product.attribute'].search(

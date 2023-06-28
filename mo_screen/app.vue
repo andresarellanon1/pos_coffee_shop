@@ -25,12 +25,12 @@ interface Production {
   }
 }
 const productionQueue = ref<{ item: Production; delta: number }[]>([])
-const done_ids = ref<number[]>([])
 const markAsDone = async (id: Number) => {
-  let response = await fetch("http://158.69.63.47:8080/production", {
+  const {data: response} = await useFetch("http://158.69.63.47:8080/production", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Accept": "*",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({ id: id })
   }); 
@@ -39,30 +39,21 @@ const markAsDone = async (id: Number) => {
 }
 const syncOrders = async () =>{
   console.warn('sync version ')
-  let _version = await fetch('http://158.69.63.47:8080/version', {
+  const {data: version} = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
-      "Content-Type": "application/json"
+      "Accept": "*",
     }
   }); 
   console.warn('sync version response')
-  console.log(_version)
-  if(_version.status !== 200) return
-  const version = _version.json()
-  console.log(_version)
-  let _production = await fetch('http://158.69.63.47:8080/production',{
+  console.log(version.value)
+  const { data: production } = await useFetch('http://158.69.63.47:8080/production',{
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    }
   }) 
   console.warn('sync production response')
-  console.log(_production)
-  if(_production.status !== 200) return
-  const production = _production.json()
-  console.log(production)
-  if (!productionQueue.value.find(value => value.item.id === production.id))
-    productionQueue.value.push({ item: production, delta: PRODUCTION_DELTA_MAX })
+  console.log(production.value)
+  if (!productionQueue.value.find(value => value.item.id === production.value.id))
+    productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX })
 }
 const checkInterval = () =>{
   for (let item of productionQueue.value) {
@@ -73,14 +64,16 @@ const checkInterval = () =>{
   }
 }
 
-setInterval(()=>{
-  console.warn('tock')
-  syncOrders()
-},10000)
-setInterval(()=>{
-  console.warn('tick')
-  checkInterval()
-},1000)
+onMounted(()=>{
+  setInterval(()=>{
+    console.warn('tock')
+    syncOrders()
+  },10000)
+  setInterval(()=>{
+    console.warn('tick')
+    checkInterval()
+  },1000)
+})
 </script>
 
 <template>
@@ -99,6 +92,9 @@ setInterval(()=>{
             </div>
           <div class="w-full">
               {{ prod.item.display_name}}  
+            <span class="text-gray-800 font-light">
+              ({{ prod.item.origin}})
+            </span>
           </div>
           <div class="w-full border-b border-black">
             {{ prod.item.product.display_name}}
