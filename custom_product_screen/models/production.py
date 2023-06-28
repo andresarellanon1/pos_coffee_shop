@@ -8,21 +8,18 @@ class MrpProduction(models.Model):
     def mark_as_done(self, id):
         print("marking as done")
         production = self.env['mrp.production'].search([('id', '=', id)])
-        production.write({
-            'date_finished': fields.Datetime.now(),
-            'product_qty': production.qty_produced,
-            'priority': '0',
-            'is_locked': True,
-            'state': 'done',
-        })
+        print("production")
+        print(production)
+        production.button_mark_done()
         return True
+
+    def button_mark_done(self):
+        
 
     def create_single_from_list(self, products):
         if not products:
             return
         for prod in products:
-            print("=======================")
-            print(prod)
             if not self.env['product.product'].browse(int(prod['id'])).pos_production:
                 break
             # NOTE: for the coffeshop use case
@@ -61,12 +58,14 @@ class MrpProduction(models.Model):
             mrp_order = self.sudo().create(vals)
             components = []
             for bom_line in mrp_order.bom_id.bom_line_ids:
-                bom_line_qty = self.env['mrp.bom'].search(
-                    [("product_tmpl_id", "=", prod['product_tmpl_id'])]).product_qty  # default qty of BoM
-                _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
-                    prod['components'])))  # check if bom_line is in components
+                print("--- bom line ---")
+                bom_line_qty = bom_line.product_qty  # default qty of BoM
+                _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(prod['components'])))  # check if bom_line is in components
                 if len(_prodComp) > 0:
+                    print("found component bom line")
                     bom_line_qty = _prodComp[0]['qty']
+                print(bom_line)
+                print(bom_line_qty)
                 components.append((0, 0, {
                     'raw_material_production_id': mrp_order.id,
                     'name': mrp_order.name,
@@ -94,11 +93,6 @@ class MrpProduction(models.Model):
                 'group_id': mrp_order.procurement_group_id.id,
                 'propagate_cancel': mrp_order.propagate_cancel,
             }
-            print("move_finished_ids")
-            print(mrp_production)
-            print("move_raw_ids")
-            print(components)
-            print("=======================")
             mrp_order.update({
                 'move_raw_ids': components,
                 'move_finished_ids': [(0, 0, mrp_production)]
