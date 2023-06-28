@@ -26,38 +26,61 @@ interface Production {
 }
 const productionQueue = ref<{ item: Production; delta: number }[]>([])
 const done_ids = ref<number[]>([])
-// sync next
-setInterval(async () => {
-  const { data: version } = await useFetch('http://158.69.63.47:8080/version')
-  if (version.value) {
-    const { data: production, error } = await useFetch<Production>(`http://158.69.63.47:8080/production`)
-    console.log(production.value)
-    if(error)
-      console.error(error.value)
-    if (production.value)
-      if (!productionQueue.value.find(value => value.item.id === production.value?.id))
-        productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX })
-  }
-}, SYNC_TIMEOUT_MAX)
-// tick clock and check done 
-setInterval(async () => {
-  for (let item of productionQueue.value) {
-    if (item.delta <= 1000) {
-      done_ids.value.push(item.item.id)
-      let done = await markAsDone(item.item.id)
+const markAsDone = async (id: Number) => {
+  let response = await fetch("http://158.69.63.47:8080/production", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id })
+  }); 
+  if(response.status === 200)
+    productionQueue.value = productionQueue.value.filter(prod => prod.id !== id)
+}
+const syncOrders = async () =>{
+  console.warn('sync version ')
+  let _version = await fetch('http://158.69.63.47:8080/version', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
     }
+  }); 
+  console.warn('sync version response')
+  console.log(_version)
+  if(_version.status !== 200) return
+  const version = _version.json()
+  console.log(_version)
+  let _production = await fetch('http://158.69.63.47:8080/production',{
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }) 
+  console.warn('sync production response')
+  console.log(_production)
+  if(_production.status !== 200) return
+  const production = _production.json()
+  console.log(production)
+  if (!productionQueue.value.find(value => value.item.id === production.id))
+    productionQueue.value.push({ item: production, delta: PRODUCTION_DELTA_MAX })
+}
+const checkInterval = () =>{
+  for (let item of productionQueue.value) {
+    if (item.delta <= 1000) 
+      markAsDone(item.item.id)
     else
       item.delta -= 1000
   }
-  productionQueue.value = productionQueue.value.filter(item => !done_ids.value.includes(item.item.id))
-}, 1000)
-async function markAsDone(id: Number) {
-  const { data: done } = await useFetch('http://158.69.63.47:8080/production', {
-    method: 'POST',
-    body: { id: id },
-  })
-  return done.value
 }
+
+setInterval(()=>{
+  console.warn('tock')
+  syncOrders()
+},10000)
+setInterval(()=>{
+  console.warn('tick')
+  checkInterval()
+},1000)
 </script>
 
 <template>

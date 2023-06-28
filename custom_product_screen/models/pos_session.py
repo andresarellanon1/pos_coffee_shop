@@ -11,20 +11,20 @@ class PosSession(models.Model):
     #     print('HOLAAAA')
     #     res = super(PosSession, self).create()
         
-    def action_pos_session_open(self):
-        # we only open sessions that haven't already been opened
-        for session in self.filtered(lambda session: session.state == 'opening_control'):
-            session
-            values = {}
-            if not session.start_at:
-                values['start_at'] = fields.Datetime.now()
-            if session.config_id.cash_control and not session.rescue:
-                last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
-                session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
-            else:
-                values['state'] = 'opened'
-            session.write(values)
-        return True
+    # def action_pos_session_open(self):
+    #     # we only open sessions that haven't already been opened
+    #     for session in self.filtered(lambda session: session.state == 'opening_control'):
+    #         session
+    #         values = {}
+    #         if not session.start_at:
+    #             values['start_at'] = fields.Datetime.now()
+    #         if session.config_id.cash_control and not session.rescue:
+    #             last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
+    #             session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
+    #         else:
+    #             values['state'] = 'opened'
+    #         session.write(values)
+    #     return True
             
     def _pos_ui_models_to_load(self):
         models_to_load = [

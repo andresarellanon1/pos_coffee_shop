@@ -14,8 +14,17 @@
                     <Orderline line="orderline" />
                 </t>
             </ul>
-            <OrderSummary order="order"/>
-        </t>
+            <div class="form-control-row">
+                <OrderSummary order="order"/>
+                <div class="form-control-col">
+                <button class="" t-on-click="() => this.trigger('clear-order')" >
+                    Cancelar 
+                </button>
+                <button class="" t-on-click="() => this.trigger('click-send')" >
+                    Terminar pedido
+                </button>
+            </div>
+        </div>
     </div>
    </t>
 </templates> 

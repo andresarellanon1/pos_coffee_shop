@@ -4,17 +4,8 @@
     <t t-name="custom_product_screen.ProductTemplateScreen" owl="1" >
             <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
                 <div class="screen-full-width">
-                    <!-- header panel -->
                     <div class="leftpane pane-border">
                         <CustomOrderWidget/>
-                        <div class="form-control-padding form-control-col justify-end">
-                            <button class="form-control-row" t-on-click="() => this.trigger('clear-order')" >
-                                Cancelar 
-                            </button>
-                            <button class="form-control-row" t-on-click="() => this.trigger('click-pay')" >
-                                Terminar pedido
-                            </button>
-                        </div>
                     </div>
                     <div class="rightpane">
                         <ProductTemplateWidget />

@@ -114,22 +114,24 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let order = this.currentOrder;
         let orderlines = order.get_orderlines();
         let parent_orderlines_id = [];
-        let extra_components_sync = this.env.pos.db.components_to_sync;
         let product_sync = this.env.pos.db.products_to_sync;
-        let response = await fetch("http://127.0.0.1:8080/order", {
+        let response = await fetch("http://158.69.63.47:8080/order", {
+            mode: 'no-cors',
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(product_sync)
         }); 
+        console.warn('order sent to main pos response');
+        console.log(response);
         if(response.status === 200){
         this.env.pos.removeOrder(this.currentOrder);
         this.env.pos.db.products_to_sync = [];
         } 
     }
     async fetchNextOrderFromQueue(){
-        let response = await fetch("http://127.0.0.1:8080/order", { 
+        let response = await fetch("http://158.69.63.47:8080/order", { 
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
