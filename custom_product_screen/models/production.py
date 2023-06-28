@@ -8,6 +8,7 @@ class MrpProduction(models.Model):
     def mark_as_done(self, id):
         print("marking as done")
         production = self.env['mrp.production'].search([('id', '=', id)])
+        print(production.qty_produced)
         production.write({
             'date_finished': fields.Datetime.now(),
             'product_qty': production.qty_produced,
@@ -21,8 +22,6 @@ class MrpProduction(models.Model):
         if not products:
             return
         for prod in products:
-            print("=======================")
-            print(prod)
             if not self.env['product.product'].browse(int(prod['id'])).pos_production:
                 break
             # NOTE: for the coffeshop use case
@@ -63,9 +62,11 @@ class MrpProduction(models.Model):
             for bom_line in mrp_order.bom_id.bom_line_ids:
                 bom_line_qty = self.env['mrp.bom'].search(
                     [("product_tmpl_id", "=", prod['product_tmpl_id'])]).product_qty  # default qty of BoM
-                _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
-                    prod['components'])))  # check if bom_line is in components
-                if len(_prodComp) > 0:
+                _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(prod['components'])))  
+                # check if bom_line is in components, this make forced components to keep the default product_qty and extra components to get prod[componentes][qty]
+                if len(_prodComp) > 0:                    
+                    print("found extra component:")
+                    print(_prodComp[0])
                     bom_line_qty = _prodComp[0]['qty']
                 components.append((0, 0, {
                     'raw_material_production_id': mrp_order.id,

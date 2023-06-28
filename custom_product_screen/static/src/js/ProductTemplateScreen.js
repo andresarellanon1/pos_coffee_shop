@@ -74,8 +74,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         for (let index in orderlines) {
             for (let key in product_extra_by_orderline) {
                 if (product_extra_by_orderline[key].orderline_id === orderlines[index].id)
-                    if(orderlines[index].quantity > 0)
-                        child_orderline.push({
+                    child_orderline.push({
                         'id': orderlines[index].product.id,
                         'qty': orderlines[index].quantity,
                     });

@@ -4,7 +4,7 @@
     <t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension"  owl="1">
         <xpath expr="//div[hasclass('pos-topheader')]" position="replace">
             <button>
-                <HeaderButton/>
+            <HeaderButton/>
             </button>
         </xpath>
     </t>

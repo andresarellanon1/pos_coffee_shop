@@ -105,9 +105,7 @@ onMounted(()=>{
             Componentes:
           </div>
             <div v-for="extra in prod.item.component" :key="extra.display_name" class="w-full flex text-xs  text-center">
-              <span v-if="extra.qty >= 1">
                 {{ extra.display_name }} ({{extra.qty}})
-              </span>
             </div>
         </div>
       </SwiperSlide>
