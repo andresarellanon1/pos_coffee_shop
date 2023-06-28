@@ -8,7 +8,6 @@ class MrpProduction(models.Model):
     def mark_as_done(self,id):
         print("marking as done")
         production = self.env['mrp.production'].search([('id', '=', id)])
-        print(dir(production))
         production.button_mark_done()
         return True
     
