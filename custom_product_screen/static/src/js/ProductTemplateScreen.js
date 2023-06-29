@@ -12,10 +12,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     setup() {
         super.setup();
         useExternalListener(window, 'product-spawned', this.productSpawned);
+        useExternalListener(window, 'click-pay', this._onClickPay);
+        useExternalListener(window, 'click-send', this._onClickSend);
+        useExternalListener(window, 'clear-order', this._clearOrder);
+        useExternalListener(window, 'click-sync-next-order', this.fetchNextOrderFromQueue);
         useListener('click-product', this._clickProduct);
-        useListener('click-pay', this._onClickPay);
-        useListener('click-send', this._onClickSend);
-        useListener('clear-order', this._clearOrder);
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
             triggerAtInput: 'update-selected-orderline',
@@ -40,6 +41,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     get currentOrder() {
         return this.env.pos.get_order();
     }
+    get isEmployee(){
+        return this.env.pos.db.isEmployee;
+    }
     async productSpawned(event) {
         NumberBuffer.reset();
     }
@@ -49,13 +53,13 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     _onClickPay() {
         this.createProductionSingle();
-        this.showScreen('PaymentScreen'); 
+        this.showScreen('PaymentScreen');
     }
-    _onClickSend(){
+    _onClickSend() {
         this.createProductionSingle();
         this.sendCurrentOrderToMainPoS();
     }
-    _onClickNext(){
+    _onClickNext() {
         this.env.pos.removeOrder(this.currentOrder);
         this.fetchNextOrderFromQueue();
     }
@@ -90,26 +94,26 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             // and the orderlines are not being merged
             // TODO: Test with data from the UI and determine wheter or not products with qty > 1 are reaching this loop
             for (let j = 0; j < orderlines[i].quantity; j++) {
-                let product_dict = 
-                list_product.push({
-                    'id': orderlines[i].product.id,
-                    'qty': 1,
-                    'product_tmpl_id': orderlines[i].product.product_tmpl_id,
-                    'pos_reference': order.name,
-                    'uom_id': orderlines[i].product.uom_id[0],
-                    'components': child_orderline
-                });
+                let product_dict =
+                    list_product.push({
+                        'id': orderlines[i].product.id,
+                        'qty': 1,
+                        'product_tmpl_id': orderlines[i].product.product_tmpl_id,
+                        'pos_reference': order.name,
+                        'uom_id': orderlines[i].product.uom_id[0],
+                        'components': child_orderline
+                    });
             }
         }
         if (list_product.length == 0)
-            return        
+            return
         rpc.query({
             model: 'mrp.production',
             method: 'create_single_from_list',
             args: [1, list_product],
         });
     }
-    async sendCurrentOrderToMainPoS(){
+    async sendCurrentOrderToMainPoS() {
         let order = this.currentOrder;
         let orderlines = order.get_orderlines();
         let parent_orderlines_id = [];
@@ -121,27 +125,27 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(product_sync)
-        }); 
+        });
         console.warn('order sent to main pos response');
         console.log(response);
-        if(response.status === 200){
-        this.env.pos.removeOrder(this.currentOrder);
-        this.env.pos.db.products_to_sync = [];
-        } 
+        if (response.status === 200) {
+            this.env.pos.removeOrder(this.currentOrder);
+            this.env.pos.db.products_to_sync = [];
+        }
     }
-    async fetchNextOrderFromQueue(){
-        let response = await fetch("http://158.69.63.47:8080/order", { 
+    async fetchNextOrderFromQueue() {
+        let response = await fetch("http://158.69.63.47:8080/order", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         });
-        if(response.status === 200){
+        if (response.status === 200) {
             let payload = await response.json();
-            this.loadRemoteOrder(payload);        
+            this.loadRemoteOrder(payload);
         }
     }
-    async loadRemoteOrder(payload){
+    async loadRemoteOrder(payload) {
         let product = this.env.pos.db.products_by_id[payload.product_id];
         let parent_orderline = await this._addProduct(product, payload.options);
         for (let component of payload.components) {

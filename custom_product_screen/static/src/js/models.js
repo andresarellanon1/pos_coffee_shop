@@ -9,7 +9,8 @@ patch(PosGlobalState.prototype, "prototype patch", {
         this._super(loadedData);
     },
     _loadProductTemplate: function(products) {
-        this.db.add_products_templates(products)
+        this.db._isEmployee();
+        this.db.add_products_templates(products);
     }
 });
 

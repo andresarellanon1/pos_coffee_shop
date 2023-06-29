@@ -12,6 +12,9 @@ class CustomOrderWidget extends PosComponent {
     get order() {
         return this.env.pos.get_order();
     }
+    get isEmployee(){
+        return this.env.pos.db.isEmployee;
+    }
     get _orderlinesArray() {
         let orderlines = this.order ? this.order.get_orderlines() : [];
         let parent_orderlines_id = [];

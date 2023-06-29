@@ -15,16 +15,26 @@
                 </t>
             </ul>
             <div class="form-control-row">
-                <OrderSummary order="order"/>
-                <div class="form-control-col">
-                <button class="" t-on-click="() => this.trigger('clear-order')" >
-                    Cancelar 
-                </button>
-                <button class="" t-on-click="() => this.trigger('click-send')" >
-                    Terminar pedido
-                </button>
+                <div class="form-control-padding form-control-col justify-end">
+                    <OrderSummary order="order"/>
+                    <div class="form-control-col">
+                        <button  class="form-control-row" t-on-click="() => this.trigger('clear-order')">
+                            Cancelar 
+                        </button>
+                        <t t-if="isEmployee">
+                            <button  class="form-control-row" t-on-click="() => this.trigger('click-pay')">
+                                Terminar pedido
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <button  class="form-control-row" t-on-click="() => this.trigger('click-send')">
+                                Terminar pedido
+                            </button>
+                        </t>
+                    </div>
+                </div>       
             </div>
-        </div>
+        </t>
     </div>
    </t>
 </templates> 
