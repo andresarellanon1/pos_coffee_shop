@@ -5,7 +5,14 @@
     <div class="order">
         <t t-if="_orderlinesArray.length === 0">
             <div class="order-empty">
-                <h1> Sin registros</h1>
+                <t t-if="isEmployee">
+                        Sin registros 
+                </t>
+                <t t-else="">
+                    <button t-on-click="() => this.trigger('click-sync-next-order')">
+                           Sincronizar siguiente 
+                    </button>
+                </t>
             </div>
         </t>
         <t t-else="">
@@ -17,17 +24,17 @@
             <div class="form-control-row">
                 <div class="form-control-padding form-control-col justify-end">
                     <OrderSummary order="order"/>
-                    <div class="form-control-col">
-                        <button  class="form-control-row" t-on-click="() => this.trigger('clear-order')">
+                    <div class="form-control-col" >
+                        <button class="p-3 mb-2 bg-danger text-white rounded-top-circle" t-on-click="() => this.trigger('clear-order')">
                             Cancelar 
                         </button>
                         <t t-if="isEmployee">
-                            <button  class="form-control-row" t-on-click="() => this.trigger('click-pay')">
+                            <button class="p-3 mb-2 bg-success text-white rounded" t-on-click="() => this.trigger('click-pay')">
                                 Terminar pedido
                             </button>
                         </t>
-                        <t t-else="">
-                            <button  class="form-control-row" t-on-click="() => this.trigger('click-send')">
+                        <t t-else="" >
+                            <button  class="p-3 mb-2 bg-success text-white rounded" t-on-click="() => this.trigger('click-send')">
                                 Terminar pedido
                             </button>
                         </t>

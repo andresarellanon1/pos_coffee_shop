@@ -3,10 +3,10 @@
     <t t-name="custom_product_screen.ClientActionpadWidget" 
         owl="1" >
         <div>
-            <button t-on-click="() => this.trigger('close-temp-screen')">
+            <button class="p-3 mb-2 bg-danger text-white" t-on-click="() => this.trigger('close-temp-screen')">
                Cancelar 
             </button>
-            <button t-on-click="() => this.trigger('spawn-product')">
+            <button class="p-3 mb-2 bg-success text-white" t-on-click="() => this.trigger('spawn-product')">
                 Aceptar
             </button>
         </div>

@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <link rel="stylesheet" href="/home/ubuntu/extras_cafe/custom_product_screen/static/src/css/bootstrap.css"/>
-
     <t t-name="custom_product_screen.ProductTemplateScreen" owl="1" >
         <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
-            <div class="form-control-row">
-                <t t-if="isEmployee">
-                    <button t-on-click="() => this.trigger('click-sync-next-order')">
-                        Sync next
-                    </button>
-                </t>
-            </div>
             <div class="screen-full-width">
                 <div class="leftpane pane-border">
                     <CustomOrderWidget/>
