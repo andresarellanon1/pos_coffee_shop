@@ -22,12 +22,13 @@
                 </t>
             </ul>
             <div class="form-control-row">
-                <div class="form-control-padding form-control-col justify-end">
+                <div  class="d-flex flex-row  p-2">
                     <OrderSummary order="order"/>
-                    <div class="form-control-col" >
-                        <button class="p-3 mb-2 bg-danger text-white rounded-top-circle" t-on-click="() => this.trigger('clear-order')">
+                        <div class="d-flex align-items-end flex-column p-2">
+                        <button class="p-3 mb-2 bg-danger text-white rounded" t-on-click="() => this.trigger('clear-order')">
                             Cancelar 
                         </button>
+                        
                         <t t-if="isEmployee">
                             <button class="p-3 mb-2 bg-success text-white rounded" t-on-click="() => this.trigger('click-pay')">
                                 Terminar pedido
@@ -38,7 +39,7 @@
                                 Terminar pedido
                             </button>
                         </t>
-                    </div>
+                        </div>
                 </div>       
             </div>
         </t>
