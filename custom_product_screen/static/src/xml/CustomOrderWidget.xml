@@ -22,20 +22,20 @@
                 </t>
             </ul>
             <div class="form-control-row">
-                <div  class="d-flex flex-row  p-2">
+                <div  class="d-flex flex-row ">
                     <OrderSummary order="order"/>
-                        <div class="d-flex align-items-end flex-column p-2">
-                        <button class="p-3 mb-2 bg-danger text-white rounded" t-on-click="() => this.trigger('clear-order')">
-                            Cancelar 
+                        <div class="d-flex align-items-end flex-column ">
+                        <button class="p-3 mb-2 bg-danger text-white rounded long-button" t-on-click="() => this.trigger('clear-order')">
+                            Cancelarrrrrrrrrrr 
                         </button>
                         
                         <t t-if="isEmployee">
-                            <button class="p-3 mb-2 bg-success text-white rounded" t-on-click="() => this.trigger('click-pay')">
+                            <button class="p-3 mb-2 bg-success text-white rounded long-button" t-on-click="() => this.trigger('click-pay')">
                                 Terminar pedido
                             </button>
                         </t>
                         <t t-else="" >
-                            <button  class="p-3 mb-2 bg-success text-white rounded" t-on-click="() => this.trigger('click-send')">
+                            <button  class="p-3 mb-2 bg-success text-white rounded long-button" t-on-click="() => this.trigger('click-send')">
                                 Terminar pedido
                             </button>
                         </t>

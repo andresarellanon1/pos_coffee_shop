@@ -6,9 +6,11 @@
     background: white;
     width: 100%;
 }
+
 .form-control-padding {
     padding: 2px 2px 16px 16px;
 }
+
 .form-control-col {
     display: flex;
     flex-direction: column;
@@ -17,6 +19,7 @@
     justify-items: center;
     background: white;
 }
+
 .orderline-control-row {
     display: flex;
     flex-direction: row;
@@ -24,26 +27,32 @@
     justify-items: center;
     width: 100%;
 }
+
 .justify-end {
     justify-content: end;
     justify-items: bottom;
 }
+
 .orderline-control-row {
     border-bottom: solid 1px #bbb;
 }
+
 .form-control-title {
     text-size: 16px;
     font-style: oblique;
 }
+
 .form-control-subtitle {
     text-size: 12px;
-    font-style: italic;   
+    font-style: italic;
 }
+
 .form-control {
     display: flex;
     flex-direction: row;
     justify-content: between;
 }
+
 .checkmark-container {
     display: inline-block;
     justify-content: center;
@@ -56,6 +65,7 @@
     cursor: pointer;
     width: 100%;
 }
+
 .checkmark-container label {
     display: inline-block;
     text-align: center;
@@ -65,7 +75,25 @@
     text-color: black;
     font-size: 16px;
 }
+
 .checkmark-container input {
     display: none;
 }
 
+
+.long-button {
+    display: inline-block;
+    padding: 0.35em 1.2em;
+    margin: 0 0.3em 0.3em 0;
+    box-sizing: border-box;
+    text-align: center;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+@media all and (max-width:30em) {
+    .long-button {
+        display: block;
+        margin: 0.4em auto;
+    }
+}

@@ -93,6 +93,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             // products with quantity > 1 should not end up in the same orderline because they are added 1 at a time by the ProductSpawernScreen
             // and the orderlines are not being merged
             // TODO: Test with data from the UI and determine wheter or not products with qty > 1 are reaching this loop
+            console.warn('order before sending mrp.production order')
+            console.log(order.id)
             for (let j = 0; j < orderlines[i].quantity; j++) {
                 let product_dict =
                     list_product.push({
