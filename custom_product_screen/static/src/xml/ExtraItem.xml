@@ -7,8 +7,11 @@
         <!-- <div class="column "> -->
             <!-- <t t-if="bandera === 1"> -->
                 <t t-esc="index"/>
+                
                 <div class="form-control border-0">
                     <t t-esc="props.extra.display_name"/>
+                    <t t-set="index" t-value="index + 1"/>
+                    <t t-esc="index"/>
                 </div>
                 <div class="">
                     <button class="rounded-circle bg-success text-white" t-on-click="() => this.removeExtra()"> - </button>
@@ -22,7 +25,7 @@
                 <div class="form-control border-0 price-wrapper">
                 <span>($<t t-esc="getPriceExtra"/>)</span>
                 </div>
-                <t t-set="index" t-value="index + 1"/>
+                
                 <t t-if="index % 7 === 0">
                     <t t-set="bandera" t-value="2"/>
                     <p>ADIOOS</p>

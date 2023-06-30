@@ -24,7 +24,7 @@
 					</div>
 					<div class="d-flex align-items-end flex-column  w-full">
 						<button class="p-2 bg-danger text-white rounded long-button   " t-on-click="() => this.trigger('clear-order')">
-							CancelarR
+							Cancelar
 						</button>
 						<t t-if="isEmployee">
 							<button class="p-2 bg-success text-white rounded long-button  " t-on-click="() => this.trigger('click-pay')">

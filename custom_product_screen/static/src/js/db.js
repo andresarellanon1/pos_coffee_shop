@@ -65,11 +65,12 @@ patch(PosDB.prototype, "prototype patch", {
         };
         this.products_extra_by_orderline[orderline_id] = value;
     },
-    add_product_to_sync: function (product_id, options, extra_components) {
+    add_product_to_sync: function (uid, product_id, options, extra_components) {
         this.products_to_sync.push({
+            uid: uid,
             product_id: product_id,
             options: options,
-            extra_components: extra_components
+            components: extra_components
         })
     },
     _isEmployee: async function () {

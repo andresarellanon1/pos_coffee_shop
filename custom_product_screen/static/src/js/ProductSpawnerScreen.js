@@ -55,7 +55,8 @@ class ProductSpawnerScreen extends PosComponent {
             this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, component.extra);
         }
         // TODO: check if this session is sender prepare product to sync
-        this.env.pos.db.add_product_to_sync(product.id, options, extra_components);
+        let uid = `${this.currentOrder.uid}`
+        this.env.pos.db.add_product_to_sync(uid, product.id, options, extra_components);
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');
     }

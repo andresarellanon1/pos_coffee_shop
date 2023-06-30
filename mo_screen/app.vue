@@ -119,7 +119,7 @@ onMounted(() => {
                 </div>
                 <div v-for="extra in production.component" :key="extra.display_name"
                   class="w-full flex text-xs  text-center">
-                  {{ extra.display_name }} ({{ extra.qty }})
+                  <span v-if="extra.qty > 0"> {{ extra.display_name }} ({{ extra.qty }}) </span>
                 </div>
               </div>
             </div>

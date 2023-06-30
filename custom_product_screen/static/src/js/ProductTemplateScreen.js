@@ -142,10 +142,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 "Accept": "*",
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ uid: `POS-${uid}`})
+            body: JSON.stringify({ uid: `POS-${uid}` })
         });
-      console.warn('sent next order uid') 
-      console.log(response)
+        console.warn('sent next order uid')
+        console.log(response)
     }
     /** only employee **/
     async fetchNextOrderFromQueue() {
@@ -165,24 +165,34 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         }
     }
     /** only employee **/
-    async loadRemoteOrder(payload) {
-        let product = this.env.pos.db.products_by_id[payload.product_id];
-        let parent_orderline = await this._addProduct(product, payload.options);
-        for (let component of payload.components) {
-            let extra = this.env.pos.db.products_by_id[component.product_id];
-            let options = {
-                draftPackLotLines,
-                quantity: component.qty,
-                price_extra: 0.0,
-                description: extra.display_name,
-            };
-            let child_orderline = await this._addProduct(extra, options);
-            this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, extra);
+    async loadRemoteOrder(payloadArray) {
+        for (let payload of payloadArray) {
+            let product = this.env.pos.db.product_by_id[payload.product_id];
+            let parent_orderline = await this._addProduct(product, payload.options);
+            for (let component of payload.components) {
+                let extra = this.env.pos.db.product_by_id[component.product_id];
+                let options = {
+                    draftPackLotLines: undefined,
+                    quantity: component.qty,
+                    price_extra: 0.0,
+                    description: extra.display_name,
+                };
+                let child_orderline = await this._addProduct(extra, options);
+                this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, extra);
+            }
         }
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');
     }
+    /* only use when fetching from queue */
+    async _addProduct(product, options) {
+        return await this.currentOrder.add_product_but_well_done(product, options);
+    }
 
+    /* only use when fetching from queue */
+    get currentOrder() {
+        return this.env.pos.get_order();
+    }
 }
 ProductTemplateScreen.template = 'custom_product_screen.ProductTemplateScreen';
 Registries.Component.add(ProductTemplateScreen);
