@@ -19,10 +19,10 @@ class BaseAttribute extends PosComponent {
     getValue() {
         return this.values.find((val) => val.id === parseFloat(this.state.selected_value));
     }
-
+    // #F32417
     setChecked(event) {
         $(this.el).find('.checkmark-container').css("background-color", "#ddd");
-        $(this.el).find(event.target.parentElement).css("background-color", "#bbb");
+        $(this.el).find(event.target.parentElement).css("background-color", "#dc3545");
     }
 }
 

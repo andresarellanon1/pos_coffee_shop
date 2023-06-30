@@ -72,7 +72,7 @@
     cursor: pointer;
     width: 100%;
     padding: 8px 2px;
-    text-color: black;
+    color: black;
     font-size: 16px;
 }
 
@@ -82,18 +82,30 @@
 
 
 .long-button {
-    display: inline-block;
-    padding: 0.35em 1.2em;
-    margin: 0 0.3em 0.3em 0;
-    box-sizing: border-box;
-    text-align: center;
-    transition: all 0.2s;
-    width: 100%;
+   width:100%; 
+   margin-bottom: 1px;
+   margin-top: 15px;
+   margin-left: 100px;
+   
 }
 
-@media all and (max-width:30em) {
-    .long-button {
-        display: block;
-        margin: 0.4em auto;
-    }
+.order-summary-wrapper {
+    margin-left: 150px; /* Ajusta el valor según tus necesidades */
+  }
+
+.count-wrapper {
+    margin-left: 5px; /* Ajusta el valor según tus necesidades */
+    margin-right: 0%;
+  }
+
+.price-wrapper {
+    margin-left: 40px; /* Ajusta el valor según tus necesidades */
 }
+
+
+.column {
+    float: left;
+    width: 50%;
+    padding: 10px;
+    height: 300px; /* Should be removed. Only for demonstration */
+  }

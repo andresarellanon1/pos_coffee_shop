@@ -8,7 +8,7 @@ import { TransitionRoot } from '@headlessui/vue'
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
 const PRODUCTION_DELTA_MAX = 180000
 const SYNC_TIMEOUT_MAX = 10000
-const baseURL = ''
+const tock = ref(10)
 interface Production {
   id: number
   display_name: string
@@ -32,18 +32,19 @@ const markAsDone = async (production: Production[]) => {
       "Accept": "*",
     }
   });
-  for (let prod of production) {
-    const { data: done } = await useFetch("http://158.69.63.47:8080/production", {
-      method: "POST",
-      headers: {
-        "Accept": "*",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ id: prod.id })
-    });
-    if (done.value === id) continue;
-    else break;
-  }
+  if (version.value !== null)
+    for (let prod of production) {
+      const { data: done } = await useFetch<number>("http://158.69.63.47:8080/production", {
+        method: "POST",
+        headers: {
+          "Accept": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ id: prod.id })
+      });
+      if (done.value !== null && done.value === prod.id) continue;
+      else break;
+    }
 }
 const syncOrders = async () => {
   productionQueue.value = productionQueue.value.filter(element => !element.done);
@@ -53,13 +54,15 @@ const syncOrders = async () => {
       "Accept": "*",
     }
   });
-  const { data: production } = await useFetch('http://158.69.63.47:8080/production', {
+  if (version.value === null) return
+  const { data: production } = await useFetch<Production[]>('http://158.69.63.47:8080/production', {
     method: "GET",
     headers: {
       "Accept": "*",
     }
   });
-  productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX, done: false });
+  if (production.value !== null && Array.isArray(production.value) && production.value?.length > 0)
+    productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX, done: false });
 }
 const checkInterval = () => {
   let buff = productionQueue.value;
@@ -75,11 +78,11 @@ const checkInterval = () => {
 
 onMounted(() => {
   setInterval(() => {
-    console.warn('tock')
+    tock.value = 10
     syncOrders()
-  }, 10000)
+  }, SYNC_TIMEOUT_MAX)
   setInterval(() => {
-    console.warn('tick')
+    tock.value -= 1
     checkInterval()
   }, 1000)
 })
@@ -87,39 +90,45 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col w-screen h-screen bg-gray-100 px-2 py-1">
-    <div class="flex space-x-2 w-full text-center justify-center">
-      <div>Ordenes en fila: </div>
-      <div>{{ productionQueue?.length }}</div>
+    <div
+      class="bg-rose-500 shadow-xl absolute m-2 p-4 w-16 h-16 flex flex-col items-center justify-center font-bold text-white text-xl rounded-full top-0 right-0">
+      {{ tock }}
     </div>
-    <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
-      :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between">
-      <SwiperSlide v-for="(productionOrder, index) in productionQueue" :key="index"
-        class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-sm cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
-        <div class="text-dark-200 h-auto w-full flex flex-col items-center">
-          <div class="w-16 shadow shadow-xl rounded-full py-1 text-white"
-            :class="[productionOrder.delta < 60000 ? 'bg-red-700' : 'bg-emerald-400']">
-            {{ productionOrder.delta / 1000 }}
-          </div>
-          <div v-for="production in productionOrder.item" :key="production.id" class="w-full">
-            {{ production.display_name }}
-            <span class="text-gray-800 font-light">
-              ({{ production.origin }})
-            </span>
-            <div class="w-full border-b border-black">
-              {{ production.product.display_name }}
+    <div v-if="productionQueue?.length > 0">
+      <div class="flex space-x-2 w-full text-center justify-center">
+        <div>Ordenes en fila: </div>
+        <div>{{ productionQueue?.length }}</div>
+      </div>
+      <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
+        :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between">
+        <SwiperSlide v-for="(productionOrder, index) in productionQueue" :key="index"
+          class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-sm cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
+          <div class="text-dark-200 h-auto w-full flex flex-col items-center">
+            <div class="w-16 shadow shadow-xl rounded-full py-1 text-white"
+              :class="[productionOrder.delta < 60000 ? 'bg-red-700' : 'bg-emerald-400']">
+              {{ productionOrder.delta / 1000 }}
             </div>
-            <div class="text-gray-900 w-full h-full">
-              <div class="w-full py-2">
-                Componentes:
+            <div v-for="production in productionOrder.item" :key="production.id" class="w-full overflow-y-auto">
+              {{ production.display_name }}
+              <div class="w-full border-b border-black">
+                {{ production.product.display_name }}
               </div>
-              <div v-for="extra in production.component" :key="extra.display_name"
-                class="w-full flex text-xs  text-center">
-                {{ extra.display_name }} ({{ extra.qty }})
+              <div class="text-gray-900 w-full h-full">
+                <div class="w-full py-2">
+                  Componentes:
+                </div>
+                <div v-for="extra in production.component" :key="extra.display_name"
+                  class="w-full flex text-xs  text-center">
+                  {{ extra.display_name }} ({{ extra.qty }})
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </SwiperSlide>
-    </Swiper>
+        </SwiperSlide>
+      </Swiper>
+    </div>
+    <div v-else class="text-center text-lg font-bold text-gray-400">
+      No hay ordenes en fila
+    </div>
   </div>
 </template>

@@ -3,30 +3,18 @@
 import PosComponent from 'point_of_sale.PosComponent'
 import ControlButtonsMixin from 'point_of_sale.ControlButtonsMixin'
 import Registries from 'point_of_sale.Registries'
-import { onMounted, useExternalListener } from '@odoo/owl'
+import { useExternalListener } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
-import NumberBuffer from 'point_of_sale.NumberBuffer'
 import rpc from 'web.rpc'
 
 class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     setup() {
         super.setup();
-        useExternalListener(window, 'product-spawned', this.productSpawned);
         useExternalListener(window, 'click-pay', this._onClickPay);
         useExternalListener(window, 'click-send', this._onClickSend);
-        useExternalListener(window, 'clear-order', this._clearOrder);
+        useExternalListener(window, 'clear-order', this._onClearOrder);
         useExternalListener(window, 'click-sync-next-order', this._onClickNext);
         useListener('click-product', this._clickProduct);
-        NumberBuffer.use({
-            nonKeyboardInputEvent: 'numpad-click-input',
-            triggerAtInput: 'update-selected-orderline',
-            useWithBarcode: true,
-        });
-        onMounted(this.onMounted);
-        onMounted(() => NumberBuffer.reset());
-    }
-    onMounted() {
-        this.env.posbus.trigger('start-cash-control');
     }
     async _clickProduct(event) {
         let productTemplate = event.detail;
@@ -41,29 +29,44 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     get currentOrder() {
         return this.env.pos.get_order();
     }
-    get isEmployee(){
+    get isEmployee() {
         return this.env.pos.db.isEmployee;
     }
-    async productSpawned(event) {
-        NumberBuffer.reset();
-    }
-    _clearOrder(event) {
+    _onClearOrder(event) {
         let order = this.currentOrder;
         this.env.pos.removeOrder(order);
+        this.env.pos.add_new_order();
     }
-    _onClickPay() {
+    async _onClickPay() {
         this.createProductionSingle();
+        await this.setNextOrder();
         this.showScreen('PaymentScreen');
     }
     _onClickSend() {
         this.createProductionSingle();
         this.sendCurrentOrderToMainPoS();
+        let order = this.currentOrder;
+        this.env.pos.removeOrder(order);
+        this.env.pos.add_new_order();
     }
     _onClickNext() {
-        this.env.pos.removeOrder(this.currentOrder);
+        let order = this.currentOrder;
+        this.env.pos.removeOrder(order);
+        this.env.pos.add_new_order();
         this.fetchNextOrderFromQueue();
     }
+    async version() {
+        let response = await fetch("http://158.69.63.47:8080/version", {
+            method: "GET",
+            headers: {
+                "Accept": "*",
+                "Content-Type": "*"
+            },
+        });
+    }
+    /** everybody trigers production order alias:  MO / mrp.production / production / manufacturing order **/
     createProductionSingle() {
+        console.warn("Creating production single")
         let list_product = []
         let child_orderline = [];
         let order = this.currentOrder;
@@ -93,21 +96,18 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             // products with quantity > 1 should not end up in the same orderline because they are added 1 at a time by the ProductSpawernScreen
             // and the orderlines are not being merged
             // TODO: Test with data from the UI and determine wheter or not products with qty > 1 are reaching this loop
-            console.warn('order before sending mrp.production order')
-            console.log(order.id)
             for (let j = 0; j < orderlines[i].quantity; j++) {
-                let product_dict =
-                    list_product.push({
-                        'id': orderlines[i].product.id,
-                        'qty': 1,
-                        'product_tmpl_id': orderlines[i].product.product_tmpl_id,
-                        'pos_reference': order.name,
-                        'uom_id': orderlines[i].product.uom_id[0],
-                        'components': child_orderline
-                    });
+                list_product.push({
+                    'id': orderlines[i].product.id,
+                    'qty': 1,
+                    'product_tmpl_id': orderlines[i].product.product_tmpl_id,
+                    'pos_reference': order.name,
+                    'uom_id': orderlines[i].product.uom_id[0],
+                    'components': child_orderline
+                });
             }
         }
-        if (list_product.length == 0)
+        if (list_product.length === 0)
             return
         rpc.query({
             model: 'mrp.production',
@@ -115,38 +115,56 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             args: [1, list_product],
         });
     }
+    /** only customer **/
     async sendCurrentOrderToMainPoS() {
-        let order = this.currentOrder;
-        let orderlines = order.get_orderlines();
-        let parent_orderlines_id = [];
+        await this.version()
         let product_sync = this.env.pos.db.products_to_sync;
         let response = await fetch("http://158.69.63.47:8080/order", {
-            mode: 'no-cors',
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Accept": "*",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(product_sync)
         });
-        console.warn('order sent to main pos response');
+        console.warn('order sent to main pos... response:');
         console.log(response);
-        if (response.status === 200) {
-            this.env.pos.removeOrder(this.currentOrder);
-            this.env.pos.db.products_to_sync = [];
-        }
+        this.env.pos.db.products_to_sync = [];
     }
+    /** only employee **/
+    async setNextOrder() {
+        await this.version()
+        let order = this.currentOrder;
+        let uid = order.name;
+        let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
+            method: "POST",
+            headers: {
+                "Accept": "*",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ uid: `POS-${uid}`})
+        });
+      console.warn('sent next order uid') 
+      console.log(response)
+    }
+    /** only employee **/
     async fetchNextOrderFromQueue() {
+        await this.version()
         let response = await fetch("http://158.69.63.47:8080/order", {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
+                "Accept": "*",
+                "Content-Type": "application/json"
             },
         });
+        console.warn('fetched next order: response:')
+        console.log(response)
         if (response.status === 200) {
             let payload = await response.json();
             this.loadRemoteOrder(payload);
         }
     }
+    /** only employee **/
     async loadRemoteOrder(payload) {
         let product = this.env.pos.db.products_by_id[payload.product_id];
         let parent_orderline = await this._addProduct(product, payload.options);

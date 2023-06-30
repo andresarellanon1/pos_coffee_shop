@@ -5,6 +5,6 @@ import { patch } from 'web.utils'
 
 patch(ReceiptScreen.prototype, "getter/setter patch", {
     get nextScreen() {
-        return !this.error? 'ReceiptScreen' : 'ProducTemplateScreen';
+        return { name: 'ProductTemplateScreen' };
     }
 });

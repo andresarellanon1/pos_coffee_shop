@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="custom_product_screen.CustomOrderWidget" 
-        owl="1" >
-    <div class="order">
-        <t t-if="_orderlinesArray.length === 0">
-            <div class="order-empty">
-                <t t-if="isEmployee">
-                        Sin registros 
-                </t>
-                <t t-else="">
-                    <button t-on-click="() => this.trigger('click-sync-next-order')">
-                           Sincronizar siguiente 
-                    </button>
-                </t>
-            </div>
-        </t>
-        <t t-else="">
-            <ul class="orderlines">
-                <t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id">
-                    <Orderline line="orderline" />
-                </t>
-            </ul>
-            <div class="form-control-row">
-                <div  class="d-flex flex-row ">
-                    <OrderSummary order="order"/>
-                        <div class="d-flex align-items-end flex-column ">
-                        <button class="p-3 mb-2 bg-danger text-white rounded long-button" t-on-click="() => this.trigger('clear-order')">
-                            Cancelarrrrrrrrrrr 
-                        </button>
-                        
-                        <t t-if="isEmployee">
-                            <button class="p-3 mb-2 bg-success text-white rounded long-button" t-on-click="() => this.trigger('click-pay')">
-                                Terminar pedido
-                            </button>
-                        </t>
-                        <t t-else="" >
-                            <button  class="p-3 mb-2 bg-success text-white rounded long-button" t-on-click="() => this.trigger('click-send')">
-                                Terminar pedido
-                            </button>
-                        </t>
-                        </div>
-                </div>       
-            </div>
-        </t>
-    </div>
-   </t>
-</templates> 
+	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
+		<div class="order">
+			<t t-if="_orderlinesArray.length === 0">
+				<div class="order-empty">
+					Sin registros
+					<t t-if="isEmployee">
+						<button class="p-2 bg-primary text-white rounded " t-on-click="() => this.trigger('click-sync-next-order')">
+							Sincronizar siguiente
+						</button>
+					</t>
+				</div>
+			</t>
+			<t t-else="">
+				<ul class="orderlines">
+					<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id">
+						<Orderline line="orderline" />
+					</t>
+				</ul>
+				<div class="d-flex w-full">
+					<div class="order-summary-wrapper">
+						<OrderSummary order="order" />
+					</div>
+					<div class="d-flex align-items-end flex-column  w-full">
+						<button class="p-2 bg-danger text-white rounded long-button   " t-on-click="() => this.trigger('clear-order')">
+							CancelarR
+						</button>
+						<t t-if="isEmployee">
+							<button class="p-2 bg-success text-white rounded long-button  " t-on-click="() => this.trigger('click-pay')">
+								Terminar pedido
+							</button>
+						</t>
+						<t t-else="">
+							<button class="p-2  bg-success text-white rounded long-button " t-on-click="() => this.trigger('click-send')">
+								Terminar pedido
+							</button>
+						</t>
+					</div>
+				</div>
+				<div class="flex-grow w-full">
+					<div class="d-flex flex-row border w-full">
+						<t t-if="isEmployee">
+							<NumpadWidget activeMode="env.pos.numpadMode" />
+						</t>
+					</div>
+				</div>
+			</t>
+		</div>
+	</t>
+</templates>
