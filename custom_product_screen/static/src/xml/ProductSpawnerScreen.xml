@@ -16,8 +16,21 @@
                         <CustomRadioProductAttribute attribute="attribute"/>
                     </div> 
                     <div class="panel_extras">
+                    
                         <div t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" class="attribute">
+                            <!-- <t t-set="index" t-value="extra.id"/>
+                            
+                            <div>
+                             -->
                             <ExtraItem extra="extra"/>
+                            <!-- </div>
+
+                            <div>
+                             -->
+                            <ExtraItem extra="extra"/>
+                            <!-- </div> -->
+                            
+                            
                         </div>
                     </div>
                     <div class="pads">
