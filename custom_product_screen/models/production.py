@@ -9,9 +9,8 @@ class MrpProduction(models.Model):
         production = self.env['mrp.production'].search([('id', '=', id)])
         production.qty_producing = 1
         production._set_qty_producing()
-        resultado = production.button_mark_done() 
+        resultado = production.button_mark_done()
         return True
-
 
     def create_single_from_list(self, products):
         if not products:

@@ -161,7 +161,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         } catch (e) {
             console.error(e)
         }
-     }
+    }
     /** only employee **/
     async fetchNextOrderFromQueue() {
         try {

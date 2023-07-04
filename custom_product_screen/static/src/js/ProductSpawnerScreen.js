@@ -18,7 +18,7 @@ class ProductSpawnerScreen extends PosComponent {
         let extra_components = [];
         let draftPackLotLines, quantity;
         let price_extra = 0.0;
-        for(let attribute_component of this.env.attribute_components) {
+        for (let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue();
             selected_attributes.push(attribute);
             price_extra += attribute.price_extra;
@@ -26,7 +26,7 @@ class ProductSpawnerScreen extends PosComponent {
         for (let extra_component of this.env.extra_components) {
             let payload = extra_component.getValue();
             // ignore if component is 0 on UI
-            if(payload.count <= 0 || payload.count > 5) continue
+            if (payload.count <= 0 || payload.count > 5) continue
             component_products.push(payload);
             // accumulate extra component price on the main product
             price_extra += payload.lst_price;
@@ -35,9 +35,9 @@ class ProductSpawnerScreen extends PosComponent {
         // enforce 1 quantity created at a time
         let options = {
             draftPackLotLines,
-            quantity:1,
+            quantity: 1,
             price_extra: price_extra,
-            description: "" 
+            description: ""
         };
         let parent_orderline = await this._addProduct(product, options);
         // NOTE: I can not think of another way to accumulate the price_extra on the product before creating the orderline
@@ -51,7 +51,7 @@ class ProductSpawnerScreen extends PosComponent {
                 description: component.display_name,
             };
             let child_orderline = await this._addProduct(component.extra, options);
-            extra_components.push({product_id: component.extra.id, qty: component.count});
+            extra_components.push({ product_id: component.extra.id, qty: component.count });
             this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, component.extra);
         }
         // TODO: check if this session is sender prepare product to sync
