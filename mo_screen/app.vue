@@ -75,11 +75,36 @@ const checkInterval = () => {
       prod.delta -= 1000
   }
 }
+const fetchQueueCache = async () => {
+  const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+    }
+  });
+  if (version.value === null) return
+  const { data: queue } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionQueue', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+    }
+  });
+  const { data: cache } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionCache', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+    }
+  });
+  console.warn('QUEUE AND CACHE')
+  console.log(queue.value)
+  console.log(cache.value)
+}
 
 onMounted(() => {
   setInterval(() => {
     tock.value = 10
     syncOrders()
+    fetchQueueCache()
   }, SYNC_TIMEOUT_MAX)
   setInterval(() => {
     tock.value -= 1
