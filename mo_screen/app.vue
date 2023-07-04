@@ -61,6 +61,8 @@ const syncOrders = async () => {
       "Accept": "*",
     }
   });
+  console.warn('got production')
+  console.log(production.value)
   if (production.value !== null && Array.isArray(production.value) && production.value?.length > 0)
     productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX, done: false });
 }

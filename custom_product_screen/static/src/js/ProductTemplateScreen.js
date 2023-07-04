@@ -37,10 +37,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let order = this.currentOrder;
         this.env.pos.removeOrder(order);
         this.env.pos.add_new_order();
+        this.env.pos.db.products_to_sync = [];
     }
     async _onClickPay() {
-        this.createProductionSingle();
-        await this.setNextOrder();
+        this.createProductionSingle(); // TODO: prevent this line from happening if the PoS order just got fetched from the queue, maybe try to match uids
+        this.env.pos.db.products_to_sync = [];
+        await this.setNextOrder(); // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "cliente" session and not "employee" session
         this.showScreen('PaymentScreen');
     }
     _onClickSend() {
@@ -56,8 +58,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         this.env.pos.add_new_order();
         this.fetchNextOrderFromQueue();
     }
-    _Test() {
-    }
     async version() {
         try {
             let response = await fetch("http://158.69.63.47:8080/version", {
@@ -67,7 +67,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "*"
                 },
             });
-            console.log
         } catch (e) {
             console.error(e)
         }
@@ -143,12 +142,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.error(e)
         }
     }
-    /** only employee **/
+    /** only employee, this tells the manufacturing queue the order in which to bring the orders. The purpuso of this call is to imitate the way POST to /order pushes the UID at the end of the queue  **/
     async setNextOrder() {
         try {
             await this.version()
             let order = this.currentOrder;
-            let uid = order.name;
+            let uid = order.name; // this icludes de Order-uid format
             let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
                 method: "POST",
                 headers: {
@@ -162,7 +161,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         } catch (e) {
             console.error(e)
         }
-    }
+     }
     /** only employee **/
     async fetchNextOrderFromQueue() {
         try {
