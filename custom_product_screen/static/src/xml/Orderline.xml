@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    
-    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension"  owl="1">
-    <xpath expr="//li[hasclass('orderline')]" position="replace">
-        <div class="orderline-control-row">
-            <!-- img -->
-            <div class="form-control-col">
-                <div class="form-control-row">
-                    <div class="form-control form-control-title">
-                        <t t-esc="props.line.get_full_product_name()"/>
-                    </div>
-                    <div class="price">
-                        <t t-esc="env.pos.format_currency(props.line.get_display_price())"/>
-                    </div>
-                </div>
-                <t t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
-                    <div class="form-control-row" t-att-data-orderline-id="cline.id">
-                        <div class="form-control form-control-subtitle">
-                            <t t-esc="cline.product.display_name"/>
-                            (<t t-esc="cline.quantity"/>)
-                        </div>
-                        <div class="price">
-                            <t t-esc="env.pos.format_currency(cline.get_display_price())"/>
-                        </div>
-                    </div>
-                </t>
-            </div>
-        </div>
-    </xpath>
-   </t>
-</templates> 
+	<t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+		<xpath expr="//li[hasclass('orderline')]" position="replace">
+			<div class="container-fluid w-100 d-flex flex-column justify-content-start align-items-center flex-grow-1 ">
+				<div class="row w-100" t-attf-id="article_product_{{props.line.product.id}}">
+					<t t-esc="props.line.product.display_name" />
+					<t t-esc="env.pos.format_currency(props.line.get_display_price())" />
+				</div>
+				<div class="row w-100">
+					<div class="col-4 border">
+						<img t-att-src="imageUrl" t-att-alt="props.line.product.display_name" />
+					</div>
+					<div class="col-8 d-flex flex-column jutify-content-start align-items-start">
+						<t t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
+							<div class="col-12 d-flex jutify-content-between align-items-start" t-att-data-orderline-id="cline.id">
+								<t t-esc="cline.product.display_name" />
+								(
+								<t t-esc="cline.quantity" />
+								)
+								<t t-esc="env.pos.format_currency(cline.get_display_price())" />
+							</div>
+						</t>
+					</div>
+				</div>
+			</div>
+		</xpath>
+	</t>
+</templates>

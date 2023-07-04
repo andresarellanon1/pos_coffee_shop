@@ -22,7 +22,9 @@ class BaseAttribute extends PosComponent {
     // #F32417
     setChecked(event) {
         $(this.el).find('.checkmark-container').css("background-color", "#ddd");
+        $(this.el).find('.checkmark-container').css("color", "#000");
         $(this.el).find(event.target.parentElement).css("background-color", "#dc3545");
+        $(this.el).find(event.target.parentElement).css("color", "#fff");
     }
 }
 

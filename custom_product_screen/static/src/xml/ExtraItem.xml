@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="custom_product_screen.ExtraItem" owl="1" >
-        <div class="form-control-row form-control-padding" t-attf-id="extra_item_{{props.extra.id}}">
-                <div class="form-control border-0">
-                    <t t-esc="props.extra.display_name"/>
-                </div>
-                <div class="">
-                    <button class="rounded-circle bg-success text-white" t-on-click="() => this.removeExtra()"> - </button>
-                </div>
-                <div class="count-wrapper">
-                    <t t-esc="getCount" />
-                </div>
-                <div class="">
-                <button class="rounded-circle bg-success text-white" t-on-click="() => this.addExtra()"> + </button>    
-                </div>
-                <div class="form-control border-0 price-wrapper">
-                <span>($<t t-esc="getPriceExtra"/>)</span>
-                </div>
-            
-            </div>
-    </t>
-    
+	<t t-name="custom_product_screen.ExtraItem" owl="1">
+		<div t-attf-id="extra_item_{{props.extra.id}" class="flex-grow-1 d-flex w-100 justify-content-center align-items-center">
+			<div class="fs-7 flex-fill  label">
+				<t t-esc="props.extra.display_name" />
+			</div>
+			<div class="d-flex  label2 ">
+				<div class="button-extra">
+					<button class="rounded-circle bg-success text-white fs-4 fw-bold" t-on-click="() => this.removeExtra()">
+						-
+					</button>
+				</div>
+				<div class="fs-6" style="padding-top:10px;">
+					<t t-esc="getCount" />
+				</div>
+				<div class="button-extra ">
+					<button class="rounded-circle bg-success text-white fs-4 fw-bold" t-on-click="() => this.addExtra()">
+						+
+					</button>
+				</div>
+				<div class="border-0 fs-7" style="margin-left:10px; padding-top:10px;">
+					<span>
+						($
+						<t t-esc="getPriceExtra" />
+						)
+					</span>
+				</div>
+			</div>
+		</div>
+	</t>
 </templates>

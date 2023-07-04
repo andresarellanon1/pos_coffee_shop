@@ -1,79 +1,9 @@
-.form-control-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: between;
-    justify-items: center;
-    background: white;
-    width: 100%;
-}
-
-.form-control-padding {
-    padding: 2px 2px 16px 16px;
-}
-
-.form-control-col {
-    display: flex;
-    flex-direction: column;
-    padding: 2px 2px 2px 2px;
-    justify-content: center;
-    justify-items: center;
-    background: white;
-}
-
-.orderline-control-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: between;
-    justify-items: center;
-    width: 100%;
-}
-
-.justify-end {
-    justify-content: end;
-    justify-items: bottom;
-}
-
-.orderline-control-row {
-    border-bottom: solid 1px #bbb;
-}
-
-.form-control-title {
-    text-size: 16px;
-    font-style: oblique;
-}
-
-.form-control-subtitle {
-    text-size: 12px;
-    font-style: italic;
-}
-
-.form-control {
-    display: flex;
-    flex-direction: row;
-    justify-content: between;
+.match_bg {
+  background: #f0eeee;
 }
 
 .checkmark-container {
-    display: inline-block;
-    justify-content: center;
-    justify-items: center;
-    text-align: center;
-    position: relative;
     background-color: #ddd;
-    margin-left: 4px;
-    margin-right: 4px;
-    cursor: pointer;
-    width: 100%;
-}
-
-.checkmark-container label {
-    display: inline-block;
-    text-align: center;
-    cursor: pointer;
-    width: 100%;
-    padding: 8px 2px;
-    color: black;
-    font-size: 16px;
 }
 
 .checkmark-container input {
@@ -82,10 +12,11 @@
 
 
 .long-button {
-   width:100%; 
+   width:140%; 
    margin-bottom: 1px;
    margin-top: 15px;
-   margin-left: 100px;
+   margin-left: auto;
+   margin-right: 100%;
    
 }
 
@@ -102,10 +33,44 @@
     margin-left: 40px; /* Ajusta el valor según tus necesidades */
 }
 
+.button-extra {
+    margin-left: 5px;
+    margin-right: 5px; /* Ajusta el valor según tus necesidades */
+}
+
+.greenbg{
+    background-color: #29A55B;
+}
+
+
+.label {
+    margin-right: 30px;
+   /* Ajusta el valor según tus necesidades */
+}
+
+.label2{
+    margin-right: 10%;
+   
+   /* Ajusta el valor según tus necesidades */
+}
+
+
 
 .column {
     float: left;
     width: 50%;
     padding: 10px;
     height: 300px; /* Should be removed. Only for demonstration */
+  }
+
+.costados{
+    min-width: 100px;
+}
+
+
+.fs-7 {
+    font-size: .8rem !important;
+  }
+.fs-8 {
+    font-size: .8rem !important;
   }

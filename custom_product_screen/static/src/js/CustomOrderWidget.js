@@ -20,6 +20,8 @@ class CustomOrderWidget extends PosComponent {
     }
     onMounted() {
         this.env.posbus.trigger('start-cash-control');
+        if (!this.isEmployee)
+            $(document).find('.pos-topheader').addClass('oe_hidden');
     }
     productSpawned(event) {
         NumberBuffer.reset();

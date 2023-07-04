@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="custom_product_screen.ProductTemplateScreen" owl="1" >
-        <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
-            <div class="screen-full-width">
-                <div class="leftpane pane-border">
-                    <CustomOrderWidget/>
-                </div>
-                <div class="rightpane">
-                    <ProductTemplateWidget />
-                </div>
-            </div>
-        </div>
-    </t>
-
+	<t t-name="custom_product_screen.ProductTemplateScreen" owl="1">
+		<div class="container-fuild h-full d-flex" t-att-class="{ oe_hidden: !props.isShown }">
+			<div class="d-flex flex-column w-25 h-full flex-grow-1 border-end match_bg">
+				<CustomOrderWidget />
+			</div>
+			<div class="d-flex flex-column w-75 h-full flex-grow-1 match_bg px-2">
+				<ProductTemplateWidget />
+			</div>
+		</div>
+	</t>
 </templates>

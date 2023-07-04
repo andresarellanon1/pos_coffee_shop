@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-  <t t-name="custom_product_screen.ProductTemplateWidget" owl="1">
-    <div class="products-widget">
-      <div class="product-list-container">
-        <div t-if="productsTemplateToDisplay.length != 0" class="product-list">
-            <t t-foreach="productsTemplateToDisplay" t-as="product" t-key="product.id">
-              <ProductTemplateItem product="product" />
-            </t>
-        </div>
-      </div>
-    </div>
-   </t>
-</templates> 
+	<t t-name="custom_product_screen.ProductTemplateWidget" owl="1">
+		<div class="container-fluid">
+			<div class="row row-cols-6">
+				<t t-foreach="productsTemplateToDisplay" t-as="product" t-key="product.id">
+					<ProductTemplateItem product="product" />
+				</t>
+			</div>
+		</div>
+	</t>
+</templates>

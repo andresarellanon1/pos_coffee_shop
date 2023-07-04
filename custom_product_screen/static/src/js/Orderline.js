@@ -14,5 +14,9 @@ patch(Orderline.prototype, "getter/setter patch", {
                 child_orderlines.push(orderlines.find(or => or.id === product_extra_by_orderline[key].orderline_id)); // if current orderline is parent we push the object[key] by searching with the id on the orderline array
         }
         return child_orderlines;
+    },
+    get imageUrl() {
+        let product = this.props.line.product;
+        return `/web/image?model=product.template&id=${product.id}&field=image_128`;
     }
 });

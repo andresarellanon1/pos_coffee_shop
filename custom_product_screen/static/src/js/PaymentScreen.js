@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import ReceiptScreen from 'point_of_sale.ReceiptScreen'
+import PaymentScreen from 'point_of_sale.PaymentScreen'
 import { patch } from 'web.utils'
 
-patch(ReceiptScreen.prototype, "getter/setter patch", {
+patch(PaymentScreen.prototype, "getter/setter patch", {
     get nextScreen() {
-        return !this.error? 'ReceiptScreen' : 'ProducTemplateScreen';
+        return !this.error ? 'ReceiptScreen' : 'ProducTemplateScreen';
     }
 });

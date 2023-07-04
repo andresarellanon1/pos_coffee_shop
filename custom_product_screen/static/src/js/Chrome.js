@@ -9,5 +9,6 @@ patch(Chrome.prototype, "getter/setter patch", {
             console.warn('ui state not ready')
         }
         return { name: 'ProductTemplateScreen' }
-    },
+    }
 });
+

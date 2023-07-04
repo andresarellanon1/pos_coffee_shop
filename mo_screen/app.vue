@@ -91,7 +91,7 @@ onMounted(() => {
 <template>
   <div class="flex flex-col w-screen h-screen bg-gray-100 px-2 py-1">
     <div
-      class="bg-rose-500 shadow-xl absolute m-2 p-4 w-16 h-16 flex flex-col items-center justify-center font-bold text-white text-xl rounded-full top-0 right-0">
+      class="bg-gray-400 shadow-xl absolute m-2 p-4 w-16 h-16 flex flex-col items-center justify-center font-bold text-white text-xl rounded-full top-0 right-0">
       {{ tock }}
     </div>
     <div v-if="productionQueue?.length > 0">

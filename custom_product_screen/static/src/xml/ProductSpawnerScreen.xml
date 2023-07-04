@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
-    <t t-name="custom_product_screen.ProductSpawnerScreen" owl="1" >
-        <div class="product-screen screen">
-            <div class="screen-full-width">
-                <div class="leftpane pane-border">
-                    <CustomOrderWidget/>
-                </div>
-                <div class="rightpane">
-                    <div class="product-list">
-                        <ProductTemplateItem product="props.product"/>
-                    </div>
-                    <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
-                        <div class="attribute_name form-control-row" t-esc="attribute.name"/>
-                        <CustomRadioProductAttribute attribute="attribute"/>
-                    </div> 
-                    <div class="panel_extras">
-                    
-                        <div t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" class="attribute">
-                            <!-- <t t-set="index" t-value="extra.id"/>
-                            
-                            <div>
-                             -->
-                            <ExtraItem extra="extra"/>
-                            <!-- </div>
-
-                            <div>
-                             -->
-                            <ExtraItem extra="extra"/>
-                            <!-- </div> -->
-                            
-                            
-                        </div>
-                    </div>
-                    <div class="pads">
-                        <ProductSpawnerActionpad /> 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-    
+	<t t-name="custom_product_screen.ProductSpawnerScreen" owl="1">
+		<div class="w-100 h-100 d-flex">
+			<div class="d-flex flex-column w-25 h-full flex-grow-1 border-end match_bg">
+				<CustomOrderWidget />
+			</div>
+			<div class="d-flex flex-column w-75 h-full flex-grow-1 match_bg px-2">
+				<div class="container-fuild">
+					<div class="row flex-grow align-items-center">
+						<div class="col-2 col-md-4 h-full ">
+							<ProductTemplateItem product="props.product" />
+						</div>
+						<div class="col-10 col-md-8 h-full">
+							<div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id">
+								<div class="" t-esc="attribute.name" />
+								<CustomRadioProductAttribute attribute="attribute" />
+							</div>
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-6 d-flex flex-column justify-content-start align-items-stretch">
+							<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
+								<t t-if="extra_index%2 === 0">
+									<div class="row justify-content-center">
+										<ExtraItem extra="extra" />
+									</div>
+								</t>
+							</t>
+						</div>
+						<div class="col-6 d-flex flex-column justify-content-start align-items-stretch">
+							<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id">
+								<t t-if="extra_index%2 !== 0">
+									<div class="row justify-content-center">
+										<ExtraItem extra="extra" />
+									</div>
+								</t>
+							</t>
+						</div>
+					</div>
+				</div>
+				<div class="pads">
+					<ProductSpawnerActionpad />
+				</div>
+			</div>
+		</div>
+	</t>
 </templates>

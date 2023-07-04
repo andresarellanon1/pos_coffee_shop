@@ -14,6 +14,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useExternalListener(window, 'click-send', this._onClickSend);
         useExternalListener(window, 'clear-order', this._onClearOrder);
         useExternalListener(window, 'click-sync-next-order', this._onClickNext);
+        useExternalListener(window, 'test-click', this._Test);
         useListener('click-product', this._clickProduct);
     }
     async _clickProduct(event) {
@@ -55,14 +56,21 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         this.env.pos.add_new_order();
         this.fetchNextOrderFromQueue();
     }
+    _Test() {
+    }
     async version() {
-        let response = await fetch("http://158.69.63.47:8080/version", {
-            method: "GET",
-            headers: {
-                "Accept": "*",
-                "Content-Type": "*"
-            },
-        });
+        try {
+            let response = await fetch("http://158.69.63.47:8080/version", {
+                method: "GET",
+                headers: {
+                    "Accept": "*",
+                    "Content-Type": "*"
+                },
+            });
+            console.log
+        } catch (e) {
+            console.error(e)
+        }
     }
     /** everybody trigers production order alias:  MO / mrp.production / production / manufacturing order **/
     createProductionSingle() {
@@ -117,51 +125,63 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     /** only customer **/
     async sendCurrentOrderToMainPoS() {
-        await this.version()
-        let product_sync = this.env.pos.db.products_to_sync;
-        let response = await fetch("http://158.69.63.47:8080/order", {
-            method: "POST",
-            headers: {
-                "Accept": "*",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(product_sync)
-        });
-        console.warn('order sent to main pos... response:');
-        console.log(response);
-        this.env.pos.db.products_to_sync = [];
+        try {
+            await this.version()
+            let product_sync = this.env.pos.db.products_to_sync;
+            let response = await fetch("http://158.69.63.47:8080/order", {
+                method: "POST",
+                headers: {
+                    "Accept": "*",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(product_sync)
+            });
+            console.warn('order sent to main pos... response:');
+            console.log(response);
+            this.env.pos.db.products_to_sync = [];
+        } catch (e) {
+            console.error(e)
+        }
     }
     /** only employee **/
     async setNextOrder() {
-        await this.version()
-        let order = this.currentOrder;
-        let uid = order.name;
-        let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
-            method: "POST",
-            headers: {
-                "Accept": "*",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ uid: `POS-${uid}` })
-        });
-        console.warn('sent next order uid')
-        console.log(response)
+        try {
+            await this.version()
+            let order = this.currentOrder;
+            let uid = order.name;
+            let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
+                method: "POST",
+                headers: {
+                    "Accept": "*",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ uid: `POS-${uid}` })
+            });
+            console.warn('sent next order uid')
+            console.log(response)
+        } catch (e) {
+            console.error(e)
+        }
     }
     /** only employee **/
     async fetchNextOrderFromQueue() {
-        await this.version()
-        let response = await fetch("http://158.69.63.47:8080/order", {
-            method: "GET",
-            headers: {
-                "Accept": "*",
-                "Content-Type": "application/json"
-            },
-        });
-        console.warn('fetched next order: response:')
-        console.log(response)
-        if (response.status === 200) {
-            let payload = await response.json();
-            this.loadRemoteOrder(payload);
+        try {
+            await this.version()
+            let response = await fetch("http://158.69.63.47:8080/order", {
+                method: "GET",
+                headers: {
+                    "Accept": "*",
+                    "Content-Type": "application/json"
+                },
+            });
+            console.warn('fetched next order: response:')
+            console.log(response)
+            if (response.status === 200) {
+                let payload = await response.json();
+                this.loadRemoteOrder(payload);
+            }
+        } catch (e) {
+            console.error(e)
         }
     }
     /** only employee **/
