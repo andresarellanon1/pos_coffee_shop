@@ -8,12 +8,12 @@ patch(PosDB.prototype, "prototype patch", {
     init(options) {
         this.products_template_by_id = {}
         this.products_extra_by_orderline = {}
-        this.products_to_sync = []
+        this.orderlines_to_sync = []
         this.components_to_sync = []
         this.isEmployee = false
         this._super(options)
     },
-    add_products_templates: function(products) {
+    add_products_templates: function (products) {
         if (!(products instanceof Array)) {
             products = [products];
         }
@@ -24,7 +24,7 @@ patch(PosDB.prototype, "prototype patch", {
             this.products_template_by_id[product.id] = product;
         }
     },
-    get_product_template_by_menu: function(menu_id) {
+    get_product_template_by_menu: function (menu_id) {
         var list = [];
         let categ_id = this.get_categ_by_name('Bebida'); // TODO: move string literal to CONST string
         if (this.products_template_by_id) {
@@ -36,7 +36,7 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return list;
     },
-    get_product_by_attr: function(selected_attributes, product_template_id) {
+    get_product_by_attr: function (selected_attributes, product_template_id) {
         let product;
         let words = selected_attributes.map((value) => { return value.name });
         for (let key in this.product_by_id) {
@@ -48,7 +48,7 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return product;
     },
-    get_categ_by_name: function(name) {
+    get_categ_by_name: function (name) {
         let categ_id;
         for (let key in this.category_by_id) {
             if (this.category_by_id[key].name !== name) continue;
@@ -56,24 +56,22 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return categ_id;
     },
-    add_child_orderline: function(parent_orderline_id, orderline_id, product_id, childProduct) {
-        let value = {
+    add_child_orderline: function (parent_orderline_id, orderline_id, product_id, childProduct) {
+        this.products_extra_by_orderline[orderline_id] = {
             orderline_id: orderline_id,
             parent_orderline_id: parent_orderline_id,
             parent_product_id: product_id,
             child_product: childProduct,
         };
-        this.products_extra_by_orderline[orderline_id] = value;
     },
-    add_product_to_sync: function(uid, product_id, options, extra_components) {
-        this.products_to_sync.push({
-            uid: uid,
+    add_product_to_sync: function (product_id, options, extra_components) {
+        this.orderlines_to_sync.push({
             product_id: product_id,
             options: options,
-            components: extra_components
+            extra_components: extra_components
         })
     },
-    _isEmployee: async function() {
+    _isEmployee: async function () {
         this.isEmployee = await rpc.query({
             model: 'pos.config',
             method: 'type_user',
@@ -81,4 +79,3 @@ patch(PosDB.prototype, "prototype patch", {
         });
     }
 });
-

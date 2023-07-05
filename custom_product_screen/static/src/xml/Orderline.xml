@@ -5,7 +5,7 @@
 			<div class="container-fluid w-100 d-flex flex-column justify-content-start align-items-center flex-grow-1 ">
 				<div class="row w-100" t-attf-id="article_product_{{props.line.product.id}}">
 					<t t-esc="props.line.product.display_name" />
-					<t t-esc="env.pos.format_currency(props.line.get_display_price())" />
+					<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
 				</div>
 				<div class="row w-100">
 					<div class="col-4 border">

@@ -2,7 +2,8 @@
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
 		<div class="d-flex flex-column align-items-center w-100 justify-content-center ">
-			<div t-if="_orderlinesArray.length === 0" class="w-100">
+			<t t-esc="order.name" />
+			<div t-if="_orderlinesArray.length === 0" class="w-100 h-100 grid d-flex flex-column gap-4 justify-content-center align-items-center">
 				<div class="order-empty">
 					Sin registros
 				</div>
@@ -40,11 +41,9 @@
 						</t>
 					</div>
 				</div>
-				<t t-if="isEmployee">
-					<div class="flex-grow-1 w-100">
-						<NumpadWidget activeMode="env.pos.numpadMode" />
-					</div>
-				</t>
+				<div t-if="isEmployee" class="flex-grow-1 w-100">
+					<NumpadWidget activeMode="env.pos.numpadMode" />
+				</div>
 			</div>
 		</div>
 	</t>

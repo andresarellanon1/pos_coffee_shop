@@ -1,7 +1,16 @@
 /** @odoo-module **/
 
 import ReceiptScreen from 'point_of_sale.ReceiptScreen'
-import { patch } from 'web.utils'
+import Registries from 'point_of_sale.Registries'
 
-patch(ReceiptScreen.prototype, "getter/setter patch", {
-});
+const PosCoffeeReceiptScreen = ReceiptScreen =>
+    class extends ReceiptScreen {
+        //@override
+        get nextScreen() {
+            return { name: 'ProductTemplateScreen' };
+        };
+    };
+
+Registries.Component.extend(ReceiptScreen, PosCoffeeReceiptScreen);
+
+return ReceiptScreen;

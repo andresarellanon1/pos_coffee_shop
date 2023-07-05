@@ -3,7 +3,7 @@
 import PosComponent from 'point_of_sale.PosComponent'
 import ControlButtonsMixin from 'point_of_sale.ControlButtonsMixin'
 import Registries from 'point_of_sale.Registries'
-import { useExternalListener } from '@odoo/owl'
+import { useExternalListener, onMounted } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
 import rpc from 'web.rpc'
 
@@ -15,7 +15,15 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useExternalListener(window, 'clear-order', this._onClearOrder);
         useExternalListener(window, 'click-sync-next-order', this._onClickNext);
         useListener('click-product', this._clickProduct);
-        this.isFetchedOrder = [];
+        onMounted(this.onMounted);
+        this.skipNextMO = false;
+    }
+    onMounted() {
+        let order = this.currentOrder;
+        this.env.pos.removeOrder(order);
+        this.env.pos.add_new_order();
+        this.env.pos.db.products_extra_by_orderline = {};
+        this.env.pos.db.orderlines_to_sync = [];
     }
     async _clickProduct(event) {
         let productTemplate = event.detail;
@@ -37,41 +45,59 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let order = this.currentOrder;
         this.env.pos.removeOrder(order);
         this.env.pos.add_new_order();
-        this.env.pos.db.products_to_sync = [];
+        this.env.pos.db.products_extra_by_orderline = {};
+        this.env.pos.db.orderlines_to_sync = [];
     }
     async _onClickPay() {
-        if (!this.isFetchedOrder.includes(this.currentOrder.name))
-            this.createProductionSingle();
-        for (let key in product_extra_by_orderline) {
-            let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.product_extra_by_orderline[key].orderline_id)
-            this.currentOrder.remove_orderlines(orderline)
+        try {
+            console.warn('onClickPay')
+            console.log(this.skipNextMO)
+            if (!this.skipNextMO)
+                this.createProductionSingle();
+            this.skipNextMO = false;
+            // NOTE: do remove extra components orderlines before proceeding to payment screen to avoid duplicating stock.move (via stock.picking / mrp.production)
+            for (let key in this.env.pos.db.products_extra_by_orderline) {
+                let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.products_extra_by_orderline[key].orderline_id)
+                console.warn('deleting orderline before payment screen:')
+                console.log(orderline)
+                this.currentOrder.remove_orderline(orderline)
+            }
+            this.env.pos.db.products_extra_by_orderline = {};
+            this.env.pos.db.orderlines_to_sync = [];
+            // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "client" session and not "employee" session
+            await this.setNextOrder();
+            this.showScreen('PaymentScreen');
+        } catch (e) {
+            console.error(e)
         }
-        this.env.pos.db.products_extra_by_orderline = {};
-        this.env.pos.db.products_to_sync = [];
-        this.env.pos.db.components_to_sync = [];
-        // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "cliente" session and not "employee" session
-        await this.setNextOrder();
-        // NOTE: do remove extra components orderlines before proceeding to payment screen to avoid duplicating stock.move (via stock.picking / mrp.production)
-        this.showScreen('PaymentScreen');
     }
-    _onClickSend() {
-        this.createProductionSingle();
-        this.sendCurrentOrderToMainPoS();
-        this.env.pos.db.products_extra_by_orderline = {};
-        this.env.pos.db.products_to_sync = [];
-        this.env.pos.db.components_to_sync = [];
-        let order = this.currentOrder;
-        this.env.pos.removeOrder(order);
-        this.env.pos.add_new_order();
+    async _onClickSend() {
+        try {
+            this.skipNextMO = false;
+            this.createProductionSingle();
+            await this.sendCurrentOrderToMainPoS();
+            this.env.pos.db.products_extra_by_orderline = {};
+            this.env.pos.db.orderlines_to_sync = [];
+            let order = this.currentOrder;
+            this.env.pos.removeOrder(order);
+            this.env.pos.add_new_order();
+        } catch (e) {
+            console.error(e)
+        }
     }
-    _onClickNext() {
-        this.env.pos.db.products_extra_by_orderline = {};
-        this.env.pos.db.products_to_sync = [];
-        this.env.pos.db.components_to_sync = [];
-        let order = this.currentOrder;
-        this.env.pos.removeOrder(order);
-        this.env.pos.add_new_order();
-        this.fetchNextOrderFromQueue();
+    async _onClickNext() {
+        try {
+            this.skipNextMO = false;
+            this.env.pos.db.products_extra_by_orderline = {};
+            this.env.pos.db.orderlines_to_sync = [];
+            let order = this.currentOrder;
+            this.env.pos.removeOrder(order);
+            this.env.pos.add_new_order();
+            let payload = await this.fetchNextOrderFromQueue();
+            await this.loadRemoteOrder(payload)
+        } catch (e) {
+            console.error(e)
+        }
     }
     async version() {
         try {
@@ -140,18 +166,21 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async sendCurrentOrderToMainPoS() {
         try {
             await this.version()
-            let product_sync = this.env.pos.db.products_to_sync;
+            let orderlines_to_sync = this.env.pos.db.orderlines_to_sync;
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "POST",
                 headers: {
                     "Accept": "*",
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(product_sync)
+                body: JSON.stringify({
+                    name: this.currentOrder.name,
+                    uid: this.currentOrder.uid,
+                    orderlines: orderlines_to_sync
+                })
             });
             console.warn('sendCurrentOrderToMainPoS:');
             console.log(response);
-            this.env.pos.db.products_to_sync = [];
         } catch (e) {
             console.error(e)
         }
@@ -191,7 +220,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.log(response)
             if (response.status === 200) {
                 let payload = await response.json();
-                this.loadRemoteOrder(payload);
+                this.skipNextMO = true;
+                return payload
             }
         } catch (e) {
             console.error(e)
@@ -199,31 +229,35 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     /** only employee **/
     async loadRemoteOrder(orderPayload) {
-        console.warn('lloadRemoteOrder')
-        console.log(orderPayload)
-        this.isFetchedOrder.push(payload.name)
-        for (let payload of orderPayload.orderlines) {
-            let product = this.env.pos.db.product_by_id[payload.product_id];
-            let parent_orderline = await this._addProduct(product, payload.options);
-            // TODO: change order name and uid to payloads
-            // NOTE: ignoring the components when reading the remote order should be fine because the payload.options.extra_price should be the accumulated of
-            // the product.price and the extra components price, done when spawned in the origin PoS Session
-            // se we let this for loop here just to display the selected extra components in the OrderWidget
-            // NOTE: remove this orderlines right before writing the stock.piciking, can be skiped in ticket.
-            for (let component of payload.components) {
-                let extra = this.env.pos.db.product_by_id[component.product_id];
-                let options = {
-                    draftPackLotLines: undefined,
-                    quantity: component.qty,
-                    price_extra: 0.0,
-                    description: extra.display_name,
-                };
-                let child_orderline = await this._addProduct(extra, options);
-                this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, extra);
+        try {
+            console.warn('lloadRemoteOrder')
+            console.log(orderPayload)
+            this.currentOrder.name = orderPayload.name
+            this.currentOrder.uid = orderPayload.uid
+            for (let payload of orderPayload.orderlines) {
+                let product = this.env.pos.db.product_by_id[payload.product_id];
+                let parent_orderline = await this._addProduct(product, payload.options);
+                // NOTE: ignoring the components when reading the remote order should be fine because the payload.options.extra_price should be the accumulated of
+                // the product.price and the extra components price, done when spawned in the origin PoS Session
+                // se we let this for loop here just to display the selected extra components in the OrderWidget
+                // NOTE: remove this orderlines right before writing the stock.piciking, can be skiped in ticket.
+                for (let component of payload.extra_components) {
+                    let extra = this.env.pos.db.product_by_id[component.product_id];
+                    let options = {
+                        draftPackLotLines: undefined,
+                        quantity: component.qty,
+                        price_extra: 0.0,
+                        description: extra.display_name,
+                    };
+                    let child_orderline = await this._addProduct(extra, options);
+                    this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, extra);
+                }
             }
+            this.trigger('product-spawned');
+            this.trigger('close-temp-screen');
+        } catch (e) {
+            console.error(e)
         }
-        this.trigger('product-spawned');
-        this.trigger('close-temp-screen');
     }
     /* only use when fetching from queue */
     async _addProduct(product, options) {

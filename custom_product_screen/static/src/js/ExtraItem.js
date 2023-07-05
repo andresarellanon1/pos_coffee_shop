@@ -20,7 +20,7 @@ class ExtraItem extends PosComponent {
         return {
             extra: this.extra,
             count: this.state.count,
-            price_extra: this.price_extra
+            price_extra: this.state.price_extra
         };
     }
 

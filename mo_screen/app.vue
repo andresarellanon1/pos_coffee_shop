@@ -129,23 +129,22 @@ onMounted(() => {
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
         :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between">
         <SwiperSlide v-for="(productionOrder, index) in productionQueue" :key="index"
-          class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-sm cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
+          class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-xs cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
+          <div class="w-full justify-end text-end "
+            :class="[productionOrder.delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
+            {{ productionOrder.delta / 1000 }}
+          </div>
           <div class="text-dark-200 h-auto w-full flex flex-col items-center">
-            <div class="w-16 shadow shadow-xl rounded-full py-1 text-white"
-              :class="[productionOrder.delta < 60000 ? 'bg-red-700' : 'bg-emerald-400']">
-              {{ productionOrder.delta / 1000 }}
+            <div class="flex text-xs font-light font-sans">
+              {{ productionOrder.item[0].origin }}
             </div>
             <div v-for="production in productionOrder.item" :key="production.id" class="w-full overflow-y-auto">
-              {{ production.display_name }}
               <div class="w-full border-b border-black">
                 {{ production.product.display_name }}
               </div>
               <div class="text-gray-900 w-full h-full">
-                <div class="w-full py-2">
-                  Componentes:
-                </div>
                 <div v-for="extra in production.component" :key="extra.display_name"
-                  class="w-full flex text-xs  text-center">
+                  class="w-full flex font-light text-center">
                   <span v-if="extra.qty > 0"> {{ extra.display_name }} ({{ extra.qty }}) </span>
                 </div>
               </div>

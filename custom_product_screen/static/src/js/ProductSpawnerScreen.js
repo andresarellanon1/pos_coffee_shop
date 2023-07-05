@@ -21,15 +21,17 @@ class ProductSpawnerScreen extends PosComponent {
         for (let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue();
             selected_attributes.push(attribute);
-            price_extra += attribute.price_extra;
+            price_extra = price_extra + attribute.price_extra;
         };
         for (let extra_component of this.env.extra_components) {
             let payload = extra_component.getValue();
             // ignore if component is 0 on UI
             if (payload.count <= 0 || payload.count > 5) continue
             component_products.push(payload);
+            console.warn('extras payload')
+            console.log(payload)
             // accumulate extra component price on the main product
-            price_extra += payload.lst_price;
+            price_extra = price_extra + payload.price_extra;
         };
         let product = this.env.pos.db.get_product_by_attr(selected_attributes, this.product_template_id);
         // enforce 1 quantity created at a time
@@ -39,6 +41,10 @@ class ProductSpawnerScreen extends PosComponent {
             price_extra: price_extra,
             description: ""
         };
+        console.warn('spawning product:')
+        console.log(product)
+        console.warn('spawning options:')
+        console.log(options)
         let parent_orderline = await this._addProduct(product, options);
         // NOTE: I can not think of another way to accumulate the price_extra on the product before creating the orderline
         // and at the same iteration add the child orderline because the child orderline requieres the parent orderline which is to wait until the price_extra of all componentes accumulates to be created
@@ -54,9 +60,7 @@ class ProductSpawnerScreen extends PosComponent {
             extra_components.push({ product_id: component.extra.id, qty: component.count });
             this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, component.extra);
         }
-        // TODO: check if this session is sender prepare product to sync
-        let uid = `${this.currentOrder.uid}`
-        this.env.pos.db.add_product_to_sync(uid, product.id, options, extra_components);
+        this.env.pos.db.add_product_to_sync(product.id, options, extra_components);
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');
     }
