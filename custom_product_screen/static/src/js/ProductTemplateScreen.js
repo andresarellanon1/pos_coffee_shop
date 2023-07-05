@@ -14,8 +14,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useExternalListener(window, 'click-send', this._onClickSend);
         useExternalListener(window, 'clear-order', this._onClearOrder);
         useExternalListener(window, 'click-sync-next-order', this._onClickNext);
-        useExternalListener(window, 'test-click', this._Test);
         useListener('click-product', this._clickProduct);
+        this.isFetchedOrder = [];
     }
     async _clickProduct(event) {
         let productTemplate = event.detail;
@@ -40,9 +40,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         this.env.pos.db.products_to_sync = [];
     }
     async _onClickPay() {
-        this.createProductionSingle(); // TODO: prevent this line from happening if the PoS order just got fetched from the queue, maybe try to match uids
+        if(!this.isFetchedOrder.includes(this.currentOrder.name)
+            this.createProductionSingle(); // TODO: prevent this line from happening if the PoS order just got fetched from the queue, maybe try to match uids
         this.env.pos.db.products_to_sync = [];
-        await this.setNextOrder(); // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "cliente" session and not "employee" session
+        // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "cliente" session and not "employee" session
+        await this.setNextOrder();         
         this.showScreen('PaymentScreen');
     }
     _onClickSend() {
@@ -184,10 +186,18 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         }
     }
     /** only employee **/
-    async loadRemoteOrder(payloadArray) {
-        for (let payload of payloadArray) {
+    async loadRemoteOrder(orderPayload) {
+        console.warn('loading remote order:')
+        console.log(orderPayload)
+        this.isFetchedOrder.push(payload.name)
+        for (let payload of orderPayload.orderlines) {
             let product = this.env.pos.db.product_by_id[payload.product_id];
             let parent_orderline = await this._addProduct(product, payload.options);
+            // TODO: change order name and uid to payloads
+            // NOTE: ignoring the components when reading the remote order should be fine because the payload.options.extra_price should be the accumulated of
+            // the product.price and the extra components price, done when spawned in the origin PoS Session
+            // se we let this for loop here just to display the selected extra components in the OrderWidget
+            // NOTE: remove this orderlines right before writing the stock.piciking, can be skiped in ticket.
             for (let component of payload.components) {
                 let extra = this.env.pos.db.product_by_id[component.product_id];
                 let options = {
