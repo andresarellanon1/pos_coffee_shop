@@ -40,21 +40,34 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         this.env.pos.db.products_to_sync = [];
     }
     async _onClickPay() {
-        if(!this.isFetchedOrder.includes(this.currentOrder.name)
-            this.createProductionSingle(); // TODO: prevent this line from happening if the PoS order just got fetched from the queue, maybe try to match uids
+        if (!this.isFetchedOrder.includes(this.currentOrder.name))
+            this.createProductionSingle();
+        for (let key in product_extra_by_orderline) {
+            let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.product_extra_by_orderline[key].orderline_id)
+            this.currentOrder.remove_orderlines(orderline)
+        }
+        this.env.pos.db.products_extra_by_orderline = {};
         this.env.pos.db.products_to_sync = [];
+        this.env.pos.db.components_to_sync = [];
         // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "cliente" session and not "employee" session
-        await this.setNextOrder();         
+        await this.setNextOrder();
+        // NOTE: do remove extra components orderlines before proceeding to payment screen to avoid duplicating stock.move (via stock.picking / mrp.production)
         this.showScreen('PaymentScreen');
     }
     _onClickSend() {
         this.createProductionSingle();
         this.sendCurrentOrderToMainPoS();
+        this.env.pos.db.products_extra_by_orderline = {};
+        this.env.pos.db.products_to_sync = [];
+        this.env.pos.db.components_to_sync = [];
         let order = this.currentOrder;
         this.env.pos.removeOrder(order);
         this.env.pos.add_new_order();
     }
     _onClickNext() {
+        this.env.pos.db.products_extra_by_orderline = {};
+        this.env.pos.db.products_to_sync = [];
+        this.env.pos.db.components_to_sync = [];
         let order = this.currentOrder;
         this.env.pos.removeOrder(order);
         this.env.pos.add_new_order();
@@ -75,7 +88,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     /** everybody trigers production order alias:  MO / mrp.production / production / manufacturing order **/
     createProductionSingle() {
-        console.warn("Creating production single")
         let list_product = []
         let child_orderline = [];
         let order = this.currentOrder;
@@ -137,7 +149,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 },
                 body: JSON.stringify(product_sync)
             });
-            console.warn('order sent to main pos... response:');
+            console.warn('sendCurrentOrderToMainPoS:');
             console.log(response);
             this.env.pos.db.products_to_sync = [];
         } catch (e) {
@@ -158,7 +170,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 },
                 body: JSON.stringify({ uid: `POS-${uid}` })
             });
-            console.warn('sent next order uid')
+            console.warn('setNextOrder')
             console.log(response)
         } catch (e) {
             console.error(e)
@@ -175,7 +187,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "application/json"
                 },
             });
-            console.warn('fetched next order: response:')
+            console.warn('fetchNextOrderFromQueue')
             console.log(response)
             if (response.status === 200) {
                 let payload = await response.json();
@@ -187,7 +199,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     /** only employee **/
     async loadRemoteOrder(orderPayload) {
-        console.warn('loading remote order:')
+        console.warn('lloadRemoteOrder')
         console.log(orderPayload)
         this.isFetchedOrder.push(payload.name)
         for (let payload of orderPayload.orderlines) {
