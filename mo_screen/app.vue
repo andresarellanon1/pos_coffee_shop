@@ -26,6 +26,8 @@ interface Production {
 }
 const productionQueue = ref<{ item: Production[]; delta: number; done: boolean }[]>([])
 const markAsDone = async (production: Production[]) => {
+  try{
+  console.warn('mark as done')
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
@@ -45,6 +47,9 @@ const markAsDone = async (production: Production[]) => {
       if (done.value !== null && done.value === prod.id) continue;
       else break;
     }
+  } catch(e){
+    console.error(e)
+  }
 }
 const syncOrders = async () => {
   productionQueue.value = productionQueue.value.filter(element => !element.done);

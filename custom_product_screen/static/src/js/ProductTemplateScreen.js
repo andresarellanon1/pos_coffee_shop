@@ -3,7 +3,7 @@
 import PosComponent from 'point_of_sale.PosComponent'
 import ControlButtonsMixin from 'point_of_sale.ControlButtonsMixin'
 import Registries from 'point_of_sale.Registries'
-import { useExternalListener, onMounted } from '@odoo/owl'
+import { useExternalListener, onMounted, useState } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
 import rpc from 'web.rpc'
 
@@ -16,7 +16,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useExternalListener(window, 'click-sync-next-order', this._onClickNext);
         useListener('click-product', this._clickProduct);
         onMounted(this.onMounted);
-        this.skipNextMO = false;
+        this.state = useState({
+            skipNextMO: false,
+        });
+
     }
     onMounted() {
         let order = this.currentOrder;
@@ -38,6 +41,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     get currentOrder() {
         return this.env.pos.get_order();
     }
+    get skipNextMO(){
+        return this.state.skipNextMO;
+    }
     get isEmployee() {
         return this.env.pos.db.isEmployee;
     }
@@ -51,10 +57,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClickPay() {
         try {
             console.warn('onClickPay')
-            console.log(this.skipNextMO)
-            if (!this.skipNextMO)
+            console.log(this.state.skipNextMO)
+            if (!this.state.skipNextMO){
                 this.createProductionSingle();
-            this.skipNextMO = false;
+                await this.setNextOrder();
+            }
+            this.state.skipNextMO = false;
             // NOTE: do remove extra components orderlines before proceeding to payment screen to avoid duplicating stock.move (via stock.picking / mrp.production)
             for (let key in this.env.pos.db.products_extra_by_orderline) {
                 let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.products_extra_by_orderline[key].orderline_id)
@@ -65,7 +73,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.env.pos.db.products_extra_by_orderline = {};
             this.env.pos.db.orderlines_to_sync = [];
             // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "client" session and not "employee" session
-            await this.setNextOrder();
             this.showScreen('PaymentScreen');
         } catch (e) {
             console.error(e)
@@ -73,7 +80,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickSend() {
         try {
-            this.skipNextMO = false;
+            this.state.skipNextMO = false;
             this.createProductionSingle();
             await this.sendCurrentOrderToMainPoS();
             this.env.pos.db.products_extra_by_orderline = {};
@@ -87,7 +94,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickNext() {
         try {
-            this.skipNextMO = false;
+            this.state.skipNextMO = false;
             this.env.pos.db.products_extra_by_orderline = {};
             this.env.pos.db.orderlines_to_sync = [];
             let order = this.currentOrder;
@@ -114,16 +121,19 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     /** everybody trigers production order alias:  MO / mrp.production / production / manufacturing order **/
     createProductionSingle() {
-        let list_product = []
+        console.warn('creating production single');
+        let list_product = [];
         let child_orderline = [];
         let order = this.currentOrder;
+        console.log(order);
         let orderlines = order.get_orderlines()
-        let parent_orderlines_id = [];
+        let extras_orderlines_id = [];
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline;
         // get parent orderlines ids
         for (let key in product_extra_by_orderline) {
-            parent_orderlines_id.push(product_extra_by_orderline[key].parent_orderline_id);
+            extras_orderlines_id.push(product_extra_by_orderline);
         }
+
         // get child product list
         for (let index in orderlines) {
             for (let key in product_extra_by_orderline) {
@@ -134,8 +144,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     });
             }
         }
-        // get parent product list
-        orderlines = orderlines.filter(or => parent_orderlines_id.includes(or.id));
+        // filter mutate orderlines array to have only parent product list
+        orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id));
         for (let i in orderlines) {
             // NOTE: inner loop is to ensure product spliting, in theory the orderlines are not merged ergo it should work without this
             // but we opted to keep it in case somehow multiple products end up in the same orderline (merged)
@@ -220,7 +230,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.log(response)
             if (response.status === 200) {
                 let payload = await response.json();
-                this.skipNextMO = true;
+                this.state.skipNextMO = true;
                 return payload
             }
         } catch (e) {
