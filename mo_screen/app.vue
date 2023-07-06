@@ -97,8 +97,9 @@ const fetchQueueCache = async () => {
       "Accept": "*",
     }
   });
-  console.warn('QUEUE AND CACHE')
+  console.warn('QUEUE  ')
   console.log(queue.value)
+  console.warn('CACHE')
   console.log(cache.value)
 }
 
@@ -113,6 +114,9 @@ onMounted(() => {
     checkInterval()
   }, 1000)
 })
+const cardClick = (index: number)=>{
+  productionQueue.value[index].delta = 3000
+}
 </script>
 
 <template>
@@ -127,8 +131,8 @@ onMounted(() => {
         <div>{{ productionQueue?.length }}</div>
       </div>
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
-        :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between">
-        <SwiperSlide v-for="(productionOrder, index) in productionQueue" :key="index"
+        :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between cursor-pointer">
+        <SwiperSlide  v-for="(productionOrder, index) in productionQueue" :key="index" @click="cardClick(index)"
           class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-xs cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
           <div class="w-full justify-end text-end "
             :class="[productionOrder.delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
@@ -139,7 +143,8 @@ onMounted(() => {
               {{ productionOrder.item[0].origin }}
             </div>
             <div v-for="production in productionOrder.item" :key="production.id" class="w-full overflow-y-auto">
-              <div class="w-full border-b border-black">
+              <div class="w-full flex flex-col items-center justify-baseline border-b border-black">
+                {{ production.product.display_name }}
                 {{ production.product.display_name }}
               </div>
               <div class="text-gray-900 w-full h-full">
