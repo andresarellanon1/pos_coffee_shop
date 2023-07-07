@@ -3,22 +3,28 @@
 	<t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
 		<xpath expr="//li[hasclass('orderline')]" position="replace">
 			<div class="container-fluid w-100 d-flex flex-column justify-content-start align-items-center flex-grow-1 ">
-				<div class="row w-100" t-attf-id="article_product_{{props.line.product.id}}">
-					<t t-esc="props.line.product.display_name" />
-					<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
+				<div class="fw-bold d-flex w-100 justify-content-between" t-attf-id="article_product_{{props.line.product.id}}">
+					<span>
+						<t t-esc="props.line.product.display_name" />
+					</span>
+					<span>
+						<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
+					</span>
 				</div>
-				<div class="row w-100">
-					<div class="col-4 border">
-						<img t-att-src="imageUrl" t-att-alt="props.line.product.display_name" />
-					</div>
-					<div class="col-8 d-flex flex-column jutify-content-start align-items-start">
+				<div class="d-flex grid gap-1 w-100 justify-content-between p-0">
+					<img class="border rounded" width="80px" height="80px" t-att-src="imageUrl" t-att-alt="props.line.product.display_name" />
+					<div class="d-flex flex-grow-1 flex-column jutify-content-start align-items-start p-0">
 						<t t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
-							<div class="col-12 d-flex jutify-content-between align-items-start" t-att-data-orderline-id="cline.id">
-								<t t-esc="cline.product.display_name" />
-								(
-								<t t-esc="cline.quantity" />
-								)
-								<t t-esc="env.pos.format_currency(cline.get_display_price())" />
+							<div class="col-12 d-flex w-100 justify-content-between" t-att-data-orderline-id="cline.id">
+								<span>
+									<t t-esc="cline.product.display_name" />
+									(
+									<t t-esc="cline.quantity" />
+									)
+								</span>
+								<span>
+									<t t-esc="env.pos.format_currency(cline.get_display_price())" />
+								</span>
 							</div>
 						</t>
 					</div>

@@ -7,9 +7,11 @@ import rpc from 'web.rpc'
 patch(PosDB.prototype, "prototype patch", {
     init(options) {
         this.products_template_by_id = {}
+        this.boms_by_template_id = {}
+        this.bom_lines_by_bom_id = {}
         this.products_extra_by_orderline = {}
-        this.orderlines_to_sync = []
-        this.components_to_sync = []
+        this.orderlines_to_sync = [] // short lived, should empty after each transaction
+        this.components_to_sync = [] // same as above
         this.isEmployee = false
         this._super(options)
     },
@@ -23,6 +25,16 @@ patch(PosDB.prototype, "prototype patch", {
             if (product.id in this.products_template_by_id) continue;
             this.products_template_by_id[product.id] = product;
         }
+    },
+    add_boms: function (boms) {
+        for (let bom of boms) {
+            this.boms_by_template_id[bom.product_tmpl_id[0]] = bom;
+            this.bom_lines_by_bom_id[bom.id] = [];
+        }
+    },
+    add_bom_lines: function (lines) {
+        for (let line of lines)
+            this.bom_lines_by_bom_id[line.bom_id[0]].push(line);
     },
     get_product_template_by_menu: function (menu_id) {
         var list = [];

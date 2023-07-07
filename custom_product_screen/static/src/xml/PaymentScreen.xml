@@ -6,11 +6,11 @@
 				<div class="button back" t-on-click="() => this.showScreen('ProductTemplateScreen')">
 					<i class="fa fa-angle-double-left fa-fw">
 					</i>
-					<span class="back_text">
+					<span class="back_text shadow">
 						Back
 					</span>
 				</div>
-				<div class="top-content-center">
+				<div class="top-content-center shadow">
 					<h1>
 						Payment
 					</h1>

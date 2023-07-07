@@ -29,6 +29,9 @@ class PosSession(models.Model):
             'account.cash.rounding',
             'pos.payment.method',
             'account.fiscal.position',
+            'mrp.bom',
+            'mrp.bom.line',
+            'hr.employee'
         ]
 
         return models_to_load
@@ -59,11 +62,10 @@ class PosSession(models.Model):
 
     def _get_pos_ui_product_template(self, params):
         self = self.with_context(**params['context'])
-        print(params)
         products = self.env['product.template'].search_read(
             **params['search_params'])
         return products
-
+    # i dont remember what this does
     # def _process_pos_ui_product_template(self, products):
         # if self.config_id.currency_id != self.company_id.currency_id:
         #    for product in products:
@@ -93,9 +95,52 @@ class PosSession(models.Model):
                 'fields': [
                     'display_name', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking',
-                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active'
+                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'bom_ids'
                 ],
                 'order': 'sequence,default_code,name',
             },
             'context': {'display_default_code': False},
+        }
+
+    def _get_pos_ui_mrp_bom(self, params):
+        self = self.with_context(**params['context'])
+        boms = self.env['mrp.bom'].search_read(**params['search_params'])
+        return boms
+
+    def _loader_params_mrp_bom(self):
+        domain = []
+        return {
+            'search_params': {
+                'domain': domain,
+                'fields': [
+                    'display_name', 'bom_line_ids', 'consumption', 'id',
+                    'operation_ids', 'picking_type_id', 'picking_type_id',
+                    'picking_type_id', 'product_qty', 'code',
+                    'product_tmpl_id', 'product_uom_id', 'product_tmpl_id'
+
+                ],
+                'order': 'sequence,code,display_name',
+            },
+            'context': {'code': False},
+        }
+
+    def _get_pos_ui_mrp_bom_line(self, params):
+        self = self.with_context(**params['context'])
+        bom_lines = self.env['mrp.bom.line'].search_read(
+            **params['search_params'])
+        return bom_lines
+
+    def _loader_params_mrp_bom_line(self):
+        domain = []
+        return {
+            'search_params': {
+                'domain': domain,
+                'fields': [
+                    'display_name', 'bom_id',
+                    'id', 'product_id', 'product_qty',
+                    'product_tmpl_id', 'sequence', 'tracking'
+                ],
+                'order': 'sequence,display_name',
+            },
+            'context': {'code': False},
         }

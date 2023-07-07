@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
-		<div class="d-flex flex-column align-items-center w-100 justify-content-center ">
-			<t t-esc="order.name" />
+		<div class="grid d-flex w-100 h-100 flex-column align-items-center justify-content-center">
 			<div t-if="_orderlinesArray.length === 0" class="w-100 h-100 grid d-flex flex-column gap-4 justify-content-center align-items-center">
 				<div class="order-empty">
 					Sin registros
 				</div>
 				<t t-if="isEmployee">
-					<button class="btn btn-light" t-on-click="() => this.trigger('click-sync-next-order')">
+					<button class="w-75 btn border border-success text-success shadow" t-on-click="() => this.trigger('click-sync-next-order')">
 						Siguiente
 					</button>
 				</t>
 				<t t-else="">
 				</t>
 			</div>
-			<div t-else="" class="w-100 flex-grow-1">
-				<ul class="w-100 flex-grow-1 ">
+			<div t-else="" class="w-100 h-100 grid d-flex flex-column justify-content-center align-items-center">
+				<ul class="d-flex h-100 w-100 row container-fluid">
 					<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id">
 						<Orderline line="orderline" />
 					</t>
 				</ul>
-				<div class="d-flex row container-fluid">
-					<div class="col-4 align-self-start">
+				<div class="d-flex w-100 row container-fluid py-4">
+					<div class="col-7 d-flex flex-column">
 						<OrderSummary order="order" />
 					</div>
-					<div class="col-8 d-grid d-flex flex-column gap-1 justify-content-center align-items-end">
-						<button class="btn bg-danger text-white d-flex justify-content-center align-items-stretch flex-grow-1 " t-on-click="() => this.trigger('clear-order')">
+					<div class="col-5 d-flex flex-column grid gap-2">
+						<button class="btn border border-danger text-danger shadow d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('clear-order')">
 							Cancelar
 						</button>
 						<t t-if="isEmployee">
-							<button class="btn bg-success text-white d-flex justify-content-center align-items-stretch flex-grow-1 " t-on-click="() => this.trigger('click-pay')">
+							<button class="btn border border-success text-success shadow d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-pay')">
 								Terminar pedido
 							</button>
 						</t>
 						<t t-else="">
-							<button class="btn bg-success text-white d-flex justify-content-center align-items-stretch flex-grow-1" t-on-click="() => this.trigger('click-send')">
+							<button class="btn border border-success text-success shadow d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-send')">
 								Terminar pedido
 							</button>
 						</t>
 					</div>
 				</div>
-				<div t-if="isEmployee" class="flex-grow-1 w-100">
-					<NumpadWidget activeMode="env.pos.numpadMode" />
+				<div class="d-flex row container-fluid w-100">
+					<NumpadWidget t-if="isEmployee" activeMode="env.pos.numpadMode" />
 				</div>
+			</div>
+			<div class="fs-6 fst-italic fw-ligth">
+				<t t-esc="order.name" />
 			</div>
 		</div>
 	</t>

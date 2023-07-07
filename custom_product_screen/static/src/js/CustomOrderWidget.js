@@ -26,6 +26,9 @@ class CustomOrderWidget extends PosComponent {
     productSpawned(event) {
         NumberBuffer.reset();
     }
+    get skipNextMO() {
+        return this.state.skipNextMO;
+    }
     get order() {
         return this.env.pos.get_order();
     }
@@ -39,10 +42,6 @@ class CustomOrderWidget extends PosComponent {
             extras_orderlines_id.push(this.env.pos.db.products_extra_by_orderline[key].orderline_id);
         }
         let result = orderlines.filter(or => !extras_orderlines_id.includes(or.id));
-        console.warn('parent orderlines array');
-        console.log(result);
-        console.warn('current order')
-        console.log(this.env.pos.get_order())
         return result;
     }
 }

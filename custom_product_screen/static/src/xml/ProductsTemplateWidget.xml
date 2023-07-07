@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductTemplateWidget" owl="1">
 		<div class="container-fluid">
-			<div class="row row-cols-6">
+			<div class="row row-cols-6 grid gap-2 pt-2">
 				<t t-foreach="productsTemplateToDisplay" t-as="product" t-key="product.id">
 					<ProductTemplateItem product="product" />
 				</t>

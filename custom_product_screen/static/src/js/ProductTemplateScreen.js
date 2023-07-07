@@ -41,7 +41,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     get currentOrder() {
         return this.env.pos.get_order();
     }
-    get skipNextMO(){
+    get skipNextMO() {
         return this.state.skipNextMO;
     }
     get isEmployee() {
@@ -56,18 +56,14 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickPay() {
         try {
-            console.warn('onClickPay')
-            console.log(this.state.skipNextMO)
-            if (!this.state.skipNextMO){
+            if (!this.state.skipNextMO) {
                 this.createProductionSingle();
-                await this.setNextOrder();
+                await this.setNextOrder(3);
             }
             this.state.skipNextMO = false;
             // NOTE: do remove extra components orderlines before proceeding to payment screen to avoid duplicating stock.move (via stock.picking / mrp.production)
             for (let key in this.env.pos.db.products_extra_by_orderline) {
                 let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.products_extra_by_orderline[key].orderline_id)
-                console.warn('deleting orderline before payment screen:')
-                console.log(orderline)
                 this.currentOrder.remove_orderline(orderline)
             }
             this.env.pos.db.products_extra_by_orderline = {};
@@ -82,7 +78,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         try {
             this.state.skipNextMO = false;
             this.createProductionSingle();
-            await this.sendCurrentOrderToMainPoS();
+            await this.sendCurrentOrderToMainPoS(3);
             this.env.pos.db.products_extra_by_orderline = {};
             this.env.pos.db.orderlines_to_sync = [];
             let order = this.currentOrder;
@@ -100,13 +96,13 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             let order = this.currentOrder;
             this.env.pos.removeOrder(order);
             this.env.pos.add_new_order();
-            let payload = await this.fetchNextOrderFromQueue();
+            let payload = await this.fetchNextOrderFromQueue(3);
             await this.loadRemoteOrder(payload)
         } catch (e) {
             console.error(e)
         }
     }
-    async version() {
+    async version(retry) {
         try {
             let response = await fetch("http://158.69.63.47:8080/version", {
                 method: "GET",
@@ -115,13 +111,16 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "*"
                 },
             });
+            if (response.status === 200)
+                return
+            if (retry > 0)
+                await this.version(retry - 1)
         } catch (e) {
             console.error(e)
         }
     }
     /** everybody trigers production order alias:  MO / mrp.production / production / manufacturing order **/
     createProductionSingle() {
-        console.warn('creating production single');
         let list_product = [];
         let child_orderline = [];
         let order = this.currentOrder;
@@ -173,9 +172,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         });
     }
     /** only customer **/
-    async sendCurrentOrderToMainPoS() {
+    async sendCurrentOrderToMainPoS(retry) {
         try {
-            await this.version()
+            await this.version(3)
             let orderlines_to_sync = this.env.pos.db.orderlines_to_sync;
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "POST",
@@ -191,12 +190,16 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             });
             console.warn('sendCurrentOrderToMainPoS:');
             console.log(response);
+            if (response.status === 200)
+                return
+            if (retry > 0)
+                await this.sendCurrentOrderToMainPoS(retry - 1)
         } catch (e) {
             console.error(e)
         }
     }
     /** only employee, this tells the manufacturing queue the order in which to bring the orders. The purpuso of this call is to imitate the way POST to /order pushes the UID at the end of the queue  **/
-    async setNextOrder() {
+    async setNextOrder(retry) {
         try {
             await this.version()
             let order = this.currentOrder;
@@ -211,12 +214,16 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             });
             console.warn('setNextOrder')
             console.log(response)
+            if (response.status === 200)
+                return
+            if (retry > 0)
+                await this.setNextOrder(retry - 1)
         } catch (e) {
             console.error(e)
         }
     }
     /** only employee **/
-    async fetchNextOrderFromQueue() {
+    async fetchNextOrderFromQueue(retry) {
         try {
             await this.version()
             let response = await fetch("http://158.69.63.47:8080/order", {
@@ -233,6 +240,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 this.state.skipNextMO = true;
                 return payload
             }
+            if (retry > 0)
+                await this.fetchNextOrderFromQueue(retry - 1)
         } catch (e) {
             console.error(e)
         }
@@ -240,8 +249,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     /** only employee **/
     async loadRemoteOrder(orderPayload) {
         try {
-            console.warn('lloadRemoteOrder')
-            console.log(orderPayload)
             this.currentOrder.name = orderPayload.name
             this.currentOrder.uid = orderPayload.uid
             for (let payload of orderPayload.orderlines) {

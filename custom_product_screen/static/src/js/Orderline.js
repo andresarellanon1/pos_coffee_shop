@@ -17,6 +17,6 @@ patch(Orderline.prototype, "getter/setter patch", {
     },
     get imageUrl() {
         let product = this.props.line.product;
-        return `/web/image?model=product.template&id=${product.id}&field=image_128`;
+        return `/web/image?model=product.template&id=${product.product_tmpl_id}&field=image_128`;
     }
 });

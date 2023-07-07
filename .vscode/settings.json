@@ -5,5 +5,9 @@
         "titleBar.activeForeground": "#FBFBF9"
     },
     "eslint.format.enable": true,
-    "python.languageServer": "None"
+    "python.languageServer": "None",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none"
 }

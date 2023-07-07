@@ -2,7 +2,7 @@
 
 import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
-import { useSubEnv, useState, } from '@odoo/owl'
+import { useSubEnv } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
 
 class ProductSpawnerScreen extends PosComponent {
@@ -10,7 +10,7 @@ class ProductSpawnerScreen extends PosComponent {
         super.setup();
         this.product_template_id = this.props.product.id;
         useSubEnv({ attribute_components: [], extra_components: [] });
-        useListener('spawn-product', this.spawnProduct)
+        useListener('spawn-product', this.spawnProduct);
     }
     async spawnProduct(event) {
         let selected_attributes = [];
@@ -64,20 +64,19 @@ class ProductSpawnerScreen extends PosComponent {
         this.trigger('product-spawned');
         this.trigger('close-temp-screen');
     }
-
     async _addProduct(product, options) {
         return await this.currentOrder.add_product_but_well_done(product, options);
     }
-
     get currentOrder() {
         return this.env.pos.get_order();
     }
-
     get getDisplayExtras() {
         let categ_id = this.env.pos.db.get_categ_by_name('Extra');
-        let result = this.env.pos.db.get_product_by_category(categ_id);
-        //TODO: use this.product_template_id to fetch the bom and filter only extras aplicable to prod tmpl bom
-        return result;
+        let extra_products = this.env.pos.db.get_product_by_category(categ_id);
+        let bom = this.env.pos.db.boms_by_template_id[this.product_template_id];
+        let bom_lines = this.env.pos.db.bom_lines_by_bom_id[bom.id];
+        let bom_lines_product_ids = bom_lines.map(line => line.product_id[0])
+        return extra_products.filter(extra => bom_lines_product_ids.includes(extra.id))
     }
 }
 ProductSpawnerScreen.template = 'custom_product_screen.ProductSpawnerScreen';

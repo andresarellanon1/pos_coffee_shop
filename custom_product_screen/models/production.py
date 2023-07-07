@@ -55,6 +55,7 @@ class MrpProduction(models.Model):
             components = []
             for bom_line in mrp_order.bom_id.bom_line_ids:
                 print("--- bom line ---")
+                # TODO: BEGUD BOM LINES TO ONLY OBTAIN THE BOM LINES OF THE BOM FOR THE PRODUCT . PRODUCT AND NOT THE PRODUCT . TEMPLATE BECAUSE THE PRODUCT.TEMPLATE BOM HAS ALL THE VARIANTS BOM.LINES COMBINED
                 bom_line_qty = bom_line.product_qty  # default qty of BoM
                 _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
                     prod['components'])))  # check if bom_line is in components

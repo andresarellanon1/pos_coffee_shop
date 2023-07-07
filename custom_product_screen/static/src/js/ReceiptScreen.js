@@ -5,7 +5,6 @@ import Registries from 'point_of_sale.Registries'
 
 const PosCoffeeReceiptScreen = ReceiptScreen =>
     class extends ReceiptScreen {
-        //@override
         get nextScreen() {
             return { name: 'ProductTemplateScreen' };
         };
