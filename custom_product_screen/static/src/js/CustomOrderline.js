@@ -6,6 +6,6 @@ import PosComponent from 'point_of_sale.PosComponent'
 class CustomOrderline extends PosComponent {
 }
 
-CustomOrderline.template = 'custom_product_screen.CustomOrderline';
-Registries.Component.add(CustomOrderline);
+CustomOrderline.template = 'custom_product_screen.CustomOrderline'
+Registries.Component.add(CustomOrderline)
 

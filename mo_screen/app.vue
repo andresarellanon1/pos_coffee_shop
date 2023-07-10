@@ -2,7 +2,7 @@
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
 import 'swiper/css'
-import { ref, useFetch, useState } from '.nuxt/imports';
+import { ref, useFetch, useState } from '.nuxt/imports'
 import { TransitionRoot } from '@headlessui/vue'
 
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
@@ -24,7 +24,7 @@ interface Production {
     display_name: string
   }
 }
-const productionQueue = ref<{ item: Production[]; delta: number; done: boolean }[]>([])
+const productionQueue = ref<{ item: Production[] delta: number done: boolean }[]>([])
 const markAsDone = async (production: Production[]) => {
   try{
   console.warn('mark as done')
@@ -33,7 +33,7 @@ const markAsDone = async (production: Production[]) => {
     headers: {
       "Accept": "*",
     }
-  });
+  })
   if (version.value !== null)
     for (let prod of production) {
       const { data: done } = await useFetch<number>("http://158.69.63.47:8080/production", {
@@ -43,36 +43,36 @@ const markAsDone = async (production: Production[]) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ id: prod.id })
-      });
-      if (done.value !== null && done.value === prod.id) continue;
-      else break;
+      })
+      if (done.value !== null && done.value === prod.id) continue
+      else break
     }
   } catch(e){
     console.error(e)
   }
 }
 const syncOrders = async () => {
-  productionQueue.value = productionQueue.value.filter(element => !element.done);
+  productionQueue.value = productionQueue.value.filter(element => !element.done)
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
       "Accept": "*",
     }
-  });
+  })
   if (version.value === null) return
   const { data: production } = await useFetch<Production[]>('http://158.69.63.47:8080/production', {
     method: "GET",
     headers: {
       "Accept": "*",
     }
-  });
+  })
   console.warn('got production')
   console.log(production.value)
   if (production.value !== null && Array.isArray(production.value) && production.value?.length > 0)
-    productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX, done: false });
+    productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX, done: false })
 }
 const checkInterval = () => {
-  let buff = productionQueue.value;
+  let buff = productionQueue.value
   for (let prod of buff) {
     if (prod.delta <= 1000) {
       markAsDone(prod.item)
@@ -88,20 +88,20 @@ const fetchQueueCache = async () => {
     headers: {
       "Accept": "*",
     }
-  });
+  })
   if (version.value === null) return
   const { data: queue } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionQueue', {
     method: "GET",
     headers: {
       "Accept": "*",
     }
-  });
+  })
   const { data: cache } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionCache', {
     method: "GET",
     headers: {
       "Accept": "*",
     }
-  });
+  })
   console.warn('QUEUE  ')
   console.log(queue.value)
   console.warn('CACHE')

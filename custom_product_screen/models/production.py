@@ -53,17 +53,17 @@ class MrpProduction(models.Model):
             }
             mrp_order = self.sudo().create(vals)
             components = []
+            print("{0} {1} {2}".format(mrp_order,bom,mrp_order.product_id.display_name))
+            print("line | product | qty")
             for bom_line in mrp_order.bom_id.bom_line_ids:
-                print("--- bom line ---")
-                # TODO: BEGUD BOM LINES TO ONLY OBTAIN THE BOM LINES OF THE BOM FOR THE PRODUCT . PRODUCT AND NOT THE PRODUCT . TEMPLATE BECAUSE THE PRODUCT.TEMPLATE BOM HAS ALL THE VARIANTS BOM.LINES COMBINED
                 bom_line_qty = bom_line.product_qty  # default qty of BoM
                 _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
                     prod['components'])))  # check if bom_line is in components
                 if len(_prodComp) > 0:
-                    print("found component bom line")
                     bom_line_qty = _prodComp[0]['qty']
-                print(bom_line)
-                print(bom_line_qty)
+                elif not any(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
+                    bom_line_qty = 0 
+                print("{0} | {1} | {2}".format(bom_line.id, bom_line.product_id.display_name,bom_line_qty))
                 components.append((0, 0, {
                     'raw_material_production_id': mrp_order.id,
                     'name': mrp_order.name,

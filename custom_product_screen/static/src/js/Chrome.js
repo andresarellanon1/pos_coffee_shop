@@ -10,5 +10,5 @@ patch(Chrome.prototype, "getter/setter patch", {
         }
         return { name: 'ProductTemplateScreen' }
     }
-});
+})
 

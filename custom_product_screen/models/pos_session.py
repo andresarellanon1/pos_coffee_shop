@@ -136,7 +136,7 @@ class PosSession(models.Model):
             'search_params': {
                 'domain': domain,
                 'fields': [
-                    'display_name', 'bom_id',
+                    'display_name', 'bom_id', 'bom_product_template_attribute_value_ids',
                     'id', 'product_id', 'product_qty',
                     'product_tmpl_id', 'sequence', 'tracking'
                 ],

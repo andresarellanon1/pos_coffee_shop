@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import PosComponent from 'point_of_sale.PosComponent';
+import PosComponent from 'point_of_sale.PosComponent'
 import Registries from 'point_of_sale.Registries'
 
 class ProductTemplateItem extends PosComponent {
@@ -8,10 +8,10 @@ class ProductTemplateItem extends PosComponent {
         super.setup()
     }
     get imageUrl() {
-        let product = this.props.product;
-        return `/web/image?model=product.template&id=${product.id}&field=image_128`;
+        let product = this.props.product
+        return `/web/image?model=product.template&id=${product.id}&field=image_128`
     }
 }
 
-ProductTemplateItem.template = 'custom_product_screen.ProductTemplateItem';
+ProductTemplateItem.template = 'custom_product_screen.ProductTemplateItem'
 Registries.Component.add(ProductTemplateItem)
