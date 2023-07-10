@@ -4,7 +4,7 @@
 		<xpath expr="//li[hasclass('orderline')]" position="replace">
 			<div class="container-fluid w-100 d-flex flex-column justify-content-start align-items-center flex-grow-1 ">
 				<div class="fw-bold d-flex w-100 justify-content-between" t-attf-id="article_product_{{props.line.product.id}}">
-					<span>
+					<span class="text-xl">
 						<t t-esc="props.line.product.display_name" />
 					</span>
 					<span>

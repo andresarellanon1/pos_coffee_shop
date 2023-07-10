@@ -132,7 +132,7 @@ const cardClick = (index: number)=>{
     </div>
     <div v-if="productionQueue?.length > 0">
       <div class="flex space-x-2 w-full text-center justify-center">
-        <div>Ordenes en fila: </div>
+        <div>Órdenes de fabricación en fila: </div>
         <div>{{ productionQueue?.length }}</div>
       </div>
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
@@ -164,7 +164,7 @@ const cardClick = (index: number)=>{
       </Swiper>
     </div>
     <div v-else class="text-center text-lg font-bold text-gray-400">
-      No hay ordenes en fila
+      No hay órdenes de fabricación en fila
     </div>
   </div>
 </template>
