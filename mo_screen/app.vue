@@ -24,7 +24,7 @@ interface Production {
     display_name: string
   }
 }
-const productionQueue = ref<{ item: Production[] delta: number done: boolean }[]>([])
+const productionQueue = ref<{ item: Production[]; delta: number; done: boolean }[]>([])
 const markAsDone = async (production: Production[]) => {
   try{
   console.warn('mark as done')
