@@ -11,7 +11,7 @@
 						-
 					</button>
 				</div>
-				<div class="fs-6" style="padding-top:10px">
+				<div class="fs-6" style="padding-top:10px;">
 					<t t-esc="getCount" />
 				</div>
 				<div class="button-extra ">
@@ -19,7 +19,7 @@
 						+
 					</button>
 				</div>
-				<div class="border-0 fs-7" style="margin-left:10px padding-top:10px">
+				<div class="border-0 fs-7" style="margin-left:10px; padding-top:10px;">
 					<span>
 						($
 						<t t-esc="getPriceExtra" />

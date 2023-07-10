@@ -19,9 +19,7 @@ patch(PosDB.prototype, "prototype patch", {
         if (!(products instanceof Array)) {
             products = [products]
         }
-        // TODO: change to for(let obj of list) ES6
-        for (var i = 0, len = products.length i < len i++) {
-            var product = products[i]
+        for (let product of products) {
             if (product === null) continue
             if (product.id in this.products_template_by_id) continue
             this.products_template_by_id[product.id] = product
