@@ -81,27 +81,24 @@ class ProductSpawnerScreen extends PosComponent {
         let bom = this.env.pos.db.boms_by_template_id[this.product_template_id]
         let bom_lines = this.env.pos.db.bom_lines_by_bom_id[bom.id]
         // NOTE: enable show only extra components that apply to the variant in the BOM line
-        let selected_attributes_ids = []
+        let selected_attributes_values = []
         for (let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue()
-            selected_attributes_ids.push(attribute.id)
+            selected_attributes_ids.push(attribute)
         }
         // NOTE: Only 1 attribute required in the variant to allow the extra component (change to 'every' to make it strictly look for all attribute ids required in the variant to allow the extra component)
-        let bom_lines_variant = bom_lines.filter(line => line.bom_product_template_attribute_value_ids.some(att_id => selected_attributes_ids.includes(att_id)))
+        let selected_attributes_values_ids = selected_attributes_values.map(att => att.id)
+        let bom_lines_variant = bom_lines.filter(line => line.bom_product_template_attribute_value_ids.some(att_id => selected_attributes_values_ids.includes(att_id)))
         let bom_lines_variant_product_ids = bom_lines_variant.map(line => line.product_id[0])
         this.state.extra_components = extra_products.filter(extra => bom_lines_variant_product_ids.includes(extra.id))
-        console.warn('extra products') 
+        console.warn('Extra products pool:') 
         console.log(extra_products)
-        console.warn('bom_lines')
-        console.log(bom_lines)
-        console.warn('selected attribute ids')
-        console.log(selected_attributes_ids)
-        console.warn('variant bom lines')
-        console.log(bom_lines_variant)
+        console.warn('bom_lines:')
+        console.log(`${bom_lines.map(line => line.product_id[1])} ${bom_lines.map(line => line.product_id[0])}`)
+        console.warn('selected attribute ids:')
+        console.log(selected_attributes_values_ids)
         console.warn('variant bom lines product ids')
         console.log(bom_lines_variant_product_ids)
-        console.warn('computed extras')
-        console.log(this.state.extra_components)
     }
 }
 ProductSpawnerScreen.template = 'custom_product_screen.ProductSpawnerScreen'

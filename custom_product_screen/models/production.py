@@ -9,7 +9,7 @@ class MrpProduction(models.Model):
         production = self.env['mrp.production'].search([('id', '=', id)])
         production.qty_producing = 1
         production._set_qty_producing()
-        resultado = production.button_mark_done()
+        production.button_mark_done()
         return True
 
     def create_single_from_list(self, products):
@@ -53,7 +53,8 @@ class MrpProduction(models.Model):
             }
             mrp_order = self.sudo().create(vals)
             components = []
-            print("{0} {1} {2}".format(mrp_order,bom,mrp_order.product_id.display_name))
+            print("{0} {1} {2}".format(mrp_order, bom,
+                  mrp_order.product_id.display_name))
             print("line | product | qty")
             for bom_line in mrp_order.bom_id.bom_line_ids:
                 bom_line_qty = bom_line.product_qty  # default qty of BoM
@@ -62,8 +63,9 @@ class MrpProduction(models.Model):
                 if len(_prodComp) > 0:
                     bom_line_qty = _prodComp[0]['qty']
                 elif not any(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
-                    bom_line_qty = 0 
-                print("{0} | {1} | {2}".format(bom_line.id, bom_line.product_id.display_name,bom_line_qty))
+                    bom_line_qty = 0
+                print("{0} | {1} | {2}".format(bom_line.id,
+                      bom_line.product_id.display_name, bom_line_qty))
                 components.append((0, 0, {
                     'raw_material_production_id': mrp_order.id,
                     'name': mrp_order.name,
