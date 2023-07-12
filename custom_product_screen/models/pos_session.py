@@ -48,7 +48,7 @@ class PosSession(models.Model):
         res = {}
         for ptav in product_template_attribute_values:
             attribute_line_id = ptav.attribute_line_id
-            attribute_id = ptav.attribute_id
+            attribute_id = ptav.attribute_id[0]
             values = [
                 {
                     'id': ptav.id,
