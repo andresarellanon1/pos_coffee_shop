@@ -95,7 +95,7 @@ class ProductSpawnerScreen extends PosComponent {
         console.log(extra_products)
         console.warn('bom_lines_variant: [product (id)] ~ [attribute value ids]')
         for (let line of bom_lines) {
-            console.log(`[${line.product_id[0]}(${line.product[1]}] [${line.bom_product_template_attribute_value_ids}]`)
+            console.log(`[${line.product_id[0]}(${line.product_id[1]}] [${line.bom_product_template_attribute_value_ids}]`)
         }
         console.warn('selected attribute: [values ids]')
         console.log(selected_attributes_values_ids)
