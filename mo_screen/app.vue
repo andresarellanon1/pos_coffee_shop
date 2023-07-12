@@ -4,6 +4,7 @@ import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
 import 'swiper/css'
 import { ref, useFetch, useState } from '.nuxt/imports'
 import { TransitionRoot } from '@headlessui/vue'
+import { parsePayload } from 'nuxt/dist/app/composables/payload'
 
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
 const PRODUCTION_DELTA_MAX = 180000
@@ -24,10 +25,9 @@ interface Production {
     display_name: string
   }
 }
-const productionQueue = ref<{ item: Production[]; delta: number; done: boolean }[]>([])
+const productionQueue = ref<{ [key: string]: { origin: string; item: Production[]; delta: number; done: boolean } }>({})
 const markAsDone = async (production: Production[]) => {
   try {
-    console.warn('mark as done')
     const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
       method: "GET",
       headers: {
@@ -44,15 +44,16 @@ const markAsDone = async (production: Production[]) => {
           },
           body: JSON.stringify({ id: prod.id })
         })
-        if (done.value !== null && done.value === prod.id) continue
+        productionQueue.value[prod.origin].done = done.value !== null && done.value === prod.id
+        if (productionQueue.value[prod.origin].done) continue
         else break
       }
   } catch (e) {
     console.error(e)
   }
 }
+// fetch 1 order at a time (List<OrderPayload>)
 const syncOrders = async () => {
-  productionQueue.value = productionQueue.value.filter(element => !element.done)
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
@@ -66,18 +67,32 @@ const syncOrders = async () => {
       "Accept": "*",
     }
   })
-  if (production.value !== null && Array.isArray(production.value) && production.value?.length > 0)
-    productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX, done: false })
+  if (production.value !== null) {
+    if (Array.isArray(production.value) && production.value?.length > 0)
+      productionQueue.value[production.value[0].origin] = {
+        origin: production.value[0].origin,
+        item: production.value,
+        delta: PRODUCTION_DELTA_MAX,
+        done: false
+      }
+    console.error(production.value)
+    console.warn('Updated procution queue contains a key for the production origin of this batch')
+    console.log(Object.keys(productionQueue.value).find(q => production.value!![0].origin === q))
+    console.log(Object.keys(productionQueue.value))
+    console.log(production.value!![0].origin)
+    // TODO: FETCH CACHE AND COMPARE TO LOCAL STUFF
+    // NOTE: READ THE CACHE SEPARATED TO AVOID BREAKING THE QUEUEB production.value!![0].origin === q))
+    //delete productionQueue.value[production.value[0].origin] * /
+  }
 }
 const checkInterval = () => {
-  let buff = productionQueue.value
-  for (let prod of buff) {
-    if (prod.delta <= 1000) {
-      markAsDone(prod.item)
-      prod.done = true
-    }
+  for (let key in productionQueue.value) {
+    if (productionQueue.value[key].delta <= 1000)
+      markAsDone(productionQueue.value[key].item)
     else
-      prod.delta -= 1000
+      productionQueue.value[key].delta -= 1000
+    if (productionQueue.value[key].done)
+      delete productionQueue.value[key]
   }
 }
 /* const fetchQueueCache = async () => {
@@ -102,17 +117,19 @@ const checkInterval = () => {
   })
 } */
 
-onMounted(() => {
-  setInterval(() => {
-    tock.value = 10
-    syncOrders()
-  }, SYNC_TIMEOUT_MAX)
-  setInterval(() => {
-    tock.value -= 1
-    checkInterval()
-  }, 1000)
+const tick_interval = setInterval(() => {
+  syncOrders()
+}, SYNC_TIMEOUT_MAX)
+const tock_interval = setInterval(() => {
+  tock.value -= 1
+  if (tock.value === 0) tock.value = 10
+  checkInterval()
+}, 1000)
+onBeforeUnmount(() => {
+  clearInterval(tick_interval)
+  clearInterval(tock_interval)
 })
-const cardClick = (index: number) => {
+const cardClick = (index: string) => {
   productionQueue.value[index].delta = 3000
 }
 </script>
@@ -123,24 +140,24 @@ const cardClick = (index: number) => {
       class="bg-gray-400 shadow-xl absolute m-2 p-4 w-16 h-16 flex flex-col items-center justify-center font-bold text-white text-xl rounded-full top-0 right-0">
       {{ tock }}
     </div>
-    <div v-if="productionQueue?.length > 0">
+    <div v-if="Object.keys(productionQueue).length !== 0">
       <div class="flex space-x-2 w-full text-center justify-center">
         <div>Órdenes de fabricación en fila: </div>
         <div>{{ productionQueue?.length }}</div>
       </div>
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
         :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between cursor-pointer">
-        <SwiperSlide v-for="(productionOrder, index) in productionQueue" :key="index" @click="cardClick(index)"
+        <SwiperSlide v-for="key in Object.keys(productionQueue)" :key="key" @click="cardClick(key)"
           class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-xs cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
           <div class="w-full justify-end text-end "
-            :class="[productionOrder.delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
-            {{ productionOrder.delta / 1000 }}
+            :class="[productionQueue[key].delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
+            {{ productionQueue[key].delta / 1000 }}
           </div>
           <div class="text-dark-200 h-auto w-full flex flex-col items-center">
             <div class="flex text-xs font-light font-sans">
-              {{ productionOrder.item[0].origin }}
+              {{ productionQueue[key].item[0].origin }}
             </div>
-            <div v-for="production in productionOrder.item" :key="production.id" class="w-full overflow-y-auto">
+            <div v-for="production in productionQueue[key].item" :key="production.id" class="w-full overflow-y-auto">
               <div class="w-full flex flex-col items-center justify-baseline border-b border-black">
                 {{ production.product.display_name }}
                 {{ production.display_name }}

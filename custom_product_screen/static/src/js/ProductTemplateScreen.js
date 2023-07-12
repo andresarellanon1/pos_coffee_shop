@@ -17,7 +17,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useListener('click-product', this._clickProduct)
         onMounted(this.onMounted)
         this.state = useState({
-            skipNextMO: false,
+            orderlineSkipMO: [],
         })
 
     }
@@ -44,8 +44,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     get currentOrder() {
         return this.env.pos.get_order()
     }
-    get skipNextMO() {
-        return this.state.skipNextMO
+    get orderlineSkipMO() {
+        return this.state.orderlineSkipMO
     }
     get isEmployee() {
         return this.env.pos.db.isEmployee
@@ -59,11 +59,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickPay() {
         try {
-            if (!this.state.skipNextMO) {
-                this.createProductionSingle()
-                await this.setNextOrder(3)
-            }
-            this.state.skipNextMO = false
+            this.createProductionSingle()
+            await this.setNextOrder(3)
+            this.state.orderlineSkipMO = []
             // NOTE: do remove extra components orderlines before proceeding to payment screen to avoid duplicating stock.move (via stock.picking / mrp.production)
             for (let key in this.env.pos.db.products_extra_by_orderline) {
                 let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.products_extra_by_orderline[key].orderline_id)
@@ -79,9 +77,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickSend() {
         try {
-            this.state.skipNextMO = false
             this.createProductionSingle()
             await this.sendCurrentOrderToMainPoS(3)
+            this.state.orderlineSkipMO = []
             this.env.pos.db.products_extra_by_orderline = {}
             this.env.pos.db.orderlines_to_sync = []
             let order = this.currentOrder
@@ -93,7 +91,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickNext() {
         try {
-            this.state.skipNextMO = false
+            this.state.orderlineSkipMO = []
             this.env.pos.db.products_extra_by_orderline = {}
             this.env.pos.db.orderlines_to_sync = []
             let order = this.currentOrder
@@ -127,15 +125,22 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let list_product = []
         let child_orderline = []
         let order = this.currentOrder
-        console.log(order)
         let orderlines = order.get_orderlines()
         let extras_orderlines_id = []
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
+        // filter mutate orderlines array to have only locally spawned orderlines (do not create mrp.production for remotely loaded orderlines) 
+        console.warn('all orderline')
+        console.log(orderlines)
+        console.warn('banned orderline ids')
+        console.log(this.orderlineSkipMO)
+        orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
+        console.warn('creating production single')
+        console.warn('found local orderlines:')
+        console.log(orderlines)
         // get parent orderlines ids
         for (let key in product_extra_by_orderline) {
             extras_orderlines_id.push(product_extra_by_orderline)
         }
-
         // get child product list
         for (let index in orderlines) {
             for (let key in product_extra_by_orderline) {
@@ -191,8 +196,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     orderlines: orderlines_to_sync
                 })
             })
-            console.warn('sendCurrentOrderToMainPoS:')
-            console.log(response)
             if (response.status === 200)
                 return
             if (retry > 0)
@@ -215,8 +218,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 },
                 body: JSON.stringify({ uid: `POS-${uid}` })
             })
-            console.warn('setNextOrder')
-            console.log(response)
             if (response.status === 200)
                 return
             if (retry > 0)
@@ -236,11 +237,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "application/json"
                 },
             })
-            console.warn('fetchNextOrderFromQueue')
-            console.log(response)
             if (response.status === 200) {
                 let payload = await response.json()
-                this.state.skipNextMO = true
                 return payload
             }
             if (retry > 0)
@@ -257,6 +255,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             for (let payload of orderPayload.orderlines) {
                 let product = this.env.pos.db.product_by_id[payload.product_id]
                 let parent_orderline = await this._addProduct(product, payload.options)
+                this.state.orderlineSkipMO.push(parent_orderline)
                 // NOTE: ignoring the components when reading the remote order should be fine because the payload.options.extra_price should be the accumulated of
                 // the product.price and the extra components price, done when spawned in the origin PoS Session
                 // se we let this for loop here just to display the selected extra components in the OrderWidget
