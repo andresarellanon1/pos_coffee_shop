@@ -26,28 +26,28 @@ interface Production {
 }
 const productionQueue = ref<{ item: Production[]; delta: number; done: boolean }[]>([])
 const markAsDone = async (production: Production[]) => {
-  try{
-  console.warn('mark as done')
-  const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
-    method: "GET",
-    headers: {
-      "Accept": "*",
-    }
-  })
-  if (version.value !== null)
-    for (let prod of production) {
-      const { data: done } = await useFetch<number>("http://158.69.63.47:8080/production", {
-        method: "POST",
-        headers: {
-          "Accept": "*",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ id: prod.id })
-      })
-      if (done.value !== null && done.value === prod.id) continue
-      else break
-    }
-  } catch(e){
+  try {
+    console.warn('mark as done')
+    const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
+      method: "GET",
+      headers: {
+        "Accept": "*",
+      }
+    })
+    if (version.value !== null)
+      for (let prod of production) {
+        const { data: done } = await useFetch<number>("http://158.69.63.47:8080/production", {
+          method: "POST",
+          headers: {
+            "Accept": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ id: prod.id })
+        })
+        if (done.value !== null && done.value === prod.id) continue
+        else break
+      }
+  } catch (e) {
     console.error(e)
   }
 }
@@ -119,7 +119,7 @@ onMounted(() => {
     checkInterval()
   }, 1000)
 })
-const cardClick = (index: number)=>{
+const cardClick = (index: number) => {
   productionQueue.value[index].delta = 3000
 }
 </script>
@@ -137,7 +137,7 @@ const cardClick = (index: number)=>{
       </div>
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
         :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between cursor-pointer">
-        <SwiperSlide  v-for="(productionOrder, index) in productionQueue" :key="index" @click="cardClick(index)"
+        <SwiperSlide v-for="(productionOrder, index) in productionQueue" :key="index" @click="cardClick(index)"
           class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-xs cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
           <div class="w-full justify-end text-end "
             :class="[productionOrder.delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
@@ -150,7 +150,7 @@ const cardClick = (index: number)=>{
             <div v-for="production in productionOrder.item" :key="production.id" class="w-full overflow-y-auto">
               <div class="w-full flex flex-col items-center justify-baseline border-b border-black">
                 {{ production.product.display_name }}
-                {{ production.product.display_name }}
+                {{ production.display_name }}
               </div>
               <div class="text-gray-900 w-full h-full">
                 <div v-for="extra in production.component" :key="extra.display_name"
