@@ -44,10 +44,12 @@ class PosSession(models.Model):
         domain = [('attribute_id', 'in', product_attributes.mapped('id'))]
         product_template_attribute_values = self.env['product.template.attribute.value'].search(
             domain)
+
         def key(ptav): return (ptav.attribute_line_id.id, ptav.attribute_id.id)
         res = {}
-        for key, group in groupby(sorted(product_template_attribute_values, key=key)key=key):
-            attribute_line_id, attribute_id =  key
+        for key, group in groupby(
+                sorted(product_template_attribute_values, key=key), key=key):
+            attribute_line_id, attribute_id = key
             values = [
                 {
                     'id': ptav.id,
@@ -58,7 +60,7 @@ class PosSession(models.Model):
                     'html_color': ptav.html_color,
                     'is_custom': ptav.is_custom,
                     'price_extra': ptav.price_extra
-                } for ptav in group ]
+                } for ptav in group]
             res[attribute_line_id] = {
                 'id': attribute_line_id,
                 'name': product_attributes_by_id[attribute_id].name,
