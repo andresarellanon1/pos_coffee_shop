@@ -55,7 +55,7 @@ class PosSession(models.Model):
                     'name': ptav.name,
                     'display_name': ptav.display_name,
                     'display_type': ptav.display_type,
-                    'product_attribute_values': ptav.product_attribute_values,
+                    'product_attribute_value_id': ptav.product_attribute_value_id,
                     'html_color': ptav.html_color,
                     'is_custom': ptav.is_custom,
                     'price_extra': ptav.price_extra
