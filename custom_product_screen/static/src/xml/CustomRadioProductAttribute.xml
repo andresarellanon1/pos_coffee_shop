@@ -6,6 +6,7 @@
 				<label t-attf-for="{{ attribute.id }}_{{ value.id }}" class="d-flex font-bold checkmark-container btn border border-dark justify-content-center algin-items-center h-100 w-100 shadow">
 					<input type="radio" t-model="state.selected_value" t-on-click="($event) => this.setChecked($event)" t-att-name="attribute.id" t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id" />
 					<t t-esc="value.name" />
+					(<t t-esc="value.id" />)
 					<t t-if="value.price_extra">
 						<label t-attf-for="{{ attribute.id }}_{{ value.id }}">
 							<span class="price_extra">
