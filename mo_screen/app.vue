@@ -66,8 +66,6 @@ const syncOrders = async () => {
       "Accept": "*",
     }
   })
-  console.warn('got production')
-  console.log(production.value)
   if (production.value !== null && Array.isArray(production.value) && production.value?.length > 0)
     productionQueue.value.push({ item: production.value, delta: PRODUCTION_DELTA_MAX, done: false })
 }
@@ -82,7 +80,7 @@ const checkInterval = () => {
       prod.delta -= 1000
   }
 }
-const fetchQueueCache = async () => {
+/* const fetchQueueCache = async () => {
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
@@ -102,17 +100,12 @@ const fetchQueueCache = async () => {
       "Accept": "*",
     }
   })
-  console.warn('QUEUE  ')
-  console.log(queue.value)
-  console.warn('CACHE')
-  console.log(cache.value)
-}
+} */
 
 onMounted(() => {
   setInterval(() => {
     tock.value = 10
     syncOrders()
-    fetchQueueCache()
   }, SYNC_TIMEOUT_MAX)
   setInterval(() => {
     tock.value -= 1

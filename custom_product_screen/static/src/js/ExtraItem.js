@@ -2,7 +2,7 @@
 
 import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
-import { useState } from '@odoo/owl'
+import { useState, onMounted } from '@odoo/owl'
 // NOTE: EXTRAS ARE PRODUCT.PRODUCT INSTANCE
 class ExtraItem extends PosComponent {
     setup() {
@@ -15,7 +15,10 @@ class ExtraItem extends PosComponent {
             price_extra: 0.0,
         })
     }
-
+    reset() {
+        this.state.count = 0
+        this.state.price_extra = 0.0
+    }
     getValue() {
         return {
             extra: this.extra,

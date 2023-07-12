@@ -91,16 +91,9 @@ class ProductSpawnerScreen extends PosComponent {
         let bom_lines_variant = bom_lines.filter(line => selected_attributes_values_ids.some(att_id => line.bom_product_template_attribute_value_ids.includes(att_id)))
         let bom_lines_variant_product_ids = bom_lines_variant.map(line => line.product_id[0])
         this.state.extra_components = extra_products.filter(extra => bom_lines_variant_product_ids.includes(extra.id))
-        console.warn('selected attributes [value (id)]')
-        for (let attr of selected_attributes_values) {
-            console.log(`${attr.name} (${attr.id})`)
+        for (let extra_component of this.env.extra_components) {
+            extra_component.reset()
         }
-        console.warn('bom_lines_variant: [product (id)] ~ [attribute value ids]')
-        for (let line of bom_lines) {
-            console.log(`${line.product_id[1]}(${line.product_id[0]}) [${line.bom_product_template_attribute_value_ids}]`)
-        }
-        console.warn('variant bom lines: [products ids]')
-        console.log(bom_lines_variant_product_ids)
     }
 }
 ProductSpawnerScreen.template = 'custom_product_screen.ProductSpawnerScreen'
