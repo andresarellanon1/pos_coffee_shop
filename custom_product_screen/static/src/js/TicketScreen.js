@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-// import { patch } from 'web.utils'
 import TicketScreen from 'point_of_sale.TicketScreen'
 import Registries from 'point_of_sale.Registries'
 
-const TicketScreen = TicketScreen =>
+const PosCoffeeTicketScreen = TicketScreen =>
     class extends TicketScreen {
         get nextScreen() {
             return { name: 'ProductTemplateScreen' }
