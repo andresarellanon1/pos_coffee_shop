@@ -84,7 +84,7 @@ class ProductSpawnerScreen extends PosComponent {
         let selected_attributes_values = []
         for (let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue()
-            selected_attributes_ids.push(attribute)
+            selected_attributes_values.push(attribute)
         }
         // NOTE: Only 1 attribute required in the variant to allow the extra component (change to 'every' to make it strictly look for all attribute ids required in the variant to allow the extra component)
         let selected_attributes_values_ids = selected_attributes_values.map(att => att.id)
@@ -93,11 +93,13 @@ class ProductSpawnerScreen extends PosComponent {
         this.state.extra_components = extra_products.filter(extra => bom_lines_variant_product_ids.includes(extra.id))
         console.warn('Extra products pool:')
         console.log(extra_products)
-        console.warn('bom_lines:')
+        console.warn('bom_lines: [product, product id]')
         console.log(`${bom_lines.map(line => line.product_id[1])} ${bom_lines.map(line => line.product_id[0])}`)
-        console.warn('selected attribute ids:')
+        console.warn('bom_lines_variant: [product, product id]')
+        console.log(`${bom_lines_variant.map(line => line.product_id[1])} ${bom_lines.map(line => line.product_id[0])}`)
+        console.warn('selected attribute: [values ids]')
         console.log(selected_attributes_values_ids)
-        console.warn('variant bom lines product ids')
+        console.warn('variant bom lines: [products ids]')
         console.log(bom_lines_variant_product_ids)
     }
 }
