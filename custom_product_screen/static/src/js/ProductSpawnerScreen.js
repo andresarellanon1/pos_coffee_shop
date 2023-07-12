@@ -88,7 +88,7 @@ class ProductSpawnerScreen extends PosComponent {
         }
         // NOTE: Only 1 attribute required in the variant to allow the extra component (change to 'every' to make it strictly look for all attribute ids required in the variant to allow the extra component)
         let selected_attributes_values_ids = selected_attributes_values.map(att => att.id)
-        let bom_lines_variant = bom_lines.filter(line => line.bom_product_template_attribute_value_ids.some(att_id => selected_attributes_values_ids.includes(att_id)))
+        let bom_lines_variant = bom_lines.filter(line => selected_attributes_values_ids.some(att_id => line.bom_product_template_attribute_value_ids.includes(att_id)))
         let bom_lines_variant_product_ids = bom_lines_variant.map(line => line.product_id[0])
         this.state.extra_components = extra_products.filter(extra => bom_lines_variant_product_ids.includes(extra.id))
         console.warn('Extra products pool:')
