@@ -30,8 +30,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _clickProduct(event) {
         let productTemplate = event.detail
+        console.warn('clicked product')
+        console.log(this.env.pos.attributes_by_ptal_id[id])
         let attributes = _.map(productTemplate.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined)
+        console.log(attributes)
         this.trigger('close-temp-screen')
         await this.showTempScreen("ProductSpawnerScreen", {
             product: productTemplate,
