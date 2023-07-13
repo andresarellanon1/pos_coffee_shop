@@ -75,14 +75,6 @@ const syncOrders = async () => {
         delta: PRODUCTION_DELTA_MAX,
         done: false
       }
-    console.error(production.value)
-    console.warn('Updated procution queue contains a key for the production origin of this batch')
-    console.log(Object.keys(productionQueue.value).find(q => production.value!![0].origin === q))
-    console.log(Object.keys(productionQueue.value))
-    console.log(production.value!![0].origin)
-    // TODO: FETCH CACHE AND COMPARE TO LOCAL STUFF
-    // NOTE: READ THE CACHE SEPARATED TO AVOID BREAKING THE QUEUEB production.value!![0].origin === q))
-    //delete productionQueue.value[production.value[0].origin] * /
   }
 }
 const checkInterval = () => {
@@ -95,7 +87,7 @@ const checkInterval = () => {
       delete productionQueue.value[key]
   }
 }
-/* const fetchQueueCache = async () => {
+const fetchQueueCache = async () => {
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
@@ -103,22 +95,28 @@ const checkInterval = () => {
     }
   })
   if (version.value === null) return
-  const { data: queue } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionQueue', {
-    method: "GET",
-    headers: {
-      "Accept": "*",
-    }
-  })
+  // const { data: queue } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionQueue', {
+  //   method: "GET",
+  //   headers: {
+  //     "Accept": "*",
+  //   }
+  // })
   const { data: cache } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionCache', {
     method: "GET",
     headers: {
       "Accept": "*",
     }
   })
-} */
+  if (cache.value === null) return
+  for (let item of cache.value) {
+    if (Object.keys(productionQueue.value).find(k => item.origin === k)) continue
+    delete productionQueue.value[item.origin]
+  }
+}
 
 const tick_interval = setInterval(() => {
   syncOrders()
+  fetchQueueCache()
 }, SYNC_TIMEOUT_MAX)
 const tock_interval = setInterval(() => {
   tock.value -= 1
