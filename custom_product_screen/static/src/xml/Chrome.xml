@@ -3,7 +3,7 @@
 <templates id="template" xml:space="preserve">
 	<t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
 		<xpath expr="//div[hasclass('pos')]" position="inside">
-			<Transition visible="_isLoading" name="o-swing" leaveDuration="800" t-slot-scope="transition">
+			<Transition visible="_isLoading" name="'o-swing'" leaveDuration="800" t-slot-scope="transition">
 				<div class="loader" t-att-class="transition.className">
 					<div class="lds-ellipsis"><div></div><div></div><div></div></div>
 				</div>
