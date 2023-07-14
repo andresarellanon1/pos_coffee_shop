@@ -104,15 +104,14 @@ const fetchQueueCache = async () => {
   if (cache.value === null) return
   console.warn(cache.value)
   console.log(productionQueue.value)
-  // for (let key in cache.value) {
-  //   if (Object.keys(productionQueue.value).find(k => key === k)) continue
-  //   delete productionQueue.value[key]
-  // }
+  for (let key in cache.value) {
+    if (Object.keys(productionQueue.value).find(k => key === k)) continue
+    productionQueue.value[key].done = true
+  }
 }
 
 const tick_interval = setInterval(() => {
-  syncOrders()
-  fetchQueueCache()
+  syncOrders().then(() => fetchQueueCache())
 }, SYNC_TIMEOUT_MAX)
 const tock_interval = setInterval(() => {
   tock.value -= 1
