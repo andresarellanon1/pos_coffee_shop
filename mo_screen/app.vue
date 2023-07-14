@@ -95,12 +95,6 @@ const fetchQueueCache = async () => {
     }
   })
   if (version.value === null) return
-  // const { data: queue } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionQueue', {
-  //   method: "GET",
-  //   headers: {
-  //     "Accept": "*",
-  //   }
-  // })
   const { data: cache } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionCache', {
     method: "GET",
     headers: {
@@ -108,6 +102,7 @@ const fetchQueueCache = async () => {
     }
   })
   if (cache.value === null) return
+  console.warn(cache.value)
   for (let item of cache.value) {
     if (Object.keys(productionQueue.value).find(k => item.origin === k)) continue
     delete productionQueue.value[item.origin]
