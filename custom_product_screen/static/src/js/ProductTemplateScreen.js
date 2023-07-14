@@ -203,13 +203,13 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             for (let key in product_extra_by_orderline) {
                 extras_orderlines_id.push(key)
             }
-            let origins = orderlines.filter(or => !extras_orderlines_id.includes(or.id)).map(m => `POS-${m.name}`)
+            orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
             console.warn('found origins')
-            console.log(origins)
+            console.log(orderlines)
             let production_ids = await this.rpc({
                 model: 'mrp.production',
                 method: 'search',
-                args: [['origin', 'in', origins]]
+                args: [['origin', 'like', `POS-${order.name}`]]
             })
             console.warn('found production')
             console.log(origins)
