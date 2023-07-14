@@ -203,6 +203,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         try {
             await this.version(3)
             let orderlines_to_sync = this.env.pos.db.orderlines_to_sync
+            console.warn('sending to main pos')
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "POST",
                 headers: {
@@ -220,6 +221,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 return
             if (retry > 0)
                 await this._sendOrder(retry - 1)
+            console.warn(response)
         } catch (e) {
             throw e
         }
