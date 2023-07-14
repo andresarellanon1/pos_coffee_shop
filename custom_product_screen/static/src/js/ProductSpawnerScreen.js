@@ -17,6 +17,7 @@ class ProductSpawnerScreen extends PosComponent {
         })
     }
     async spawnProduct(event) {
+        this.trigger('show-loader')
         let selected_attributes = []
         let component_products = []
         let extra_components = []
@@ -72,20 +73,18 @@ class ProductSpawnerScreen extends PosComponent {
         return this.state.extra_components
     }
     _computeExtras(event) {
-        // NOTE: Any changes to this block may result in undesired stock.move/stock.move.line
-        // NOTE: Side effect: By using our list filtered by category 'Extra' required components are ignored since they're not extras
+        // WARNING: Any changes to this block may result in undesired stock.move/stock.move.line
+        // WARNING: Side effect: By using our list filtered by category 'Extra' required components are ignored since they're not extras
         // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed
         let categ_id = this.env.pos.db.get_categ_by_name('Extra')
         let extra_products = this.env.pos.db.get_product_by_category(categ_id)
         let bom = this.env.pos.db.boms_by_template_id[this.product_template_id]
         let bom_lines = this.env.pos.db.bom_lines_by_bom_id[bom.id]
-        // NOTE: enable show only extra components that apply to the variant in the BOM line
         let selected_attributes_values = []
         for (let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue()
             selected_attributes_values.push(attribute)
         }
-        // NOTE: Only 1 attribute required in the variant to allow the extra component (change to 'every' to make it strictly look for all attribute ids required in the variant to allow the extra component)
         let selected_attributes_values_ids = selected_attributes_values.map(att => att.id)
         let bom_lines_variant = bom_lines.filter(line => selected_attributes_values_ids.some(att_id => line.bom_product_template_attribute_value_ids.includes(att_id)))
         let bom_lines_variant_product_ids = bom_lines_variant.map(line => line.product_id[0])

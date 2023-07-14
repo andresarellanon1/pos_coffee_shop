@@ -11,6 +11,7 @@ patch(Chrome.prototype, "constructor patch", {
             isLoading: false
         })
         useExternalListener(window, 'show-loader', this._onShowLoader)
+        useExternalListener(window, 'hide-loader', this._onHideLoader)
     }
 })
 
@@ -23,9 +24,15 @@ patch(Chrome.prototype, "getter/setter patch", {
     },
     get _isLoading() {
         return this.stateLoading.isLoading
+    }
+})
+
+patch(Chrome.prototype, "prototype patch", {
+    _onShowLoader: function() {
+        this.stateLoading.isLoading = true
     },
-   set _onShowLoader(){
-    
+    _onHideLoader: function() {
+        this.stateLoading.isLoading = true
     }
 })
 

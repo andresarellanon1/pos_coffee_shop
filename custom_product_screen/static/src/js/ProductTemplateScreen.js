@@ -48,20 +48,17 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         return this.env.pos.db.isEmployee
     }
     _onClearOrder(event) {
+        this.trigger('show-loader')
         let order = this.currentOrder
         this._clearMrpProduction(order)
         this.env.pos.removeOrder(order)
         this.env.pos.add_new_order()
         this.env.pos.db.products_extra_by_orderline = {}
         this.env.pos.db.orderlines_to_sync = []
-        //TODO: 
-        // Deterime if for each orderline of the orderline already has a MO 
-        // MO should exists if this is a remotely loaded orderline
-        // Obtain Mrp.production correct ids to unlink
-        // Call rpc[mrp.production.unlink(ids)]
     }
     async _onClickPay() {
         try {
+            this.trigger('show-loader')
             this.createProductionSingle()
             await this.setNextOrder(3)
             this.state.orderlineSkipMO = []
@@ -72,7 +69,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             }
             this.env.pos.db.products_extra_by_orderline = {}
             this.env.pos.db.orderlines_to_sync = []
-            // NOTE: THis is required since the POST to /order (which sets the next UID to the production queue) only triggers from "client" session and not "employee" session
             this.showScreen('PaymentScreen')
         } catch (e) {
             console.error(e)
@@ -80,6 +76,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickSend() {
         try {
+            this.trigger('show-loader')
             this.createProductionSingle()
             await this.sendCurrentOrderToMainPoS(3)
             this.state.orderlineSkipMO = []
@@ -94,6 +91,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _onClickNext() {
         try {
+            this.trigger('show-loader')
             this.state.orderlineSkipMO = []
             this.env.pos.db.products_extra_by_orderline = {}
             this.env.pos.db.orderlines_to_sync = []
@@ -115,6 +113,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "*"
                 },
             })
+            this.trigger('hide-loader')
             if (response.status === 200)
                 return
             if (retry > 0)
@@ -133,9 +132,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
         // filter mutate orderlines array to have only locally spawned orderlines (do not create mrp.production for remotely loaded orderlines) 
         orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
-        // get parent orderlines ids
         for (let key in product_extra_by_orderline) {
-            extras_orderlines_id.push(product_extra_by_orderline[key].id)
+            extras_orderlines_id.push(key)
         }
         // get child product list
         for (let index in orderlines) {
@@ -147,7 +145,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     })
             }
         }
-        // filter mutate orderlines array to have only parent product list
+        // Only parent product list maped to MO
         orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
         for (let i in orderlines) {
             // NOTE: inner loop is to ensure product spliting, in theory the orderlines are not merged ergo it should work without this
@@ -174,8 +172,14 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             method: 'create_single_from_list',
             args: [1, list_product],
         })
+        this.trigger('hide-loader')
     }
     _clearMrpProduction() {
+        // Deterime if for each orderline of the orderline already has a MO 
+        // MO should exists if this is a remotely loaded orderline
+        // Obtain Mrp.production correct ids to unlink
+        // Call rpc[mrp.production.unlink(ids)]
+
         let order = this.currentOrder
         let orderlines = order.get_orderlines()
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
@@ -188,6 +192,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             method: 'create_single_from_list',
             args: [1, mo_ids],
         })
+        this.trigger('hide-loader')
     }
     /** only customer **/
     async sendCurrentOrderToMainPoS(retry) {
@@ -206,6 +211,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     orderlines: orderlines_to_sync
                 })
             })
+            this.trigger('hide-loader')
             if (response.status === 200)
                 return
             if (retry > 0)
@@ -247,6 +253,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "application/json"
                 },
             })
+            this.trigger('hide-loader')
             if (response.status === 200) {
                 let payload = await response.json()
                 return payload
