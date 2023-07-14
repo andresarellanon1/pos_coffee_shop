@@ -95,7 +95,7 @@ const fetchQueueCache = async () => {
     }
   })
   if (version.value === null) return
-  const { data: cache } = await useFetch<Production[]>('http://158.69.63.47:8080/getProductionCache', {
+  const { data: cache } = await useFetch<{ [key: string]: Production[] }>('http://158.69.63.47:8080/getProductionCache', {
     method: "GET",
     headers: {
       "Accept": "*",
