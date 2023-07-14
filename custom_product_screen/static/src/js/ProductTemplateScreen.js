@@ -205,8 +205,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             }
             orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
             console.warn('found origins')
-            console.log(order.origin)
             let origin = `POS-${order.name}`
+            console.log(origin)
             let production_ids = await this.rpc({
                 model: 'mrp.production',
                 method: 'search',
