@@ -104,8 +104,8 @@ const fetchQueueCache = async () => {
   if (cache.value === null) return
   console.warn(cache.value)
   console.log(productionQueue.value)
-  for (let key in cache.value) {
-    if (Object.keys(productionQueue.value).find(k => key === k)) continue
+  for (let key in productionQueue.value) {
+    if (Object.keys(cache.value).find(k => key === k)) continue
     productionQueue.value[key].done = true
   }
 }
