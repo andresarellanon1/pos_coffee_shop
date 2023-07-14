@@ -102,10 +102,9 @@ const fetchQueueCache = async () => {
     }
   })
   if (cache.value === null) return
-  console.warn(cache.value)
-  for (let item of cache.value) {
-    if (Object.keys(productionQueue.value).find(k => item.origin === k)) continue
-    delete productionQueue.value[item.origin]
+  for (let key in cache.value) {
+    if (Object.keys(productionQueue.value).find(k => key === k)) continue
+    delete productionQueue.value[key]
   }
 }
 
