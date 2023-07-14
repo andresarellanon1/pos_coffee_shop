@@ -217,11 +217,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 })
             })
             this.trigger('hide-loader')
-            if (response.status === 200)
+            if (response.status === 200) {
+                console.warn(response)
                 return
+            }
             if (retry > 0)
                 await this._sendOrder(retry - 1)
-            console.warn(response)
         } catch (e) {
             throw e
         }
