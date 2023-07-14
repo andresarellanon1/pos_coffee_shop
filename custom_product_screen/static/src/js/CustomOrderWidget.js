@@ -25,6 +25,7 @@ class CustomOrderWidget extends PosComponent {
     }
     productSpawned(event) {
         NumberBuffer.reset()
+        this.trigger('hide-loader')
     }
     get skipNextMO() {
         return this.state.skipNextMO
