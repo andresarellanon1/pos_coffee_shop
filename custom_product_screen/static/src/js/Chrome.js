@@ -32,7 +32,7 @@ patch(Chrome.prototype, "prototype patch", {
         this.stateLoading.isLoading = true
     },
     _onHideLoader: function() {
-        this.stateLoading.isLoading = true
+        this.stateLoading.isLoading = false 
     }
 })
 
