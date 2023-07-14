@@ -29,6 +29,7 @@ class CustomOrderWidget extends PosComponent {
     }
     get skipNextMO() {
         return this.state.skipNextMO
+        m
     }
     get order() {
         return this.env.pos.get_order()

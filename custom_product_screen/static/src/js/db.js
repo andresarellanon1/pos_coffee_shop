@@ -10,12 +10,12 @@ patch(PosDB.prototype, "prototype patch", {
         this.boms_by_template_id = {}
         this.bom_lines_by_bom_id = {}
         this.products_extra_by_orderline = {}
-        this.orderlines_to_sync = [] // short lived, should empty after each transaction
-        this.components_to_sync = [] // same as above
+        this.orderlines_to_sync = []
+        this.components_to_sync = []
         this.isEmployee = false
         this._super(options)
     },
-    add_products_templates: function (products) {
+    add_products_templates: function(products) {
         if (!(products instanceof Array)) {
             products = [products]
         }
@@ -25,13 +25,13 @@ patch(PosDB.prototype, "prototype patch", {
             this.products_template_by_id[product.id] = product
         }
     },
-    add_boms: function (boms) {
+    add_boms: function(boms) {
         for (let bom of boms) {
             this.boms_by_template_id[bom.product_tmpl_id[0]] = bom
             this.bom_lines_by_bom_id[bom.id] = []
         }
     },
-    add_bom_lines: function (lines) {
+    add_bom_lines: function(lines) {
         try {
             for (let line of lines)
                 this.bom_lines_by_bom_id[line.bom_id[0]].push(line)
@@ -41,7 +41,7 @@ patch(PosDB.prototype, "prototype patch", {
         }
     },
     // TODO: optimize to O(1)
-    get_product_template_by_menu: function (menu_id) {
+    get_product_template_by_menu: function(menu_id) {
         var list = []
         let categ_id = this.get_categ_by_name('Bebida') // TODO: move string literal to CONST string
         if (this.products_template_by_id) {
@@ -54,7 +54,7 @@ patch(PosDB.prototype, "prototype patch", {
         return list
     },
     // TODO: optimize to O(1)
-    get_product_by_attr: function (selected_attributes, product_template_id) {
+    get_product_by_attr: function(selected_attributes, product_template_id) {
         let product
         let words = selected_attributes.map((value) => { return value.name })
         for (let key in this.product_by_id) {
@@ -67,7 +67,7 @@ patch(PosDB.prototype, "prototype patch", {
         return product
     },
     // TODO: optimize to O(1)
-    get_categ_by_name: function (name) {
+    get_categ_by_name: function(name) {
         let categ_id
         for (let key in this.category_by_id) {
             if (this.category_by_id[key].name !== name) continue
@@ -75,7 +75,7 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return categ_id
     },
-    add_child_orderline: function (parent_orderline_id, orderline_id, product_id, childProduct) {
+    add_child_orderline: function(parent_orderline_id, orderline_id, product_id, childProduct) {
         this.products_extra_by_orderline[orderline_id] = {
             orderline_id: orderline_id,
             parent_orderline_id: parent_orderline_id,
@@ -83,14 +83,14 @@ patch(PosDB.prototype, "prototype patch", {
             child_product: childProduct,
         }
     },
-    add_product_to_sync: function (product_id, options, extra_components) {
+    add_product_to_sync: function(product_id, options, extra_components) {
         this.orderlines_to_sync.push({
             product_id: product_id,
             options: options,
             extra_components: extra_components
         })
     },
-    _isEmployee: async function () {
+    _isEmployee: async function() {
         this.isEmployee = await rpc.query({
             model: 'pos.config',
             method: 'type_user',

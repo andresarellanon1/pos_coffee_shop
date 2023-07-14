@@ -28,6 +28,16 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         this.env.pos.db.products_extra_by_orderline = {}
         this.env.pos.db.orderlines_to_sync = []
     }
+    get currentOrder() {
+        return this.env.pos.get_order()
+    }
+    get orderlineSkipMO() {
+        return this.state.orderlineSkipMO
+    }
+    get isEmployee() {
+        return this.env.pos.db.isEmployee
+    }
+    // Handlers
     async _clickProduct(event) {
         let productTemplate = event.detail
         let attributes = _.map(productTemplate.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
@@ -38,31 +48,28 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             attributes: attributes,
         })
     }
-    get currentOrder() {
-        return this.env.pos.get_order()
-    }
-    get orderlineSkipMO() {
-        return this.state.orderlineSkipMO
-    }
-    get isEmployee() {
-        return this.env.pos.db.isEmployee
-    }
     _onClearOrder(event) {
-        this.trigger('show-loader')
-        let order = this.currentOrder
-        this._clearMrpProduction(order)
-        this.env.pos.removeOrder(order)
-        this.env.pos.add_new_order()
-        this.env.pos.db.products_extra_by_orderline = {}
-        this.env.pos.db.orderlines_to_sync = []
-    }
-    async _onClickPay() {
         try {
             this.trigger('show-loader')
-            this.createProductionSingle()
-            await this.setNextOrder(3)
+            let order = this.currentOrder
+            this._clearMO(order)
+            this.env.pos.removeOrder(order)
+            this.env.pos.add_new_order()
+            this.env.pos.db.products_extra_by_orderline = {}
+            this.env.pos.db.orderlines_to_sync = []
+            this.trigger('hide-loader')
+        } catch (e) {
+            this.trigger('hide-loader')
+            this.showPopup('ErrorPopup', e)
+            console.error(e)
+        }
+    }
+    async _onClickPay(event) {
+        try {
+            this.trigger('show-loader')
+            this._createMO()
+            await this._fixQueue(3)
             this.state.orderlineSkipMO = []
-            // NOTE: do remove extra components orderlines before proceeding to payment screen to avoid duplicating stock.move (via stock.picking / mrp.production)
             for (let key in this.env.pos.db.products_extra_by_orderline) {
                 let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.products_extra_by_orderline[key].orderline_id)
                 this.currentOrder.remove_orderline(orderline)
@@ -70,26 +77,31 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.env.pos.db.products_extra_by_orderline = {}
             this.env.pos.db.orderlines_to_sync = []
             this.showScreen('PaymentScreen')
+            this.trigger('hide-loader')
         } catch (e) {
+            this.trigger('hide-loader')
+            this.showPopup('ErrorPopup', e)
             console.error(e)
         }
     }
-    async _onClickSend() {
+    async _onClickSend(event) {
         try {
             this.trigger('show-loader')
-            this.createProductionSingle()
-            await this.sendCurrentOrderToMainPoS(3)
+            await this._sendOrder(3)
             this.state.orderlineSkipMO = []
             this.env.pos.db.products_extra_by_orderline = {}
             this.env.pos.db.orderlines_to_sync = []
             let order = this.currentOrder
             this.env.pos.removeOrder(order)
             this.env.pos.add_new_order()
+            this.trigger('hide-loader')
         } catch (e) {
+            this.trigger('hide-loader')
+            this.showPopup('ErrorPopup', e)
             console.error(e)
         }
     }
-    async _onClickNext() {
+    async _onClickNext(event) {
         try {
             this.trigger('show-loader')
             this.state.orderlineSkipMO = []
@@ -98,12 +110,16 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             let order = this.currentOrder
             this.env.pos.removeOrder(order)
             this.env.pos.add_new_order()
-            let payload = await this.fetchNextOrderFromQueue(3)
-            await this.loadRemoteOrder(payload)
+            let payload = await this._fetchOrder(3)
+            await this._loadOrder(payload)
+            this.trigger('hide-loader')
         } catch (e) {
+            this.trigger('hide-loader')
+            this.showPopup('ErrorPopup', e)
             console.error(e)
         }
     }
+    // operations
     async version(retry) {
         try {
             let response = await fetch("http://158.69.63.47:8080/version", {
@@ -113,29 +129,22 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "*"
                 },
             })
-            this.trigger('hide-loader')
             if (response.status === 200)
                 return
             if (retry > 0)
                 await this.version(retry - 1)
         } catch (e) {
-            console.error(e)
+            throw e
         }
     }
-    /** everybody trigers production order alias:  MO / mrp.production / production / manufacturing order **/
-    createProductionSingle() {
+    _createMO() {
         let list_product = []
         let child_orderline = []
         let order = this.currentOrder
         let orderlines = order.get_orderlines()
         let extras_orderlines_id = []
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
-        // filter mutate orderlines array to have only locally spawned orderlines (do not create mrp.production for remotely loaded orderlines) 
         orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
-        for (let key in product_extra_by_orderline) {
-            extras_orderlines_id.push(key)
-        }
-        // get child product list
         for (let index in orderlines) {
             for (let key in product_extra_by_orderline) {
                 if (product_extra_by_orderline[key].orderline_id === orderlines[index].id)
@@ -145,15 +154,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     })
             }
         }
-        // Only parent product list maped to MO
+        for (let key in product_extra_by_orderline) {
+            extras_orderlines_id.push(key)
+        }
         orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
         for (let i in orderlines) {
-            // NOTE: inner loop is to ensure product spliting, in theory the orderlines are not merged ergo it should work without this
-            // but we opted to keep it in case somehow multiple products end up in the same orderline (merged)
-            // or a product with quantity > 1 end up having a merged orderline
-            // products with quantity > 1 should not end up in the same orderline because they are added 1 at a time by the ProductSpawernScreen
-            // and the orderlines are not being merged
-            // TODO: Test with data from the UI and determine wheter or not products with qty > 1 are reaching this loop
             for (let j = 0; j < orderlines[i].quantity; j++) {
                 list_product.push({
                     'id': orderlines[i].product.id,
@@ -172,9 +177,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             method: 'create_single_from_list',
             args: [1, list_product],
         })
-        this.trigger('hide-loader')
     }
-    _clearMrpProduction() {
+    _clearMO() {
         // Deterime if for each orderline of the orderline already has a MO 
         // MO should exists if this is a remotely loaded orderline
         // Obtain Mrp.production correct ids to unlink
@@ -186,16 +190,13 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let mo_ids = []
         orderlines = orderlines.filter(or => !product_extra_by_orderline.map(m => m.orderline_id).includes(or.id))
 
-
         rpc.query({
             model: 'mrp.production',
             method: 'create_single_from_list',
             args: [1, mo_ids],
         })
-        this.trigger('hide-loader')
     }
-    /** only customer **/
-    async sendCurrentOrderToMainPoS(retry) {
+    async _sendOrder(retry) {
         try {
             await this.version(3)
             let orderlines_to_sync = this.env.pos.db.orderlines_to_sync
@@ -215,13 +216,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             if (response.status === 200)
                 return
             if (retry > 0)
-                await this.sendCurrentOrderToMainPoS(retry - 1)
+                await this._sendOrder(retry - 1)
         } catch (e) {
-            console.error(e)
+            throw e
         }
     }
-    /** only employee, this tells the manufacturing queue the order in which to bring the orders. The purpuso of this call is to imitate the way POST to /order pushes the UID at the end of the queue  **/
-    async setNextOrder(retry) {
+    async _fixQueue(retry) {
         try {
             await this.version()
             let order = this.currentOrder
@@ -237,13 +237,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             if (response.status === 200)
                 return
             if (retry > 0)
-                await this.setNextOrder(retry - 1)
+                await this._fixQueue(retry - 1)
         } catch (e) {
-            console.error(e)
+            throw e
         }
     }
-    /** only employee **/
-    async fetchNextOrderFromQueue(retry) {
+    async _fetchOrder(retry) {
         try {
             await this.version()
             let response = await fetch("http://158.69.63.47:8080/order", {
@@ -253,19 +252,17 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                     "Content-Type": "application/json"
                 },
             })
-            this.trigger('hide-loader')
             if (response.status === 200) {
                 let payload = await response.json()
                 return payload
             }
             if (retry > 0)
-                await this.fetchNextOrderFromQueue(retry - 1)
+                await this._fetchOrder(retry - 1)
         } catch (e) {
-            console.error(e)
+            throw e
         }
     }
-    /** only employee **/
-    async loadRemoteOrder(orderPayload) {
+    async _loadOrder(orderPayload) {
         try {
             this.currentOrder.name = orderPayload.name
             this.currentOrder.uid = orderPayload.uid
@@ -273,10 +270,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 let product = this.env.pos.db.product_by_id[payload.product_id]
                 let parent_orderline = await this._addProduct(product, payload.options)
                 this.state.orderlineSkipMO.push(parent_orderline)
-                // NOTE: ignoring the components when reading the remote order should be fine because the payload.options.extra_price should be the accumulated of
-                // the product.price and the extra components price, done when spawned in the origin PoS Session
-                // se we let this for loop here just to display the selected extra components in the OrderWidget
-                // NOTE: remove this orderlines right before writing the stock.piciking, can be skiped in ticket.
                 for (let component of payload.extra_components) {
                     let extra = this.env.pos.db.product_by_id[component.product_id]
                     let options = {
@@ -292,12 +285,15 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('product-spawned')
             this.trigger('close-temp-screen')
         } catch (e) {
-            console.error(e)
+            throw e
         }
     }
-    /* only use when fetching from queue */
     async _addProduct(product, options) {
-        return await this.currentOrder.add_product_but_well_done(product, options)
+        try {
+            return await this.currentOrder.add_product_but_well_done(product, options)
+        } catch (e) {
+            throw e
+        }
     }
 }
 ProductTemplateScreen.template = 'custom_product_screen.ProductTemplateScreen'

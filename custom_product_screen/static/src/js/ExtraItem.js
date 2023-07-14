@@ -2,8 +2,7 @@
 
 import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
-import { useState, onMounted } from '@odoo/owl'
-// NOTE: EXTRAS ARE PRODUCT.PRODUCT INSTANCE
+import { useState } from '@odoo/owl'
 class ExtraItem extends PosComponent {
     setup() {
         super.setup()
