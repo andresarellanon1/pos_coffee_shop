@@ -60,7 +60,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
         } catch (e) {
             this.trigger('hide-loader')
-            this.showPopup('ErrorPopup', e)
+            this.showPopup('ErrorPopup', {
+                title: 'Error al cancelar orden',
+                body: e
+            })
             console.error(e)
         }
     }
@@ -80,7 +83,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
         } catch (e) {
             this.trigger('hide-loader')
-            this.showPopup('ErrorPopup', e)
+            this.showPopup('ErrorPopup', {
+                title: 'Error al preparar pantalla de cobro',
+                body: e
+            })
             console.error(e)
         }
     }
@@ -98,7 +104,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
         } catch (e) {
             this.trigger('hide-loader')
-            this.showPopup('ErrorPopup', e)
+            this.showPopup('ErrorPopup', {
+                title: 'Error al enviar orden a la session remota',
+                body: e
+            })
             console.error(e)
         }
     }
@@ -116,7 +125,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
         } catch (e) {
             this.trigger('hide-loader')
-            this.showPopup('ErrorPopup', e)
+            this.showPopup('ErrorPopup', {
+                title: 'Error al cargar orden desde la session remota',
+                body: e
+            })
             console.error(e)
         }
     }
@@ -139,71 +151,85 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         }
     }
     async _createMO() {
-        let list_product = []
-        let child_orderline = []
-        let order = this.currentOrder
-        let orderlines = order.get_orderlines()
-        let extras_orderlines_id = []
-        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
-        orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
-        for (let index in orderlines) {
+        try {
+            let list_product = []
+            let child_orderline = []
+            let order = this.currentOrder
+            let orderlines = order.get_orderlines()
+            let extras_orderlines_id = []
+            let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
+            orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
+            for (let index in orderlines) {
+                for (let key in product_extra_by_orderline) {
+                    if (product_extra_by_orderline[key].orderline_id === orderlines[index].id)
+                        child_orderline.push({
+                            'id': orderlines[index].product.id,
+                            'qty': orderlines[index].quantity,
+                        })
+                }
+            }
             for (let key in product_extra_by_orderline) {
-                if (product_extra_by_orderline[key].orderline_id === orderlines[index].id)
-                    child_orderline.push({
-                        'id': orderlines[index].product.id,
-                        'qty': orderlines[index].quantity,
+                extras_orderlines_id.push(key)
+            }
+            orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
+            for (let i in orderlines) {
+                for (let j = 0; j < orderlines[i].quantity; j++) {
+                    list_product.push({
+                        'id': orderlines[i].product.id,
+                        'qty': 1,
+                        'product_tmpl_id': orderlines[i].product.product_tmpl_id,
+                        'pos_reference': order.name,
+                        'uom_id': orderlines[i].product.uom_id[0],
+                        'components': child_orderline
                     })
+                }
             }
+            if (list_product.length === 0)
+                return
+            await rpc.query({
+                model: 'mrp.production',
+                method: 'create_single_from_list',
+                args: [1, list_product],
+            })
+        } catch (e) {
+            throw e
         }
-        for (let key in product_extra_by_orderline) {
-            extras_orderlines_id.push(key)
-        }
-        orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
-        for (let i in orderlines) {
-            for (let j = 0; j < orderlines[i].quantity; j++) {
-                list_product.push({
-                    'id': orderlines[i].product.id,
-                    'qty': 1,
-                    'product_tmpl_id': orderlines[i].product.product_tmpl_id,
-                    'pos_reference': order.name,
-                    'uom_id': orderlines[i].product.uom_id[0],
-                    'components': child_orderline
-                })
-            }
-        }
-        if (list_product.length === 0)
-            return
-        await rpc.query({
-            model: 'mrp.production',
-            method: 'create_single_from_list',
-            args: [1, list_product],
-        })
     }
     async _clearMO(order) {
-        let orderlines = order.get_orderlines()
-        let extras_orderlines_id = []
-        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
-        for (let key in product_extra_by_orderline) {
-            extras_orderlines_id.push(key)
+        try {
+            let orderlines = order.get_orderlines()
+            let extras_orderlines_id = []
+            let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
+            for (let key in product_extra_by_orderline) {
+                extras_orderlines_id.push(key)
+            }
+            let origins = orderlines.filter(or => !extras_orderlines_id.includes(or.id)).map(m => `POS-${m.name}`)
+            console.warn('found origins')
+            console.log(origins)
+            let production_ids = await this.rpc({
+                model: 'mrp.production',
+                method: 'search',
+                args: [['origin', 'in', origins]]
+            })
+            console.warn('found production')
+            console.log(origins)
+            await rpc.query({
+                model: 'mrp.production',
+                method: 'unlink',
+                args: [1, production_ids],
+            })
+        } catch (e) {
+            this.showPopup('ErrorPopup', {
+                title: 'Error al eliminar la order de manufactura en el sistema. Se esta eliminando del PoS.',
+                body: e
+            })
+            console.error(e)
         }
-        let origins = orderlines.filter(or => !extras_orderlines_id.includes(or.id)).map(m => `POS-${m.name}`)
-        let production_ids = await this.rpc({
-            model: 'mrp.production',
-            method: 'search',
-            args: [['origin', 'in', origins]]
-        })
-
-        await rpc.query({
-            model: 'mrp.production',
-            method: 'unlink',
-            args: [1, production_ids],
-        })
     }
     async _sendOrder(retry) {
         try {
             await this.version(3)
             let orderlines_to_sync = this.env.pos.db.orderlines_to_sync
-            console.warn('sending to main pos')
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "POST",
                 headers: {
@@ -217,10 +243,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 })
             })
             this.trigger('hide-loader')
-            if (response.status === 200) {
-                console.warn(response.json())
+            if (response.status === 200)
                 return
-            }
             if (retry > 0)
                 await this._sendOrder(retry - 1)
         } catch (e) {
