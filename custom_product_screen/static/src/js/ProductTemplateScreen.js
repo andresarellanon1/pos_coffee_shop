@@ -209,7 +209,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             let production_ids = await this.rpc({
                 model: 'mrp.production',
                 method: 'search',
-                args: [['origin', 'like', `POS-${order.name}`]]
+                args: [['origin', '=', `POS-${order.name}`]]
             })
             console.warn('found production')
             console.log(origins)
