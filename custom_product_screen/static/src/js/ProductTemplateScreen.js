@@ -186,11 +186,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         for (let key in product_extra_by_orderline) {
             extras_orderlines_id.push(key)
         }
-        let origins = orderlines.filter(or => !product_extra_by_orderline.map(m => m.orderline_id).includes(or.id)).map(m => `POS-${m.name}`)
+        let origins = orderlines.filter(or => !extras_orderlines_id.includes(or.id)).map(m => `POS-${m.name}`)
         let production_ids = await this.rpc({
             model: 'mrp.production',
             method: 'search',
-            args: [['origin', 'in', origins]],
+            args: [['origin', 'in', origins]]
         })
 
         await rpc.query({
