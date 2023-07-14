@@ -101,7 +101,15 @@ const fetchQueueCache = async () => {
       "Accept": "*",
     }
   })
+  const { data: queue } = await useFetch<string[]>('http://158.69.63.47:8080/getProductionCache', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+    }
+  })
   if (cache.value === null) return
+  if (queue.value === null) return
+  console.warn(queue.value)
   console.warn(cache.value)
   console.log(productionQueue.value)
   for (let key in productionQueue.value) {
