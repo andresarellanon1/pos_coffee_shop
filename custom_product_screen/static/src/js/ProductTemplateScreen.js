@@ -218,7 +218,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             })
             this.trigger('hide-loader')
             if (response.status === 200) {
-                console.warn(response)
+                console.warn(response.json())
                 return
             }
             if (retry > 0)
