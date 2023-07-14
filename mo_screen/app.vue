@@ -101,7 +101,7 @@ const fetchQueueCache = async () => {
       "Accept": "*",
     }
   })
-  const { data: queue } = await useFetch<string[]>('http://158.69.63.47:8080/getProductionCache', {
+  const { data: queue } = await useFetch<string[]>('http://158.69.63.47:8080/getProductionQueue', {
     method: "GET",
     headers: {
       "Accept": "*",
