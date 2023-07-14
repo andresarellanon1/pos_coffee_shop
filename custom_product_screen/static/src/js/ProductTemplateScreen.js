@@ -48,11 +48,11 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             attributes: attributes,
         })
     }
-    _onClearOrder(event) {
+    async _onClearOrder(event) {
         try {
             this.trigger('show-loader')
             let order = this.currentOrder
-            this._clearMO(order)
+            await this._clearMO(order)
             this.env.pos.removeOrder(order)
             this.env.pos.add_new_order()
             this.env.pos.db.products_extra_by_orderline = {}
@@ -67,7 +67,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClickPay(event) {
         try {
             this.trigger('show-loader')
-            this._createMO()
+            await this._createMO()
             await this._fixQueue(3)
             this.state.orderlineSkipMO = []
             for (let key in this.env.pos.db.products_extra_by_orderline) {
@@ -137,7 +137,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             throw e
         }
     }
-    _createMO() {
+    async _createMO() {
         let list_product = []
         let child_orderline = []
         let order = this.currentOrder
@@ -172,28 +172,31 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         }
         if (list_product.length === 0)
             return
-        rpc.query({
+        await rpc.query({
             model: 'mrp.production',
             method: 'create_single_from_list',
             args: [1, list_product],
         })
     }
-    _clearMO() {
-        // Deterime if for each orderline of the orderline already has a MO 
-        // MO should exists if this is a remotely loaded orderline
-        // Obtain Mrp.production correct ids to unlink
-        // Call rpc[mrp.production.unlink(ids)]
-
+    async _clearMO() {
         let order = this.currentOrder
         let orderlines = order.get_orderlines()
+        let extras_orderlines_id = []
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
-        let mo_ids = []
-        orderlines = orderlines.filter(or => !product_extra_by_orderline.map(m => m.orderline_id).includes(or.id))
-
-        rpc.query({
+        for (let key in product_extra_by_orderline) {
+            extras_orderlines_id.push(key)
+        }
+        let origins = orderlines.filter(or => !product_extra_by_orderline.map(m => m.orderline_id).includes(or.id)).map(m => `POS-${m.name}`)
+        let production_ids = await this.rpc({
             model: 'mrp.production',
-            method: 'create_single_from_list',
-            args: [1, mo_ids],
+            method: 'search',
+            args: [['origin', 'in', origins]],
+        })
+
+        await rpc.query({
+            model: 'mrp.production',
+            method: 'unlink',
+            args: [1, production_ids],
         })
     }
     async _sendOrder(retry) {
