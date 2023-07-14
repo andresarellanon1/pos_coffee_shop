@@ -2,6 +2,16 @@
 
 import { patch } from 'web.utils'
 import Chrome from 'point_of_sale.Chrome'
+import { useState } from '@odoo/owl'
+
+patch(Chrome.prototype, "constructor patch", {
+    setup() {
+        this._super(...arguments)
+        this.stateLoading = useState({
+            isLoading: false
+        })
+    }
+})
 
 patch(Chrome.prototype, "getter/setter patch", {
     get startScreen() {
@@ -9,6 +19,9 @@ patch(Chrome.prototype, "getter/setter patch", {
             console.warn('ui state not ready')
         }
         return { name: 'ProductTemplateScreen' }
+    },
+    get _isLoading() {
+        return this.stateLoading.isLoading
     }
 })
 

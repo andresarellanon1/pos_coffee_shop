@@ -30,11 +30,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     async _clickProduct(event) {
         let productTemplate = event.detail
-        console.warn('clicked product')
-        console.log(this.env.pos.attributes_by_ptal_id)
         let attributes = _.map(productTemplate.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined)
-        console.log(attributes)
         this.trigger('close-temp-screen')
         await this.showTempScreen("ProductSpawnerScreen", {
             product: productTemplate,
@@ -52,10 +49,16 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     _onClearOrder(event) {
         let order = this.currentOrder
+        this._clearMrpProduction(order)
         this.env.pos.removeOrder(order)
         this.env.pos.add_new_order()
         this.env.pos.db.products_extra_by_orderline = {}
         this.env.pos.db.orderlines_to_sync = []
+        //TODO: 
+        // Deterime if for each orderline of the orderline already has a MO 
+        // MO should exists if this is a remotely loaded orderline
+        // Obtain Mrp.production correct ids to unlink
+        // Call rpc[mrp.production.unlink(ids)]
     }
     async _onClickPay() {
         try {
@@ -129,17 +132,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let extras_orderlines_id = []
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
         // filter mutate orderlines array to have only locally spawned orderlines (do not create mrp.production for remotely loaded orderlines) 
-        console.warn('all orderline')
-        console.log(orderlines)
-        console.warn('banned orderline ids')
-        console.log(this.orderlineSkipMO)
         orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
-        console.warn('creating production single')
-        console.warn('found local orderlines:')
-        console.log(orderlines)
         // get parent orderlines ids
         for (let key in product_extra_by_orderline) {
-            extras_orderlines_id.push(product_extra_by_orderline)
+            extras_orderlines_id.push(product_extra_by_orderline[key].id)
         }
         // get child product list
         for (let index in orderlines) {
@@ -177,6 +173,20 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             model: 'mrp.production',
             method: 'create_single_from_list',
             args: [1, list_product],
+        })
+    }
+    _clearMrpProduction() {
+        let order = this.currentOrder
+        let orderlines = order.get_orderlines()
+        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
+        let mo_ids = []
+        orderlines = orderlines.filter(or => !product_extra_by_orderline.map(m => m.orderline_id).includes(or.id))
+
+
+        rpc.query({
+            model: 'mrp.production',
+            method: 'create_single_from_list',
+            args: [1, mo_ids],
         })
     }
     /** only customer **/
@@ -281,11 +291,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     /* only use when fetching from queue */
     async _addProduct(product, options) {
         return await this.currentOrder.add_product_but_well_done(product, options)
-    }
-
-    /* only use when fetching from queue */
-    get currentOrder() {
-        return this.env.pos.get_order()
     }
 }
 ProductTemplateScreen.template = 'custom_product_screen.ProductTemplateScreen'

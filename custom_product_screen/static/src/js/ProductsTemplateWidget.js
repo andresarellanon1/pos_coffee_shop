@@ -21,7 +21,7 @@ class ProductTemplateWidget extends PosComponent {
     }
     async loadProductTemplateFromDB() {
         try {
-            const limit = 30
+            let limit = 30
             // TODO: Corroborar query columnas de busqueda
             let ProductTemplateIds = await this.rpc({
                 model: 'product.template',
