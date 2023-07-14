@@ -2,7 +2,7 @@
 
 import { patch } from 'web.utils'
 import Chrome from 'point_of_sale.Chrome'
-import { useState } from '@odoo/owl'
+import { useState, useExternalListener } from '@odoo/owl'
 
 patch(Chrome.prototype, "constructor patch", {
     setup() {
@@ -10,6 +10,7 @@ patch(Chrome.prototype, "constructor patch", {
         this.stateLoading = useState({
             isLoading: false
         })
+        useExternalListener(window, 'show-loader', this._onShowLoader)
     }
 })
 
@@ -22,6 +23,9 @@ patch(Chrome.prototype, "getter/setter patch", {
     },
     get _isLoading() {
         return this.stateLoading.isLoading
+    },
+   set _onShowLoader(){
+    
     }
 })
 
