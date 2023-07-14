@@ -87,6 +87,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClickSend(event) {
         try {
             this.trigger('show-loader')
+            await this._createMO()
             await this._sendOrder(3)
             this.state.orderlineSkipMO = []
             this.env.pos.db.products_extra_by_orderline = {}
@@ -178,8 +179,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             args: [1, list_product],
         })
     }
-    async _clearMO() {
-        let order = this.currentOrder
+    async _clearMO(order) {
         let orderlines = order.get_orderlines()
         let extras_orderlines_id = []
         let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
