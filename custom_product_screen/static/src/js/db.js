@@ -9,9 +9,8 @@ patch(PosDB.prototype, "prototype patch", {
         this.products_template_by_id = {}
         this.boms_by_template_id = {}
         this.bom_lines_by_bom_id = {}
-        this.products_extra_by_orderline = {}
-        this.orderlines_to_sync = []
-        this.components_to_sync = []
+        this.products_extra_by_orderline_id = {}
+        this.orderlines_to_sync_by_production_id = {}
         this.isEmployee = false
         this._super(options)
     },
@@ -75,20 +74,21 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return categ_id
     },
-    add_child_orderline: function(parent_orderline_id, orderline_id, product_id, childProduct) {
-        this.products_extra_by_orderline[orderline_id] = {
+    add_extra_component_by_orderline_id: function(parent_orderline_id, orderline_id, product_id, childProduct) {
+        this.products_extra_by_orderline_id[orderline_id] = {
             orderline_id: orderline_id,
             parent_orderline_id: parent_orderline_id,
             parent_product_id: product_id,
             child_product: childProduct,
         }
     },
-    add_product_to_sync: function(product_id, options, extra_components) {
-        this.orderlines_to_sync.push({
+    add_orderline_to_sync_by_production_id: function(production_id, product_id, options, extra_components) {
+        this.orderlines_to_sync_by_production_id[production_id] = {
+            production_id: production_id,
             product_id: product_id,
             options: options,
             extra_components: extra_components
-        })
+        }
     },
     _isEmployee: async function() {
         this.isEmployee = await rpc.query({

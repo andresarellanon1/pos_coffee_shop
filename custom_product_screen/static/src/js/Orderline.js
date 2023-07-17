@@ -6,7 +6,7 @@ import Orderline from 'point_of_sale.Orderline'
 patch(Orderline.prototype, "getter/setter patch", {
     get childOrderlines() {
         let orderlines = this.env.pos.get_order().get_orderlines()
-        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline
+        let product_extra_by_orderline = this.env.pos.db.products_extra_by_orderline_id
         let orderline_id = this.props.line.id
         let child_orderlines = []
         for (let key in product_extra_by_orderline) {

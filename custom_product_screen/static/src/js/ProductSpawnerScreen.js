@@ -52,14 +52,13 @@ class ProductSpawnerScreen extends PosComponent {
             }
             let child_orderline = await this._addProduct(component.extra, options)
             extra_components.push({ product_id: component.extra.id, qty: component.count })
-            this.env.pos.db.add_child_orderline(parent_orderline.id, child_orderline.id, product.id, component.extra)
+            this.env.pos.db.add_extra_component_by_orderline_id(parent_orderline.id, child_orderline.id, product.id, component.extra)
         }
-        this.env.pos.db.add_product_to_sync(product.id, options, extra_components)
-        this.trigger('product-spawned')
+        this.trigger('product-spawned', { product_id: product.id, options: options, extra_components: extra_components })
         this.trigger('close-temp-screen')
     }
     async _addProduct(product, options) {
-        return await this.currentOrder.add_product_but_well_done(product, options)
+        return await this.currentOrder.add_product_but_well_done(product, options, null)
     }
     get currentOrder() {
         return this.env.pos.get_order()
