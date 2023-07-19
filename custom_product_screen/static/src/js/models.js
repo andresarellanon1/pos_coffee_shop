@@ -3,6 +3,11 @@
 import { patch } from 'web.utils'
 import { PosGlobalState, Order, Orderline } from 'point_of_sale.models'
 
+patch(PosGlobalState.prototype, "getter/setter patch", {
+    get currentOrder() {
+        return this.get_order()
+    }
+})
 patch(PosGlobalState.prototype, "prototype patch", {
     _processData: async function(loadedData) {
         this._loadProductTemplate(loadedData['product.template'])
