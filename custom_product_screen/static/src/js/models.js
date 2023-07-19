@@ -134,7 +134,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     */
     sendOrderToMainPoS: async function(retry) {
         try {
-            await this.version(3)
+            await this.fetchVersion(3)
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
             let orderlines_to_sync_by_production_id = this.orderlines_to_sync_by_production_id
             let orderlines = []
@@ -174,7 +174,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     */
     fixQueueForCurrentOrder: async function(retry) {
         try {
-            await this.version(3)
+            await this.fetchVersion(3)
             let order = this.currentOrder
             let uid = order.name
             let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
@@ -198,7 +198,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     */
     fetchOrderFromClientPoS: async function(retry) {
         try {
-            await this.version(3)
+            await this.fetchVersion(3)
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "GET",
                 headers: {
@@ -249,9 +249,9 @@ patch(PosGlobalState.prototype, "prototype patch", {
     _addProduct: async function(product, options) {
         return await this.currentOrder.add_product_but_well_done(product, options)
     },
-    version: async function(retry) {
+    fetchVersion: async function(retry) {
         try {
-            let response = await fetch("http://158.69.63.47:8080/version", {
+            let response = await fetch("http://158.69.63.47:8080/fetchVersion", {
                 method: "GET",
                 headers: {
                     "Accept": "*",
@@ -261,7 +261,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             if (response.status === 200)
                 return
             if (retry > 0)
-                await this.version(retry - 1)
+                await this.fetchVersion(retry - 1)
         } catch (e) {
             throw e
         }
