@@ -251,7 +251,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     },
     fetchVersion: async function(retry) {
         try {
-            let response = await fetch("http://158.69.63.47:8080/fetchVersion", {
+            let response = await fetch("http://158.69.63.47:8080/version", {
                 method: "GET",
                 headers: {
                     "Accept": "*",
