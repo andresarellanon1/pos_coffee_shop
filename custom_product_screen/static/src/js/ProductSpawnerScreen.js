@@ -4,7 +4,6 @@ import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
 import { useSubEnv, useState, useExternalListener } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
-import rpc from 'web.rpc'
 
 class ProductSpawnerScreen extends PosComponent {
     setup(options) {

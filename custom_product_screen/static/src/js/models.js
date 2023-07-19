@@ -2,6 +2,7 @@
 
 import { patch } from 'web.utils'
 import { PosGlobalState, Order, Orderline } from 'point_of_sale.models'
+import rpc from 'web.rpc'
 
 patch(PosGlobalState.prototype, "getter/setter patch", {
     get currentOrder() {
