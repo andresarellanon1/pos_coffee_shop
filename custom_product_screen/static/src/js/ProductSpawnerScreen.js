@@ -31,11 +31,10 @@ class ProductSpawnerScreen extends PosComponent {
         }
         let product = this.env.pos.db.get_product_by_attr(selected_attributes, this.product_template_id)
         for (let extra_component of this.env.extra_components) {
-            let payload = extra_component.getValue()
-            if (payload.count <= 0 || payload.count > 5) continue
-            component_products.push(payload)
+            let component = extra_component.getValue()
+            if (component.count <= 0 || component.count > 5) continue
             // accumulate extra component price on the main product
-            price_extra = price_extra + payload.price_extra
+            price_extra = price_extra + component.price_extra
         }
         let options = {
             draftPackLotLines,
@@ -46,6 +45,7 @@ class ProductSpawnerScreen extends PosComponent {
         let parent_orderline = await this._addProduct(product, options)
         for (let extra_component of this.env.extra_components) {
             let component = extra_component.getValue()
+            if (component.count <= 0 || component.count > 5) continue
             let options = {
                 draftPackLotLines,
                 quantity: component.count,
