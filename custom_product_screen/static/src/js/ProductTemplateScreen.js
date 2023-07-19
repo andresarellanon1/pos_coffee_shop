@@ -15,9 +15,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useExternalListener(window, 'click-pay', this._onClickPay)
         useExternalListener(window, 'click-send', this._onClickSend)
         useExternalListener(window, 'clear-order', this._onClearOrder)
+        useExternalListener(window, 'clear-orderline', this._onClearOrderline)
         useExternalListener(window, 'click-sync-next-order', this._onClickNext)
         useExternalListener(window, 'product-spawned', this._onProductSpawned)
-        useExternalListener(window, 'order-validated', this._onOrderValid)
         useListener('click-product', this._clickProduct)
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',

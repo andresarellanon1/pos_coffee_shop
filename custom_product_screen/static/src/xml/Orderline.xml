@@ -11,7 +11,7 @@
 					<span>
 						<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
 					</span>
-					<span class="btn btn-danger w-6 h-6">
+					<span class="btn btn-danger w-6 h-6" t-on-click="() => this.trigger('clear-orderline', props.line.id)">
 					X	
 					</span>
 				</div>
