@@ -94,7 +94,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     clearCurrentOrderMrpProduction: async function() {
         try {
             let origin = `POS-${this.currentOrder.name}`
-            let production_ids = await this.rpc({
+            let production_ids = await rpc.query({
                 model: 'mrp.production',
                 method: 'search',
                 args: [['origin', '=', origin]]
@@ -113,7 +113,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             for (let key in orderlines_to_sync_by_production_id) {
                 if (orderlines_to_sync_by_production_id[key].orderline_id !== orderline_id) continue
-                let production_ids = await this.rpc({
+                let production_ids = await rpc.query({
                     model: 'mrp.production',
                     method: 'search',
                     args: [['id', '=', orderlines_to_sync_by_production_id[key].production_id]]
@@ -153,7 +153,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     "Accept": "*",
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
                     name: this.currentOrder.name,
                     uid: this.currentOrder.uid,
@@ -292,9 +291,3 @@ patch(Order.prototype, "prototype patch", {
         return screen
     }
 })
-
-// patch(Order.prototype, "constructor patch", {
-//     setup() {
-//         this._super(...arguments)
-//     }
-// })
