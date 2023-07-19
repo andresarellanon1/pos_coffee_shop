@@ -46,11 +46,11 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         model: 'mrp.production',
                         method: 'create_single',
                         args: [1, {
-                            'id': orderlines[key].product.id,
+                            'id': line.product.id,
                             'qty': 1,
-                            'product_tmpl_id': orderlines[key].product.product_tmpl_id,
+                            'product_tmpl_id': line.product.product_tmpl_id,
                             'pos_reference': order.name,
-                            'uom_id': orderlines[key].product.uom_id[0]
+                            'uom_id': line.product.uom_id[0]
                         }],
                     })
                     this.db.add_orderline_to_sync_by_production_id(id, orderlines[key].id)
@@ -79,9 +79,9 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         'id': orderline.product.id,
                         'production_id': orderlines_to_sync_by_production_id[key].production_id,
                         'qty': 1,
-                        'product_tmpl_id': orderlines[orderline_id].product.product_tmpl_id,
+                        'product_tmpl_id': orderline.product.product_tmpl_id,
                         'pos_reference': order.name,
-                        'uom_id': orderlines[orderline_id].product.uom_id[0],
+                        'uom_id': orderline.product.uom_id[0],
                         'components': products_to_sync_by_orderline_id[orderline_id].extra_components
                     }],
                 })
