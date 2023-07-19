@@ -37,11 +37,10 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
             let products_to_sync_by_orderline_id_keys = Object.keys(this.db.products_to_sync_by_orderline_id)
-            let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
             orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
-            orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(orderline.id))
-            for (let key in products_to_sync_by_orderline_id) {
-                for (let j = 0; j < orderlines[key].quantity; j++) {
+            orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
+            for (let line of orderlines) {
+                for (let j = 0; j < line.quantity; j++) {
                     let id = await rpc.query({
                         model: 'mrp.production',
                         method: 'create_single',
@@ -66,16 +65,17 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let orderlines = order.get_orderlines()
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
-            let products_to_sync_by_orderline_id_keys = Object.keys(this.db.products_to_sync_by_orderline_id)
+            let products_to_sync_by_orderline_id_keys = Object.keys(products_to_sync_by_orderline_id)
             orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
-            orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(orderline.id))
+            orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
             for (let key in orderlines_to_sync_by_production_id) {
                 let orderline_id = orderlines_to_sync_by_production_id[key].orderline_id
+                let orderline = orderlines.find(line => line.id === orderline_id)
                 await rpc.query({
                     model: 'mrp.production',
                     method: 'confirm_single',
                     args: [1, {
-                        'id': orderlines[orderline_id].product.id,
+                        'id': orderline.product.id,
                         'production_id': orderlines_to_sync_by_production_id[key].production_id,
                         'qty': 1,
                         'product_tmpl_id': orderlines[orderline_id].product.product_tmpl_id,
