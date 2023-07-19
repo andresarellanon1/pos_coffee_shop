@@ -104,11 +104,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 args: [1, production_ids],
             })
         } catch (e) {
-            this.showPopup('ErrorPopup', {
-                title: 'Error al eliminar la order de manufactura en el sistema. Se esta eliminando del PoS.',
-                body: e
-            })
-            console.error(e)
+            throw e
         }
     },
     clearSingleMrpProduction: async function(orderline_id) {
@@ -129,11 +125,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 break
             }
         } catch (e) {
-            this.showPopup('ErrorPopup', {
-                title: 'Error al eliminar la order de manufactura en el sistema. Se esta eliminando del PoS.',
-                body: e
-            })
-            console.error(e)
+            throw e
         }
     },
     /*
