@@ -21,8 +21,8 @@ class CustomOrderWidget extends PosComponent {
     }
     get _orderlinesArray() {
         let orderlines = this.order ? this.order.get_orderlines() : []
-        let extras_orderlines_id = Object.keys(this.db.extra_components_by_orderline_id)
-        let result = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
+        let extra_components_by_orderline_id = Object.keys(this.db.products_to_sync_by_orderline_id)
+        let result = orderlines.filter(or => extra_components_by_orderline_id.includes(or.id))
         return result
     }
 }
