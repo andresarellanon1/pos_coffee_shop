@@ -174,7 +174,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     */
     fixQueueForCurrentOrder: async function(retry) {
         try {
-            await this.version()
+            await this.version(3)
             let order = this.currentOrder
             let uid = order.name
             let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
@@ -198,7 +198,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     */
     fetchOrderFromClientPoS: async function(retry) {
         try {
-            await this.version()
+            await this.version(3)
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "GET",
                 headers: {
