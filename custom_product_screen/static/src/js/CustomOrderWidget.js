@@ -24,7 +24,7 @@ class CustomOrderWidget extends PosComponent {
         let products_to_sync_by_orderline_id = Object.keys(this.env.pos.db.products_to_sync_by_orderline_id)
         console.warn(products_to_sync_by_orderline_id)
         console.warn(orderlines)
-        let result = orderlines.filter(or => products_to_sync_by_orderline_id.includes(or.id))
+        let result = orderlines.filter(line => products_to_sync_by_orderline_id.includes(`${line.id}`))
         console.warn(result)
         return result
     }
