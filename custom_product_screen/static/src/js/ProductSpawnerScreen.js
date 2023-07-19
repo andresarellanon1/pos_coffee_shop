@@ -56,6 +56,8 @@ class ProductSpawnerScreen extends PosComponent {
             extra_components.push({ id: component.extra.id, qty: component.count })
             this.env.pos.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
         }
+        console.warn('adding product to sync by orderline')
+        console.log(this.env.pos.db.product_to_sync_by_orderline_id)
         this.env.pos.db.add_product_to_sync_by_orderline_id(parent_orderline.id, product.id, options, extra_components)
         this.trigger('product-spawned')
         this.trigger('close-temp-screen')
