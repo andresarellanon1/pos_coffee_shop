@@ -11,7 +11,7 @@ patch(Orderline.prototype, "getter/setter patch", {
         let child_orderlines = []
         for (let key in child_orderline_by_orderline_id) {
             if (child_orderline_by_orderline_id[key].parent_orderline_id === orderline_id)
-                child_orderlines.push(orderlines.find(or => or.id === key))
+                child_orderlines.push(orderlines.find(line => line.id === child_orderline_by_orderline_id[key].orderline_id))
         }
         return child_orderlines
     },

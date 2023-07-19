@@ -71,7 +71,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     method: 'confirm_single',
                     args: [1, {
                         'id': orderlines[orderline_id].product.id,
-                        'production_id': key,
+                        'production_id': orderlines_to_sync_by_production_id[key].production_id,
                         'qty': 1,
                         'product_tmpl_id': orderlines[orderline_id].product.product_tmpl_id,
                         'pos_reference': order.name,
@@ -114,7 +114,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 let production_ids = await this.rpc({
                     model: 'mrp.production',
                     method: 'search',
-                    args: [['id', '=', key]]
+                    args: [['id', '=', orderlines_to_sync_by_production_id[key].production_id]]
                 })
                 await rpc.query({
                     model: 'mrp.production',
@@ -143,7 +143,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             for (let key in orderlines_to_sync_by_production_id) {
                 let index = orderlines_to_sync_by_production_id[key].orderline_id
                 orderlines.push({
-                    production_id: key,
+                    production_id: orderlines_to_sync_by_production_id[key].production_id,
                     product_id: products_to_sync_by_orderline_id[index].product_id,
                     options: products_to_sync_by_orderline_id[index].options,
                     extra_components: products_to_sync_by_orderline_id[index].extra_components
