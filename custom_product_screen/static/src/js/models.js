@@ -53,7 +53,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                             'uom_id': line.product.uom_id[0]
                         }],
                     })
-                    this.db.add_orderline_to_sync_by_production_id(id, orderlines[key].id)
+                    this.db.add_orderline_to_sync_by_production_id(id, line.id)
                 }
             }
         } catch (e) {
