@@ -38,7 +38,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let orderlines = order.get_orderlines()
             let products_to_sync_by_orderline_id_keys = Object.keys(this.db.products_to_sync_by_orderline_id)
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
-            orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
+            orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(orderline.id))
             for (let key in products_to_sync_by_orderline_id) {
                 for (let j = 0; j < orderlines[key].quantity; j++) {
@@ -67,7 +67,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
             let products_to_sync_by_orderline_id_keys = Object.keys(this.db.products_to_sync_by_orderline_id)
-            orderlines = orderlines.filter(orderline => !this.orderlineSkipMO.map(line => line.id).includes(orderline.id))
+            orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(orderline.id))
             for (let key in orderlines_to_sync_by_production_id) {
                 let orderline_id = orderlines_to_sync_by_production_id[key].orderline_id
