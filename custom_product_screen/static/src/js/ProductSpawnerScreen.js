@@ -29,6 +29,7 @@ class ProductSpawnerScreen extends PosComponent {
             selected_attributes.push(attribute)
             price_extra = price_extra + attribute.price_extra
         }
+        let product = this.env.pos.db.get_product_by_attr(selected_attributes, this.product_template_id)
         for (let extra_component of this.env.extra_components) {
             let payload = extra_component.getValue()
             if (payload.count <= 0 || payload.count > 5) continue
@@ -36,7 +37,6 @@ class ProductSpawnerScreen extends PosComponent {
             // accumulate extra component price on the main product
             price_extra = price_extra + payload.price_extra
         }
-        let product = this.env.pos.db.get_product_by_attr(selected_attributes, this.product_template_id)
         let options = {
             draftPackLotLines,
             quantity: 1,
@@ -44,7 +44,8 @@ class ProductSpawnerScreen extends PosComponent {
             description: ""
         }
         let parent_orderline = await this._addProduct(product, options)
-        for (let component of component_products) {
+        for (let extra_component of this.env.extra_components) {
+            let component = extra_component.getValue()
             let options = {
                 draftPackLotLines,
                 quantity: component.count,
@@ -53,7 +54,7 @@ class ProductSpawnerScreen extends PosComponent {
             }
             let child_orderline = await this._addProduct(component.extra, options)
             extra_components.push({ id: component.extra.id, qty: component.count })
-            this.env.pos.db.add_extra_component_by_orderline_id(parent_orderline.id, child_orderline.id, product.id, component.extra)
+            this.env.pos.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
         }
         this.env.pos.db.add_product_to_sync_by_orderline_id(parent_orderline.id, product.id, options, extra_components)
         this.trigger('product-spawned')

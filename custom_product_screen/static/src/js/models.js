@@ -21,7 +21,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         this.db.add_bom_lines(lines)
     },
     add_new_order: function() {
-        this.db.extra_components_by_orderline_id = {}
+        this.db.child_orderline_by_orderline_id = {}
         this.db.products_to_sync_by_orderline_id = {}
         this.db.orderlines_to_sync_by_production_id = {}
         this.db.orderlineSkipMO = []
@@ -84,16 +84,10 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    clearOrderMrpProduction: async function(order) {
+    // NOTE: Clears mrp production for the current matching origin (order name)
+    clearCurrentOrderMrpProduction: async function() {
         try {
-            let orderlines = order.get_orderlines()
-            let extras_orderlines_id = []
-            let extra_components_by_orderline_id = this.db.extra_components_by_orderline_id
-            for (let key in extra_components_by_orderline_id) {
-                extras_orderlines_id.push(key)
-            }
-            orderlines = orderlines.filter(or => !extras_orderlines_id.includes(or.id))
-            let origin = `POS-${order.name}`
+            let origin = `POS-${this.currentOrder.name}`
             let production_ids = await this.rpc({
                 model: 'mrp.production',
                 method: 'search',
@@ -112,18 +106,23 @@ patch(PosGlobalState.prototype, "prototype patch", {
             console.error(e)
         }
     },
-    clearSingleMrpProduction: async function(id) {
+    clearSingleMrpProduction: async function(orderline_id) {
         try {
-            let production_ids = await this.rpc({
-                model: 'mrp.production',
-                method: 'search',
-                args: [['id', '=', id]]
-            })
-            await rpc.query({
-                model: 'mrp.production',
-                method: 'unlink',
-                args: [1, production_ids],
-            })
+            let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
+            for (let key in orderlines_to_sync_by_production_id) {
+                if (orderlines_to_sync_by_production_id[key].orderline_id !== orderline_id) continue
+                let production_ids = await this.rpc({
+                    model: 'mrp.production',
+                    method: 'search',
+                    args: [['id', '=', key]]
+                })
+                await rpc.query({
+                    model: 'mrp.production',
+                    method: 'unlink',
+                    args: [1, production_ids],
+                })
+                break
+            }
         } catch (e) {
             this.showPopup('ErrorPopup', {
                 title: 'Error al eliminar la order de manufactura en el sistema. Se esta eliminando del PoS.',
@@ -174,7 +173,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     },
     /*  
     * NOTE: only requires to fix on click pay for the orders created in the main PoS because the order uids haven't been pushed in the queue yet 
-    * NOTE: the clent session method "sendOrder" does this internally when the order is sent to the queue
+    * NOTE: the client session method "sendOrderToMainPoS" does this as a side effect on its backend handler
     */
     fixQueueForCurrentOrder: async function(retry) {
         try {
@@ -236,12 +235,12 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         price_extra: 0.0,
                         description: extra.display_name,
                     }
-                    let extra_components = await this._addProduct(extra, options)
-                    this.db.add_extra_component_by_orderline_id(parent_orderline.id, extra_components.id, product.id, extra)
+                    let child_orderline = await this._addProduct(extra, options)
+                    this.db.add_extra_component_by_orderline_id(parent_orderline.id, child_orderline.id)
                 }
-                // NOTE: Emulate spawing orderline for product locally
+                // NOTE: Emulate spawing orderline for product locally (from method spawnProduct)
                 this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, payload.product_id, payload.options, payload.extra_components)
-                // NOTE: Emulate creating mrp.production locally 
+                // NOTE: Emulate creating mrp.production locally  (from method createCurrentOrderMrpProduction)
                 this.db.add_orderline_to_sync_by_production_id(payload.production_id, parent_orderline.id)
             }
             this.trigger('product-spawned')
@@ -296,8 +295,8 @@ patch(Order.prototype, "prototype patch", {
     }
 })
 
-patch(Order.prototype, "constructor patch", {
-    setup() {
-        this._super(...arguments)
-    }
-})
+// patch(Order.prototype, "constructor patch", {
+//     setup() {
+//         this._super(...arguments)
+//     }
+// })

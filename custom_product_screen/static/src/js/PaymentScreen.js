@@ -11,6 +11,7 @@ patch(PaymentScreen.prototype, "getter/setter patch", {
 patch(PaymentScreen.prototype, "prototype patch", {
     _finalizeValidation: async function() {
         await this.env.pos.confirmCurrentOrderMrpProduction()
+        await this.env.pos.fixQueueForCurrentOrder(3)
         this._super()
     }
 })

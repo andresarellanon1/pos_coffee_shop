@@ -10,7 +10,7 @@ patch(PosDB.prototype, "prototype patch", {
         this.boms_by_template_id = {}
         this.bom_lines_by_bom_id = {}
         this.isEmployee = false
-        this.extra_components_by_orderline_id = {}
+        this.child_orderline_by_orderline_id = {}
         this.products_to_sync_by_orderline_id = {}
         this.orderlines_to_sync_by_production_id = {}
         this.orderlineSkipMO = []
@@ -79,12 +79,10 @@ patch(PosDB.prototype, "prototype patch", {
     },
     // NOTE: Prepare extra components to show on UI based on the extra component orderline id
     // NOTE: Also used to filter unwanted orderlines before making inventory moves based on orderlines  
-    add_extra_component_by_orderline_id: function(parent_orderline_id, parent_product_id, orderline_id, extra_component) {
-        this.extra_components_by_orderline_id[orderline_id] = {
+    add_child_orderline_by_orderline_id: function(parent_orderline_id, orderline_id) {
+        this.child_orderline_by_orderline_id[orderline_id] = {
             orderline_id: orderline_id,
-            parent_orderline_id: parent_orderline_id,
-            parent_product_id: parent_product_id,
-            extra_component: extra_component,
+            parent_orderline_id: parent_orderline_id
         }
     },
     // NOTE: Prepare orderlines and products to create mrp.production for each "parent orderline product", the child_orderlines_ids are no longer relevant so we store the raw list of components

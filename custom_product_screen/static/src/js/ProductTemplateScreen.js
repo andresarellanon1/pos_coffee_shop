@@ -58,6 +58,25 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClearOrder(event) {
         try {
             this.trigger('show-loader')
+            await this.env.pos.clearCurrentOrderMrpProduction()
+            let order = this.currentOrder
+            this.env.pos.removeOrder(order)
+            this.env.pos.add_new_order()
+            this.trigger('hide-loader')
+        } catch (e) {
+            this.trigger('hide-loader')
+            this.showPopup('ErrorPopup', {
+                title: 'Error al cancelar orden',
+                body: e
+            })
+            console.error(e)
+        }
+    }
+    async _onClearOrderline(event) {
+        try {
+            this.trigger('show-loader')
+            let orderline_id = event.detail
+            await this.env.pos.clearCurrentOrderMrpProduction(orderline_id)
             let order = this.currentOrder
             this.env.pos.removeOrder(order)
             this.env.pos.add_new_order()
@@ -78,9 +97,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         try {
             this.trigger('show-loader')
             await this.env.pos.createCurrentOrderMrpProduction()
-            await this.env.pos.fixQueueForCurrentOrder(3)
-            for (let key in this.env.pos.db.extra_components_by_orderline_id) {
-                let orderline = this.currentOrder.orderlines.find(or => or.id === this.env.pos.db.extra_components_by_orderline_id[key].orderline_id)
+            for (let key in this.env.pos.db.child_orderline_by_orderline_id) {
+                let orderline = this.currentOrder.orderlines.find(or => or.id === key)
                 this.currentOrder.remove_orderline(orderline)
             }
             this.showScreen('PaymentScreen')
@@ -94,12 +112,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.error(e)
         }
     }
-    /*
-    * NOTE: Call on main PoS session
-    */
-    async _onOrderValid(event) {
-        let orderName = event.detail
-            }
     /*
     * NOTE: Call on main PoS session
     */
