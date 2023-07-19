@@ -269,7 +269,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
 })
 
 patch(Order.prototype, "prototype patch", {
-    add_product_but_well_done: async function(product, options, production_id) {
+    add_product_but_well_done: async function(product, options) {
         this.assert_editable()
         options = options || {}
         var line = Orderline.create({}, { pos: this.pos, order: this, product: product })
