@@ -9,9 +9,11 @@ patch(PosDB.prototype, "prototype patch", {
         this.products_template_by_id = {}
         this.boms_by_template_id = {}
         this.bom_lines_by_bom_id = {}
-        this.products_extra_by_orderline_id = {}
-        this.orderlines_to_sync_by_production_id = {}
         this.isEmployee = false
+        this.extra_components_by_orderline_id = {}
+        this.products_to_sync_by_orderline_id = {}
+        this.orderlines_to_sync_by_production_id = {}
+        this.orderlineSkipMO = []
         this._super(options)
     },
     add_products_templates: function(products) {
@@ -35,6 +37,7 @@ patch(PosDB.prototype, "prototype patch", {
             for (let line of lines)
                 this.bom_lines_by_bom_id[line.bom_id[0]].push(line)
         } catch (e) {
+            // TODO: add popup error 
             console.error('Most likely caused by a poor mrp.bom configuration')
             console.error(e)
         }
@@ -74,22 +77,33 @@ patch(PosDB.prototype, "prototype patch", {
         }
         return categ_id
     },
-    add_extra_component_by_orderline_id: function(parent_orderline_id, orderline_id, product_id, childProduct) {
-        this.products_extra_by_orderline_id[orderline_id] = {
+    // NOTE: Prepare extra components to show on UI based on the extra component orderline id
+    // NOTE: Also used to filter unwanted orderlines before making inventory moves based on orderlines  
+    add_extra_component_by_orderline_id: function(parent_orderline_id, parent_product_id, orderline_id, extra_component) {
+        this.extra_components_by_orderline_id[orderline_id] = {
             orderline_id: orderline_id,
             parent_orderline_id: parent_orderline_id,
-            parent_product_id: product_id,
-            child_product: childProduct,
+            parent_product_id: parent_product_id,
+            extra_component: extra_component,
         }
     },
-    add_orderline_to_sync_by_production_id: function(production_id, product_id, options, extra_components) {
-        this.orderlines_to_sync_by_production_id[production_id] = {
-            production_id: production_id,
+    // NOTE: Prepare orderlines and products to create mrp.production for each "parent orderline product", the child_orderlines_ids are no longer relevant so we store the raw list of components
+    add_product_to_sync_by_orderline_id: function(orderline_id, product_id, options, extra_components) {
+        this.products_to_sync_by_orderline_id[orderline_id] = {
+            orderline_id: orderline_id,
             product_id: product_id,
             options: options,
             extra_components: extra_components
         }
     },
+    // NOTE: "products_to_sync_by_orderline_id" and "orderlines_to_sync_by_production_id" are the same logic unit but "orderlines_to_sync_by_production_id" need the mrp.production to be generated in order to store the reference
+    add_orderline_to_sync_by_production_id: function(production_id, orderline_id) {
+        this.orderlines_to_sync_by_production_id[production_id] = {
+            production_id: production_id,
+            orderline_id: orderline_id
+        }
+    },
+    // TODO: move to pos global state
     _isEmployee: async function() {
         this.isEmployee = await rpc.query({
             model: 'pos.config',

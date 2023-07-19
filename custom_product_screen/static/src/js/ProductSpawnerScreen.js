@@ -4,6 +4,7 @@ import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
 import { useSubEnv, useState, useExternalListener } from '@odoo/owl'
 import { useListener } from '@web/core/utils/hooks'
+import rpc from 'web.rpc'
 
 class ProductSpawnerScreen extends PosComponent {
     setup(options) {
@@ -51,14 +52,16 @@ class ProductSpawnerScreen extends PosComponent {
                 description: component.display_name,
             }
             let child_orderline = await this._addProduct(component.extra, options)
-            extra_components.push({ product_id: component.extra.id, qty: component.count })
+            extra_components.push({ id: component.extra.id, qty: component.count })
             this.env.pos.db.add_extra_component_by_orderline_id(parent_orderline.id, child_orderline.id, product.id, component.extra)
         }
-        this.trigger('product-spawned', { product_id: product.id, options: options, extra_components: extra_components })
+        this.env.pos.db.add_product_to_sync_by_orderline_id(parent_orderline.id, product.id, options, extra_components)
+        this.trigger('product-spawned')
         this.trigger('close-temp-screen')
     }
+
     async _addProduct(product, options) {
-        return await this.currentOrder.add_product_but_well_done(product, options, null)
+        return await this.currentOrder.add_product_but_well_done(product, options)
     }
     get currentOrder() {
         return this.env.pos.get_order()
@@ -68,7 +71,7 @@ class ProductSpawnerScreen extends PosComponent {
     }
     _computeExtras(event) {
         // WARNING: Any changes to this block may result in undesired stock.move/stock.move.line
-        // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed
+        // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed 
         let categ_id = this.env.pos.db.get_categ_by_name('Extra')
         let extra_products = this.env.pos.db.get_product_by_category(categ_id)
         let bom = this.env.pos.db.boms_by_template_id[this.product_template_id]

@@ -8,3 +8,9 @@ patch(PaymentScreen.prototype, "getter/setter patch", {
         return !this.error ? 'ReceiptScreen' : 'ProducTemplateScreen'
     }
 })
+patch(PaymentScreen.prototype, "prototype patch", {
+    _finalizeValidation: async function() {
+        await this.env.pos.confirmCurrentOrderMrpProduction()
+        this._super()
+    }
+})
