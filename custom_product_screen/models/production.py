@@ -17,6 +17,47 @@ class MrpProduction(models.Model):
             return
         mrp_order = self.env['mrp.production'].search(
             [('id', '=', product_payload['production_id'])])
+        mrp_order.update({
+            'state': 'progress'})
+        return
+
+    def create_single(self, product_payload):
+        if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
+            return
+        # NOTE: for the coffeshop use case
+        # each mrp.production(manufacturingorde) should be created for each individual product, meaning only product_payload[qty] == 1 allowed
+        # make sure to send the products 1 by 1 from the POS javascript files
+        # and to not merge theorderlines in the pos live data
+        if not product_payload['qty'] == 1:
+            return
+        # NOTE: do not remove this block to define the bom
+        # it looks time consuming to justify wheter or not to discriminate mrp.bom(s) without product_id
+        # NOTE: ps by default it will give priority to bom_prod
+        bom_count = self.env['mrp.bom'].search(
+            [('product_tmpl_id', '=', product_payload['product_tmpl_id'])])
+        if bom_count:
+            bom_temp = self.env['mrp.bom'].search(
+                [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
+            bom_prod = self.env['mrp.bom'].search(
+                [('product_id', '=', product_payload['id'])])
+        if bom_prod:
+            bom = bom_prod[0]  # priority
+        elif bom_temp:
+            bom = bom_temp[0]
+        else:
+            bom = []
+        if not bom:
+            return
+        vals = {
+            'origin': 'POS-' + product_payload['pos_reference'],
+            'state': 'confirmed',
+            'product_id': product_payload['id'],
+            'product_tmpl_id': product_payload['product_tmpl_id'],
+            'product_uom_id': product_payload['uom_id'],
+            'product_qty': product_payload['qty'],
+            'bom_id': bom.id,
+        }
+        mrp_order = self.sudo().create(vals)
         components = []
         for bom_line in mrp_order.bom_id.bom_line_ids:
             # default qty of BoM
@@ -59,46 +100,6 @@ class MrpProduction(models.Model):
             'move_raw_ids': components,
             'move_finished_ids': [(0, 0, mrp_production)]
         })
-
-        return
-
-    def create_single(self, product_payload):
-        if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
-            return
-        # NOTE: for the coffeshop use case
-        # each mrp.production(manufacturingorde) should be created for each individual product, meaning only product_payload[qty] == 1 allowed
-        # make sure to send the products 1 by 1 from the POS javascript files
-        # and to not merge theorderlines in the pos live data
-        if not product_payload['qty'] == 1:
-            return
-        # NOTE: do not remove this block to define the bom
-        # it looks time consuming to justify wheter or not to discriminate mrp.bom(s) without product_id
-        # NOTE: ps by default it will give priority to bom_prod
-        bom_count = self.env['mrp.bom'].search(
-            [('product_tmpl_id', '=', product_payload['product_tmpl_id'])])
-        if bom_count:
-            bom_temp = self.env['mrp.bom'].search(
-                [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
-            bom_prod = self.env['mrp.bom'].search(
-                [('product_id', '=', product_payload['id'])])
-        if bom_prod:
-            bom = bom_prod[0]  # priority
-        elif bom_temp:
-            bom = bom_temp[0]
-        else:
-            bom = []
-        if not bom:
-            return
-        vals = {
-            'origin': 'POS-' + product_payload['pos_reference'],
-            'state': 'confirmed',
-            'product_id': product_payload['id'],
-            'product_tmpl_id': product_payload['product_tmpl_id'],
-            'product_uom_id': product_payload['uom_id'],
-            'product_qty': product_payload['qty'],
-            'bom_id': bom.id,
-        }
-        mrp_order = self.sudo().create(vals)
         return mrp_order.id
 
 
