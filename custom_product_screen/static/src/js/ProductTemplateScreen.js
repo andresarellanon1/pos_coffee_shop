@@ -120,7 +120,9 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             let order = this.currentOrder
             this.env.pos.removeOrder(order)
             this.env.pos.add_new_order()
-            await this.fetchOrderFromClientPoS(3)
+            await this.env.pos.fetchOrderFromClientPoS(3)
+            this.trigger('product-spawned')
+            this.trigger('close-temp-screen')
             this.trigger('hide-loader')
         } catch (e) {
             this.trigger('hide-loader')

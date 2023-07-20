@@ -159,7 +159,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     orderlines: orderlines,
                 })
             })
-            this.trigger('hide-loader')
             if (response.status === 200)
                 return
             if (retry > 0)
@@ -240,8 +239,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 // NOTE: Emulate creating mrp.production locally  (from method createCurrentOrderMrpProduction)
                 this.db.add_orderline_to_sync_by_production_id(payload.production_id, parent_orderline.id)
             }
-            this.trigger('product-spawned')
-            this.trigger('close-temp-screen')
         } catch (e) {
             throw e
         }
