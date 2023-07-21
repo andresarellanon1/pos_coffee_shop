@@ -118,7 +118,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 let production_ids = await rpc.query({
                     model: 'mrp.production',
                     method: 'search',
-                    args: [['id', '=', orderlines_to_sync_by_production_id[key].production_id]]
+                    args: [1, ['id', '=', orderlines_to_sync_by_production_id[key].production_id]]
                 })
                 await rpc.query({
                     model: 'mrp.production',
