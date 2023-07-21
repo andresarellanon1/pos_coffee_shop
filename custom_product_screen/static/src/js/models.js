@@ -37,24 +37,28 @@ patch(PosGlobalState.prototype, "prototype patch", {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
-            let products_to_sync_by_orderline_id_keys = Object.keys(this.db.products_to_sync_by_orderline_id)
+            let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
+            let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
+            let products_to_sync_by_orderline_id_keys = Object.keys(products_to_sync_by_orderline_id)
             orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
-            for (let line of orderlines) {
-                for (let j = 0; j < line.quantity; j++) {
-                    let id = await rpc.query({
-                        model: 'mrp.production',
-                        method: 'create_single',
-                        args: [1, {
-                            'id': line.product.id,
-                            'qty': 1,
-                            'product_tmpl_id': line.product.product_tmpl_id,
-                            'pos_reference': order.name,
-                            'uom_id': line.product.uom_id[0]
-                        }],
-                    })
-                    this.db.add_orderline_to_sync_by_production_id(id, line.id)
-                }
+            for (let key in orderlines_to_sync_by_production_id) {
+                let orderline_id = orderlines_to_sync_by_production_id[key].orderline_id
+                let orderline = orderlines.find(line => line.id === orderline_id)
+                let id = await rpc.query({
+                    model: 'mrp.production',
+                    method: 'create_single',
+                    args: [1, {
+                        'id': orderline.product.id,
+                        'production_id': orderlines_to_sync_by_production_id[key].production_id,
+                        'qty': 1,
+                        'product_tmpl_id': orderline.product.product_tmpl_id,
+                        'pos_reference': order.name,
+                        'uom_id': orderline.product.uom_id[0],
+                        'components': products_to_sync_by_orderline_id[orderline_id].extra_components
+                    }],
+                })
+                this.db.add_orderline_to_sync_by_production_id(id, line.id)
             }
         } catch (e) {
             throw e
@@ -78,11 +82,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     args: [1, {
                         'id': orderline.product.id,
                         'production_id': orderlines_to_sync_by_production_id[key].production_id,
-                        'qty': 1,
-                        'product_tmpl_id': orderline.product.product_tmpl_id,
-                        'pos_reference': order.name,
-                        'uom_id': orderline.product.uom_id[0],
-                        'components': products_to_sync_by_orderline_id[orderline_id].extra_components
                     }],
                 })
             }
@@ -99,6 +98,9 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 method: 'search',
                 args: [['origin', '=', origin]]
             })
+            if (production_ids.lenght === 0 || production_ids === null) return
+            console.warn('clearing current production ids')
+            console.log(production_ids)
             await rpc.query({
                 model: 'mrp.production',
                 method: 'unlink',
