@@ -43,8 +43,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
             console.warn('creating the thingy')
             for (let key in products_to_sync_by_orderline_id) {
-                let orderline_id = products_to_sync_by_orderline_id[key].orderline_id
-                let orderline = orderlines.find(line => line.id === orderline_id)
+                let orderline = orderlines.find(line => line.id === products_to_sync_by_orderline_id[key].orderline_id)
                 let id = await rpc.query({
                     model: 'mrp.production',
                     method: 'create_single',
@@ -54,12 +53,12 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         'product_tmpl_id': orderline.product.product_tmpl_id,
                         'pos_reference': order.name,
                         'uom_id': orderline.product.uom_id[0],
-                        'components': products_to_sync_by_orderline_id[orderline_id].extra_components
+                        'components': products_to_sync_by_orderline_id[orderline.id].extra_components
                     }],
                 })
                 console.warn('the thingy id')
                 console.log(id)
-                this.db.add_orderline_to_sync_by_production_id(id, line.id)
+                this.db.add_orderline_to_sync_by_production_id(id, orderline.id)
                 console.warn(this.db.orderlines_to_sync_by_production_id)
             }
         } catch (e) {
