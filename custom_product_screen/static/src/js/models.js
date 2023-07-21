@@ -97,7 +97,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let production_ids = await rpc.query({
                 model: 'mrp.production',
                 method: 'search',
-                args: [['origin', '=', origin]]
+                args: [1, ['origin', '=', origin]]
             })
             if (production_ids.lenght === 0 || production_ids === null) return
             console.log(production_ids)
@@ -149,6 +149,8 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     extra_components: products_to_sync_by_orderline_id[index].extra_components
                 })
             }
+            console.warn('orderlines')
+            console.log(orderlines)
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "POST",
                 headers: {
