@@ -37,13 +37,12 @@ patch(PosGlobalState.prototype, "prototype patch", {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
-            let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
             let products_to_sync_by_orderline_id_keys = Object.keys(products_to_sync_by_orderline_id)
             orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
             console.warn('creating the thingy')
-            for (let key in orderlines_to_sync_by_production_id) {
+            for (let key in products_to_sync_by_orderline_id) {
                 let orderline_id = orderlines_to_sync_by_production_id[key].orderline_id
                 let orderline = orderlines.find(line => line.id === orderline_id)
                 let id = await rpc.query({
@@ -51,7 +50,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     method: 'create_single',
                     args: [1, {
                         'id': orderline.product.id,
-                        'production_id': orderlines_to_sync_by_production_id[key].production_id,
                         'qty': 1,
                         'product_tmpl_id': orderline.product.product_tmpl_id,
                         'pos_reference': order.name,
