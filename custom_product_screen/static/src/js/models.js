@@ -93,14 +93,14 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let production_ids = await rpc.query({
                 model: 'mrp.production',
                 method: 'search',
-                args: [1, ['origin', '=', origin]]
+                args: [[['origin', '=', origin]]]
             })
             if (production_ids.lenght === 0 || production_ids === null) return
             console.log(production_ids)
             await rpc.query({
                 model: 'mrp.production',
                 method: 'unlink',
-                args: [1, production_ids],
+                args: [production_ids],
             })
         } catch (e) {
             throw e
@@ -114,7 +114,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 let production_ids = await rpc.query({
                     model: 'mrp.production',
                     method: 'search',
-                    args: [1, ['id', '=', orderlines_to_sync_by_production_id[key].production_id]]
+                    args: [['id', '=', orderlines_to_sync_by_production_id[key].production_id]]
                 })
                 await rpc.query({
                     model: 'mrp.production',
