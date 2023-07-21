@@ -139,9 +139,14 @@ patch(PosGlobalState.prototype, "prototype patch", {
             await this.fetchVersion(3)
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
             let orderlines_to_sync_by_production_id = this.orderlines_to_sync_by_production_id
+            console.warn('products_to_sync_by_orderline_id')
+            console.log(products_to_sync_by_orderline_id)
+            console.warn('orderlines_to_sync_by_production_id')
+            console.log(orderlines_to_sync_by_production_id)
             let orderlines = []
             for (let key in orderlines_to_sync_by_production_id) {
                 let index = orderlines_to_sync_by_production_id[key].orderline_id
+                console.error(index)
                 orderlines.push({
                     production_id: orderlines_to_sync_by_production_id[key].production_id,
                     product_id: products_to_sync_by_orderline_id[index].product_id,
