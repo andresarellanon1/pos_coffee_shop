@@ -66,7 +66,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
             this.showPopup('ErrorPopup', {
                 title: 'Error al cancelar orden',
-                body: e
+                body: JSON.stringify(e)
             })
             console.error(e)
         }
@@ -84,7 +84,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
             this.showPopup('ErrorPopup', {
                 title: 'Error al cancelar orden',
-                body: e
+                body: JSON.stringify(e)
             })
             console.error(e)
         }
@@ -106,7 +106,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
             this.showPopup('ErrorPopup', {
                 title: 'Error al preparar pantalla de cobro',
-                body: e
+                body: JSON.stringify(e)
             })
             console.error(e)
         }
@@ -128,7 +128,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
             this.showPopup('ErrorPopup', {
                 title: 'Error al cargar orden desde la session remota',
-                body: e
+                body: JSON.stringify(e)
             })
             console.error(e)
         }
@@ -151,7 +151,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
             this.showPopup('ErrorPopup', {
                 title: 'Error al enviar orden a la session remota',
-                body: e
+                body: JSON.stringify(e)
             })
             console.error(e)
         }
