@@ -142,7 +142,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         try {
             await this.fetchVersion(3)
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
-            let orderlines_to_sync_by_production_id = this.orderlines_to_sync_by_production_id
+            let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             console.warn('products_to_sync_by_orderline_id')
             console.log(products_to_sync_by_orderline_id)
             console.warn('orderlines_to_sync_by_production_id')
