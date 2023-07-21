@@ -43,7 +43,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
             console.warn('creating the thingy')
             for (let key in products_to_sync_by_orderline_id) {
-                let orderline_id = orderlines_to_sync_by_production_id[key].orderline_id
+                let orderline_id = products_to_sync_by_orderline_id[key].orderline_id
                 let orderline = orderlines.find(line => line.id === orderline_id)
                 let id = await rpc.query({
                     model: 'mrp.production',
