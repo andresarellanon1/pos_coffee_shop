@@ -209,6 +209,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             })
             if (response.status === 200) {
                 let payload = await response.json()
+                console.log(payload)
                 return await this.loadDataToCurrentOrder(payload)
             }
             if (retry > 0)

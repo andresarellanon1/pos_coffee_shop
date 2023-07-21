@@ -2,7 +2,7 @@
 
 import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
-import { useRef, onMounted } from '@odoo/owl'
+import { useRef } from '@odoo/owl'
 
 class CustomOrderWidget extends PosComponent {
     setup() {
@@ -11,7 +11,6 @@ class CustomOrderWidget extends PosComponent {
     }
     get skipNextMO() {
         return this.state.skipNextMO
-        m
     }
     get order() {
         return this.env.pos.get_order()
@@ -22,10 +21,7 @@ class CustomOrderWidget extends PosComponent {
     get _orderlinesArray() {
         let orderlines = this.order ? this.order.get_orderlines() : []
         let products_to_sync_by_orderline_id = Object.keys(this.env.pos.db.products_to_sync_by_orderline_id)
-        console.warn(products_to_sync_by_orderline_id)
-        console.warn(orderlines)
         let result = orderlines.filter(line => products_to_sync_by_orderline_id.includes(`${line.id}`))
-        console.warn(result)
         return result
     }
 }
