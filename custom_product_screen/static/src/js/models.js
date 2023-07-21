@@ -42,6 +42,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let products_to_sync_by_orderline_id_keys = Object.keys(products_to_sync_by_orderline_id)
             orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
+            console.warn('creating the thingy')
             for (let key in orderlines_to_sync_by_production_id) {
                 let orderline_id = orderlines_to_sync_by_production_id[key].orderline_id
                 let orderline = orderlines.find(line => line.id === orderline_id)
@@ -58,7 +59,10 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         'components': products_to_sync_by_orderline_id[orderline_id].extra_components
                     }],
                 })
+                console.warn('the thingy id')
+                console.log(id)
                 this.db.add_orderline_to_sync_by_production_id(id, line.id)
+                console.warn(this.db.orderlines_to_sync_by_production_id)
             }
         } catch (e) {
             throw e
