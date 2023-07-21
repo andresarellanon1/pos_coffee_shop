@@ -41,7 +41,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let products_to_sync_by_orderline_id_keys = Object.keys(products_to_sync_by_orderline_id)
             orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
-            console.warn('creating the thingy')
             for (let key in products_to_sync_by_orderline_id) {
                 let orderline = orderlines.find(line => line.id === products_to_sync_by_orderline_id[key].orderline_id)
                 let id = await rpc.query({
@@ -56,10 +55,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         'components': products_to_sync_by_orderline_id[orderline.id].extra_components
                     }],
                 })
-                console.warn('the thingy id')
-                console.log(id)
                 this.db.add_orderline_to_sync_by_production_id(id, orderline.id)
-                console.warn(this.db.orderlines_to_sync_by_production_id)
             }
         } catch (e) {
             throw e
@@ -93,7 +89,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
     // NOTE: Clears mrp production for the current matching origin (order name)
     clearCurrentOrderMrpProduction: async function() {
         try {
-            console.warn('clearing current production ids')
             let origin = `POS-${this.currentOrder.name}`
             let production_ids = await rpc.query({
                 model: 'mrp.production',
@@ -140,14 +135,9 @@ patch(PosGlobalState.prototype, "prototype patch", {
             await this.fetchVersion(2)
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
-            console.warn('products_to_sync_by_orderline_id')
-            console.log(products_to_sync_by_orderline_id)
-            console.warn('orderlines_to_sync_by_production_id')
-            console.log(orderlines_to_sync_by_production_id)
             let orderlines = []
             for (let key in orderlines_to_sync_by_production_id) {
                 let index = orderlines_to_sync_by_production_id[key].orderline_id
-                console.error(index)
                 orderlines.push({
                     production_id: orderlines_to_sync_by_production_id[key].production_id,
                     product_id: products_to_sync_by_orderline_id[index].product_id,
@@ -155,8 +145,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     extra_components: products_to_sync_by_orderline_id[index].extra_components
                 })
             }
-            console.warn('orderlines')
-            console.log(orderlines)
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "POST",
                 headers: {
@@ -217,7 +205,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
             })
             if (response.status === 200) {
                 let payload = await response.json()
-                console.log(payload)
                 return await this.loadDataToCurrentOrder(payload)
             }
             if (retry > 0)
@@ -230,8 +217,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
         try {
             this.currentOrder.name = orderPayload.name
             this.currentOrder.uid = orderPayload.uid
-            console.warn('loading order')
-            console.warn(orderPayload)
             for (let payload of orderPayload.orderlines) {
                 let product = this.db.product_by_id[payload.product_id]
                 let parent_orderline = await this._addProduct(product, payload.options)
@@ -252,7 +237,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 // NOTE: Emulate creating mrp.production locally  (from method createCurrentOrderMrpProduction)
                 this.db.add_orderline_to_sync_by_production_id(payload.production_id, parent_orderline.id)
             }
-            console.log(this.currentOrder)
         } catch (e) {
             throw e
         }
