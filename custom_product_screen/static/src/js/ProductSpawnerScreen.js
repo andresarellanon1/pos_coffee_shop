@@ -19,7 +19,6 @@ class ProductSpawnerScreen extends PosComponent {
     async spawnProduct(event) {
         this.trigger('show-loader')
         let selected_attributes = []
-        let component_products = []
         let extra_components = []
         let draftPackLotLines, quantity
         let price_extra = 0.0
