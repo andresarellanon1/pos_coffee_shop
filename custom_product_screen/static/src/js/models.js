@@ -241,6 +241,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, payload.product_id, payload.options, payload.extra_components)
                 // NOTE: Emulate creating mrp.production locally  (from method createCurrentOrderMrpProduction)
                 this.db.add_orderline_to_sync_by_production_id(payload.production_id, parent_orderline.id)
+                console.log(this.currentOrder)
             }
         } catch (e) {
             throw e
