@@ -92,6 +92,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     // NOTE: Clears mrp production for the current matching origin (order name)
     clearCurrentOrderMrpProduction: async function() {
         try {
+            console.warn('clearing current production ids')
             let origin = `POS-${this.currentOrder.name}`
             let production_ids = await rpc.query({
                 model: 'mrp.production',
@@ -99,7 +100,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 args: [['origin', '=', origin]]
             })
             if (production_ids.lenght === 0 || production_ids === null) return
-            console.warn('clearing current production ids')
             console.log(production_ids)
             await rpc.query({
                 model: 'mrp.production',
@@ -223,6 +223,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             this.currentOrder.name = orderPayload.name
             this.currentOrder.uid = orderPayload.uid
             console.warn('loading order')
+            console.warn(orderPayload)
             for (let payload of orderPayload.orderlines) {
                 let product = this.db.product_by_id[payload.product_id]
                 let parent_orderline = await this._addProduct(product, payload.options)
