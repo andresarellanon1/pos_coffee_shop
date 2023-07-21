@@ -209,7 +209,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             })
             if (response.status === 200) {
                 let payload = await response.json()
-                await this.loadDataToCurrentOrder(payload)
+                return await this.loadDataToCurrentOrder(payload)
             }
             if (retry > 0)
                 await this.fetchOrderFromClientPoS(retry - 1)
