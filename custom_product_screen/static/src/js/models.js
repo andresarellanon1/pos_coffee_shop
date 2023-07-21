@@ -35,14 +35,18 @@ patch(PosGlobalState.prototype, "prototype patch", {
     },
     createCurrentOrderMrpProduction: async function() {
         try {
+            console.warn('createCurrentOrderMrpProduction')
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
+            console.log('Products to sync by orderine id:')
+            console.log(products_to_sync_by_orderline_id)
             let products_to_sync_by_orderline_id_keys = Object.keys(products_to_sync_by_orderline_id)
             orderlines = orderlines.filter(orderline => !this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id))
             orderlines = orderlines.filter(orderline => products_to_sync_by_orderline_id_keys.includes(`${orderline.id}`))
             for (let key in products_to_sync_by_orderline_id) {
                 let orderline = orderlines.find(line => line.id === products_to_sync_by_orderline_id[key].orderline_id)
+                console.log(`orderline${orderline}`)
                 let id = await rpc.query({
                     model: 'mrp.production',
                     method: 'create_single',
@@ -55,6 +59,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         'components': products_to_sync_by_orderline_id[orderline.id].extra_components
                     }],
                 })
+                console.log(`Production id${id}`)
                 this.db.add_orderline_to_sync_by_production_id(id, orderline.id)
             }
         } catch (e) {
@@ -63,6 +68,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     },
     confirmCurrentOrderMrpProduction: async function() {
         try {
+            console.warn('confirmCurrentOrderMrpProduction')
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
@@ -73,6 +79,8 @@ patch(PosGlobalState.prototype, "prototype patch", {
             for (let key in orderlines_to_sync_by_production_id) {
                 let orderline_id = orderlines_to_sync_by_production_id[key].orderline_id
                 let orderline = orderlines.find(line => line.id === orderline_id)
+                console.log('orderline to confirm')
+                console.log(orderline)
                 await rpc.query({
                     model: 'mrp.production',
                     method: 'confirm_single',
