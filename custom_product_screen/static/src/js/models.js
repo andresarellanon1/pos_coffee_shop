@@ -222,6 +222,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         try {
             this.currentOrder.name = orderPayload.name
             this.currentOrder.uid = orderPayload.uid
+            console.warn('loading order')
             for (let payload of orderPayload.orderlines) {
                 let product = this.db.product_by_id[payload.product_id]
                 let parent_orderline = await this._addProduct(product, payload.options)
@@ -242,7 +243,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 // NOTE: Emulate creating mrp.production locally  (from method createCurrentOrderMrpProduction)
                 this.db.add_orderline_to_sync_by_production_id(payload.production_id, parent_orderline.id)
             }
-
             console.log(this.currentOrder)
         } catch (e) {
             throw e
