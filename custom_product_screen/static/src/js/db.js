@@ -45,7 +45,7 @@ patch(PosDB.prototype, "prototype patch", {
     // TODO: optimize to O(1)
     get_product_template_by_menu: function(menu_id) {
         var list = []
-        let categ_id = this.get_categ_by_name('Bebida') // TODO: move string literal to CONST string
+        let categ_id = this.get_categ_by_name('Display') // TODO: move string literal to CONST string
         if (this.products_template_by_id) {
             for (let key in this.products_template_by_id) {
                 let product = this.products_template_by_id[key]
