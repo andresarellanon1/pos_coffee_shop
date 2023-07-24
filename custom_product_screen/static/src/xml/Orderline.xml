@@ -3,7 +3,7 @@
 <templates id="template" xml:space="preserve">
 	<t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
 		<xpath expr="//li[hasclass('orderline')]" position="replace">
-			<div class="container-fluid w-100 d-flex flex-column justify-content-start align-items-center flex-grow-1 ">
+			<div class="btn btn-light container-fluid w-100 d-flex flex-column justify-content-start align-items-center flex-grow-1 ">
 				<div class="fw-bold d-flex w-100 justify-content-between" t-attf-id="article_product_{{props.line.product.id}}">
 					<span class="text-xl">
 						<t t-esc="props.line.product.display_name" />
@@ -11,7 +11,7 @@
 					<span>
 						<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
 					</span>
-					<span class="btn btn-light text-danger" t-on-click="() => this.trigger('clear-orderline', props.line.id)">
+					<span class=" text-danger" t-on-click="() => this.trigger('clear-orderline', props.line.id)">
 					x	
 					</span>
 				</div>
