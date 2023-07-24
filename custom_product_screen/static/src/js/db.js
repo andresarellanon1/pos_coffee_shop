@@ -42,7 +42,7 @@ patch(PosDB.prototype, "prototype patch", {
             console.error(e)
         }
     },
-    // TODO: optimize to O(1)
+    // TODO: optimime to O(1)
     get_product_template_by_menu: function(menu_id) {
         var list = []
         let categ_id = this.get_categ_by_name('Display') // TODO: move string literal to CONST string
