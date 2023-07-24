@@ -74,6 +74,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClearOrderline(event) {
         try {
             this.trigger('show-loader')
+            console.warn('clearing orderline')
+            console.log(event.detail)
             let orderline_id = event.detail
             await this.env.pos.clearCurrentOrderMrpProduction(orderline_id)
             let order = this.currentOrder
