@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-
+import logging
+logger = logging.getLogger(__name__)
 
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
@@ -24,28 +25,10 @@ class MrpProduction(models.Model):
     def create_single(self, product_payload):
         if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
             return
-        # NOTE: for the coffeshop use case
-        # each mrp.production(manufacturingorde) should be created for each individual product, meaning only product_payload[qty] == 1 allowed
-        # make sure to send the products 1 by 1 from the POS javascript files
-        # and to not merge theorderlines in the pos live data
         if not product_payload['qty'] == 1:
             return
-        # NOTE: do not remove this block to define the bom
-        # it looks time consuming to justify wheter or not to discriminate mrp.bom(s) without product_id
-        # NOTE: ps by default it will give priority to bom_prod
-        bom_count = self.env['mrp.bom'].search(
-            [('product_tmpl_id', '=', product_payload['product_tmpl_id'])])
-        if bom_count:
-            bom_temp = self.env['mrp.bom'].search(
+        bom = self.env['mrp.bom'].search(
                 [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
-            bom_prod = self.env['mrp.bom'].search(
-                [('product_id', '=', product_payload['id'])])
-        if bom_prod:
-            bom = bom_prod[0]  # priority
-        elif bom_temp:
-            bom = bom_temp[0]
-        else:
-            bom = []
         if not bom:
             return
         vals = {
@@ -77,7 +60,7 @@ class MrpProduction(models.Model):
                 'product_uom_qty': bom_line_qty,
                 'picking_type_id': mrp_order.picking_type_id.id,
                 'location_id': mrp_order.location_src_id.id,
-                'location_dest_id': bom_line.product_id.with_company(self.company_id.id).property_stock_production.id,
+                'location_dest_id': bom_line.product_id.with_company(self.env.user.company_id.id).property_stock_production.id,
                 'company_id': mrp_order.company_id.id,
             }))
         mrp_production = {
