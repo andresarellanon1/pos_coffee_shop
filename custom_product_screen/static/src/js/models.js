@@ -238,7 +238,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         description: extra.display_name,
                     }
                     let child_orderline = await this._addProduct(extra, options)
-                    this.db.add_extra_component_by_orderline_id(parent_orderline.id, child_orderline.id)
+                    this.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
                 }
                 // NOTE: Emulate spawing orderline for product locally (from method spawnProduct)
                 this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, payload.product_id, payload.options, payload.extra_components)
