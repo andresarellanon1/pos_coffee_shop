@@ -25,7 +25,7 @@ interface Production {
     display_name: string
   }
 }
-const productionQueue = ref<{ [key: string]: { origin: string; item: Production[]; delta: number; done: boolean } }>({})
+const productionQueue = ref<{ [key: string]: { origin: string; item: Production[]; delta: number } }>({})
 const markAsDone = async (production: Production[]) => {
   try {
     const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
@@ -53,7 +53,7 @@ const markAsDone = async (production: Production[]) => {
   }
 }
 // fetch 1 order at a time (List<OrderPayload>)
-const syncOrders = async () => {
+const fetchNextMrpProduction = async () => {
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
@@ -67,64 +67,44 @@ const syncOrders = async () => {
       "Accept": "*",
     }
   })
-  if (production.value !== null) {
-    if (Array.isArray(production.value) && production.value?.length > 0)
-      productionQueue.value[production.value[0].origin] = {
-        origin: production.value[0].origin,
-        item: production.value,
-        delta: PRODUCTION_DELTA_MAX,
-        done: false
-      }
-  }
+  if (production.value === null) return
+  if (Array.isArray(production.value) && production.value.length > 0)
+    productionQueue.value[production.value[0].origin] = {
+      origin: production.value[0].origin,
+      item: production.value,
+      delta: PRODUCTION_DELTA_MAX,
+    }
 }
-const checkInterval = () => {
+const checkIntervalDone = () => {
   for (let key in productionQueue.value) {
     if (productionQueue.value[key].delta <= 1000)
       markAsDone(productionQueue.value[key].item)
     else
       productionQueue.value[key].delta -= 1000
-    if (productionQueue.value[key].done)
-      delete productionQueue.value[key]
   }
 }
-const fetchQueueCache = async () => {
-  const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
-    method: "GET",
-    headers: {
-      "Accept": "*",
-    }
-  })
-  if (version.value === null) return
+const syncCaches = async () => {
   const { data: cache } = await useFetch<{ [key: string]: Production[] }>('http://158.69.63.47:8080/getProductionCache', {
     method: "GET",
     headers: {
       "Accept": "*",
     }
   })
-  const { data: queue } = await useFetch<string[]>('http://158.69.63.47:8080/getProductionQueue', {
-    method: "GET",
-    headers: {
-      "Accept": "*",
-    }
-  })
   if (cache.value === null) return
-  if (queue.value === null) return
-  console.warn(queue.value)
-  console.warn(cache.value)
-  console.log(productionQueue.value)
   for (let key in productionQueue.value) {
     if (Object.keys(cache.value).find(k => key === k)) continue
-    productionQueue.value[key].done = true
+    delete productionQueue.value[key]
   }
 }
 
-const tick_interval = setInterval(() => {
-  syncOrders().then(() => fetchQueueCache())
+const tick_interval = setInterval(async () => {
+  await syncCaches()
+  await fetchNextMrpProduction()
 }, SYNC_TIMEOUT_MAX)
 const tock_interval = setInterval(() => {
   tock.value -= 1
   if (tock.value === 0) tock.value = 10
-  checkInterval()
+  checkIntervalDone()
 }, 1000)
 onBeforeUnmount(() => {
   clearInterval(tick_interval)
