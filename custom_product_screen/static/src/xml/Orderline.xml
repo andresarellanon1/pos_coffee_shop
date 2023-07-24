@@ -11,8 +11,8 @@
 					<span>
 						<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
 					</span>
-					<span class="btn btn-danger w-6 h-6" t-on-click="() => this.trigger('clear-orderline', props.line.id)">
-					X	
+					<span class="btn btn-light text-danger" t-on-click="() => this.trigger('clear-orderline', props.line.id)">
+					x	
 					</span>
 				</div>
 				<div class="d-flex grid gap-1 w-100 justify-content-between p-0">
