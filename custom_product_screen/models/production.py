@@ -3,6 +3,7 @@ from odoo.exceptions import ValidationError
 import logging
 logger = logging.getLogger(__name__)
 
+
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
@@ -27,8 +28,19 @@ class MrpProduction(models.Model):
             return
         if not product_payload['qty'] == 1:
             return
-        bom = self.env['mrp.bom'].search(
+        bom_count = self.env['mrp.bom'].search(
+            [('product_tmpl_id', '=', product_payload['product_tmpl_id'])])
+        if bom_count:
+            bom_temp = self.env['mrp.bom'].search(
                 [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
+            bom_prod = self.env['mrp.bom'].search(
+                [('product_id', '=', product_payload['id'])])
+        if bom_prod:
+            bom = bom_prod[0]  # priority
+        elif bom_temp:
+            bom = bom_temp[0]
+        else:
+            bom = []
         if not bom:
             return
         vals = {

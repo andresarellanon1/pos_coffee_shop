@@ -44,9 +44,6 @@ const markAsDone = async (production: Production[]) => {
           },
           body: JSON.stringify({ id: prod.id })
         })
-        productionQueue.value[prod.origin].done = done.value !== null && done.value === prod.id
-        if (productionQueue.value[prod.origin].done) continue
-        else break
       }
   } catch (e) {
     console.error(e)
@@ -68,6 +65,8 @@ const fetchNextMrpProduction = async () => {
     }
   })
   if (production.value === null) return
+  console.warn('production blob')
+  console.log(production.value)
   if (Array.isArray(production.value) && production.value.length > 0)
     productionQueue.value[production.value[0].origin] = {
       origin: production.value[0].origin,
@@ -84,6 +83,13 @@ const checkIntervalDone = () => {
   }
 }
 const syncCaches = async () => {
+  const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+    }
+  })
+  if (version.value === null) return
   const { data: cache } = await useFetch<{ [key: string]: Production[] }>('http://158.69.63.47:8080/getProductionCache', {
     method: "GET",
     headers: {
@@ -91,8 +97,12 @@ const syncCaches = async () => {
     }
   })
   if (cache.value === null) return
+  console.warn('cache keys')
+  console.log(Object.keys(cache.value))
   for (let key in productionQueue.value) {
+    console.log(`Evaluating key: ${key}`)
     if (Object.keys(cache.value).find(k => key === k)) continue
+    console.log('Not found key. Deleteing.')
     delete productionQueue.value[key]
   }
 }
