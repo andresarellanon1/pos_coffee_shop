@@ -10,30 +10,30 @@ patch(PosGlobalState.prototype, "getter/setter patch", {
     }
 })
 patch(PosGlobalState.prototype, "prototype patch", {
-    _processData: async function (loadedData) {
+    _processData: async function(loadedData) {
         this._loadProductTemplate(loadedData['product.template'])
         this._loadMrpBom(loadedData['mrp.bom'])
         this._loadBomLines(loadedData['mrp.bom.line'])
         this._super(loadedData)
     },
-    _loadProductTemplate: function (products) {
+    _loadProductTemplate: function(products) {
         this.db._isEmployee()
         this.db.add_products_templates(products)
     },
-    _loadMrpBom: function (boms) {
+    _loadMrpBom: function(boms) {
         this.db.add_boms(boms)
     },
-    _loadBomLines: function (lines) {
+    _loadBomLines: function(lines) {
         this.db.add_bom_lines(lines)
     },
-    add_new_order: function () {
+    add_new_order: function() {
         this.db.child_orderline_by_orderline_id = {}
         this.db.products_to_sync_by_orderline_id = {}
         this.db.orderlines_to_sync_by_production_id = {}
         this.db.orderlineSkipMO = []
         this._super(...arguments)
     },
-    createCurrentOrderMrpProduction: async function () {
+    createCurrentOrderMrpProduction: async function() {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
@@ -63,7 +63,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    confirmCurrentOrderMrpProduction: async function () {
+    confirmCurrentOrderMrpProduction: async function() {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
@@ -89,7 +89,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         }
     },
     // NOTE: Clears mrp production for the current matching origin (order name)
-    clearCurrentOrderMrpProduction: async function () {
+    clearCurrentOrderMrpProduction: async function() {
         try {
             let origin = `POS-${this.currentOrder.name}`
             let production_ids = await rpc.query({
@@ -107,7 +107,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    clearSingleMrpProduction: async function (orderline_id) {
+    clearSingleMrpProduction: async function(orderline_id) {
         try {
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             for (let key in orderlines_to_sync_by_production_id) {
@@ -131,7 +131,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     /*
     * NOTE: this method expects the orderlines to have a production id created and stored in memory beforehand
     */
-    sendOrderToMainPoS: async function (retry) {
+    sendOrderToMainPoS: async function(retry) {
         try {
             await this.fetchVersion(2)
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
@@ -161,7 +161,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             if (response.status === 200)
                 return
             if (retry > 0)
-                await this._sendOrder(retry - 1)
+                await this.sendOrderToMainPoS(retry - 1)
         } catch (e) {
             throw e
         }
@@ -170,7 +170,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     * NOTE: only requires to fix on click pay for the orders created in the main PoS because the order uids haven't been pushed in the queue yet 
     * NOTE: the client session method "sendOrderToMainPoS" does this as a side effect on its backend handler
     */
-    fixQueueForCurrentOrder: async function (retry) {
+    fixQueueForCurrentOrder: async function(retry) {
         try {
             await this.fetchVersion(3)
             let order = this.currentOrder
@@ -194,7 +194,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     /*
     * NOTE: on fetching next order emulate the spawning of a new orderline but add it to the skipMO list
     */
-    fetchOrderFromClientPoS: async function (retry) {
+    fetchOrderFromClientPoS: async function(retry) {
         try {
             await this.fetchVersion(3)
             let response = await fetch("http://158.69.63.47:8080/order", {
@@ -214,7 +214,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    loadDataToCurrentOrder: async function (orderPayload) {
+    loadDataToCurrentOrder: async function(orderPayload) {
         try {
             this.currentOrder.name = orderPayload.name
             this.currentOrder.uid = orderPayload.uid
@@ -242,10 +242,10 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    _addProduct: async function (product, options) {
+    _addProduct: async function(product, options) {
         return await this.currentOrder.add_product_but_well_done(product, options)
     },
-    fetchVersion: async function (retry) {
+    fetchVersion: async function(retry) {
         try {
             let response = await fetch("http://158.69.63.47:8080/version", {
                 method: "GET",
@@ -265,7 +265,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
 })
 
 patch(Order.prototype, "prototype patch", {
-    add_product_but_well_done: async function (product, options) {
+    add_product_but_well_done: async function(product, options) {
         this.assert_editable()
         options = options || {}
         var line = Orderline.create({}, { pos: this.pos, order: this, product: product })
@@ -275,7 +275,7 @@ patch(Order.prototype, "prototype patch", {
         this.select_orderline(this.get_last_orderline())
         return Promise.resolve(line)
     },
-    get_screen_data: function () {
+    get_screen_data: function() {
         const screen = this.screen_data['value']
         if (!screen) {
             if (this.get_paymentlines().length > 0) return { name: 'PaymentScreen' }
