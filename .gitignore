@@ -9,3 +9,4 @@ lazy-lock.json
 node_modules
 __pycache__
 modules/__pycache__
+custom_product_screen/models/__pycache__/production.cpython-310.pyc
