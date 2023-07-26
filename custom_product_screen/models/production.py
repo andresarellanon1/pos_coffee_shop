@@ -44,16 +44,16 @@ class MrpProduction(models.Model):
         mrp_order = self.sudo().create(vals)
         components = []
         for bom_line in mrp_order.bom_id.bom_line_ids:
-            bom_line_qty = bom_line.product_qty  # default qty of BoM
-            # check if bom_line is in components, if so allow flexible consuming
+            bom_line_qty = bom_line.product_qty
+            # check if bom_line is in extra components, if so allow flexible consuming
             _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
                 product_payload['components'])))
             if len(_prodComp) > 0:
                 bom_line_qty = _prodComp[0]['qty']
-            elif not any(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
+            # elif all(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
+                # do nothing
+            elif not all(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
                 bom_line_qty = 0
-            if not all(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
-                return
             components.append((0, 0, {
                 'raw_material_production_id': mrp_order.id,
                 'name': mrp_order.name,
