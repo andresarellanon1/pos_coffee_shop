@@ -28,19 +28,8 @@ class MrpProduction(models.Model):
             return
         if not product_payload['qty'] == 1:
             return
-        bom_count = self.env['mrp.bom'].search(
-            [('product_tmpl_id', '=', product_payload['product_tmpl_id'])])
-        if bom_count:
-            bom_temp = self.env['mrp.bom'].search(
-                [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
-            bom_prod = self.env['mrp.bom'].search(
-                [('product_id', '=', product_payload['id'])])
-        if bom_prod:
-            bom = bom_prod[0]  # priority
-        elif bom_temp:
-            bom = bom_temp[0]
-        else:
-            bom = []
+        bom = self.env['mrp.bom'].search(
+            [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
         if not bom:
             return
         vals = {
@@ -55,8 +44,7 @@ class MrpProduction(models.Model):
         mrp_order = self.sudo().create(vals)
         components = []
         for bom_line in mrp_order.bom_id.bom_line_ids:
-            # default qty of BoM
-            bom_line_qty = bom_line.product_qty
+            bom_line_qty = bom_line.product_qty  # default qty of BoM
             # check if bom_line is in components, if so allow flexible consuming
             _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
                 product_payload['components'])))
@@ -64,6 +52,8 @@ class MrpProduction(models.Model):
                 bom_line_qty = _prodComp[0]['qty']
             elif not any(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
                 bom_line_qty = 0
+            if not all(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
+                return
             components.append((0, 0, {
                 'raw_material_production_id': mrp_order.id,
                 'name': mrp_order.name,
