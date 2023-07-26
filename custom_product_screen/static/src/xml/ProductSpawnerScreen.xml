@@ -8,15 +8,11 @@
 				</div>
 				<div class="col-8 sm-col-10 h-100 d-flex flex-column border-end match_bg px-2">
 					<div class="container-fuild">
+						<img width="80px" height="80px" t-att-src="imageUrl" t-att-alt="props.product.display_name" />
 						<div class="row flex-grow align-items-center">
-							<div class="col-2 col-md-4 h-full">
-								<ProductTemplateItem product="props.product" />
-							</div>
-							<div class="col-10 col-md-8 h-full">
-								<div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id">
-									<div class="" t-esc="attribute.name" />
-									<CustomRadioProductAttribute attribute="attribute" />
-								</div>
+							<div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id">
+								<div class="" t-esc="attribute.name" />
+								<CustomRadioProductAttribute attribute="attribute" />
 							</div>
 						</div>
 						<div class="row justify-content-center">

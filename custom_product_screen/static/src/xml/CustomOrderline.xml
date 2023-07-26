@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="custom_product_screen.CustomOrderline" owl="1">
+		<img class="mr-3 border rounded" height="80px" width="80px" t-att-src="imageUrl" t-att-alt="props.line.product.display_name" />
+		<div class="media-body px-2">
+			<h6 class="mt-0 mb-0">
+				<t t-esc="props.line.product.display_name" />
+				<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
+			</h6>
+			<t t-foreach="childOrderlines" t-as="cline" t-key="cline.id">
+				<div class="col-12 d-flex w-100 justify-content-between" t-att-data-orderline-id="cline.id">
+					<span>
+						<t t-esc="cline.product.display_name" />
+						(
+						<t t-esc="cline.quantity" />
+						)
+					</span>
+					<span>
+						<!--
+						<t
+						t-esc="env.pos.format_currency(cline.get_display_price())" />
+						-->
+					</span>
+				</div>
+			</t>
+		</div>
+	</t>
+</templates>

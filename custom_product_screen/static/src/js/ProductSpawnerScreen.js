@@ -16,6 +16,10 @@ class ProductSpawnerScreen extends PosComponent {
             extra_components: []
         })
     }
+    get imageUrl() {
+        let product = this.props.product
+        return `/web/image?model=product.template&id=${product.id}&field=image_128`
+    }
     async spawnProduct(event) {
         this.trigger('show-loader')
         let selected_attributes = []
@@ -65,25 +69,40 @@ class ProductSpawnerScreen extends PosComponent {
     get currentOrder() {
         return this.env.pos.get_order()
     }
+    get currentBomLines() {
+        return this.env.pos.db.bom_lines_by_bom_id[this.env.pos.db.boms_by_template_id[this.product_template_id].id]
+    }
+    get currentProducts() {
+        return this.env.pos.db.get_product_by_category(this.env.pos.db.get_categ_by_name('Extra'))
+    }
     get getDisplayExtras() {
         return this.state.extra_components
     }
-    _computeExtras(event) {
-        // WARNING: Any changes to this block may result in undesired stock.move/stock.move.line
-        // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed 
-        let categ_id = this.env.pos.db.get_categ_by_name('Extra')
-        let extra_products = this.env.pos.db.get_product_by_category(categ_id)
-        let bom = this.env.pos.db.boms_by_template_id[this.product_template_id]
-        let bom_lines = this.env.pos.db.bom_lines_by_bom_id[bom.id]
+    get selectedAttributes() {
         let selected_attributes_values = []
         for (let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue()
             selected_attributes_values.push(attribute)
         }
-        let selected_attributes_values_ids = selected_attributes_values.map(att => att.id)
-        let bom_lines_variant = bom_lines.filter(line => selected_attributes_values_ids.some(att_id => line.bom_product_template_attribute_value_ids.includes(att_id)))
-        let bom_lines_variant_product_ids = bom_lines_variant.map(line => line.product_id[0])
-        this.state.extra_components = extra_products.filter(extra => bom_lines_variant_product_ids.includes(extra.id))
+        return selected_attributes_values
+    }
+    _computeExtras(event) {
+        // WARNING: Any changes to this block may result in undesired stock.move/stock.move.line
+        // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed 
+        console.warn('current bom lines:')
+        for (let bom_line of this.currentBomLines) {
+            console.log(`bom prod temp att val ids ${bom_line.bom_product_template_attribute_value_ids}`)
+        }
+        console.warn('current selected attributes')
+        console.log(this.selectedAttributes)
+        this.state.extra_components = []
+        this.state.extra_components = this.currentProducts
+            .filter(extra => this.currentBomLines
+                .filter(bom_line => bom_line.bom_product_template_attribute_value_ids
+                    .every(id => this.selectedAttributes.map(att => att.id).includes(id))
+                    || bom_line.bom_product_template_attribute_value_ids.length === 0)
+                .map(bom_line => bom_line.product_id[0])
+                .includes(extra.id))
         for (let extra_component of this.env.extra_components) {
             extra_component.reset()
         }
