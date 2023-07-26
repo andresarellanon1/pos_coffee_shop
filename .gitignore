@@ -5,6 +5,7 @@ nvim
 lazy-lock.json
 .stylua.toml
 .vscode
+.pyc
 node_modules
 __pycache__
 modules/__pycache__
