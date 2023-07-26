@@ -89,12 +89,6 @@ class ProductSpawnerScreen extends PosComponent {
     _computeExtras(event) {
         // WARNING: Any changes to this block may result in undesired stock.move/stock.move.line
         // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed 
-        console.warn('current bom lines:')
-        for (let bom_line of this.currentBomLines) {
-            console.log(`bom prod temp att val ids ${bom_line.bom_product_template_attribute_value_ids}`)
-        }
-        console.warn('current selected attributes')
-        console.log(this.selectedAttributes)
         this.state.extra_components = []
         this.state.extra_components = this.currentProducts
             .filter(extra => this.currentBomLines
