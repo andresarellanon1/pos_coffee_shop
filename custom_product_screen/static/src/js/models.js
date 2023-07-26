@@ -137,14 +137,18 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             let orderlines = []
+            console.warn('sending current order to main pos:')
             for (let key in orderlines_to_sync_by_production_id) {
                 let index = orderlines_to_sync_by_production_id[key].orderline_id
-                orderlines.push({
+                console.log(orderlines_to_sync_by_production_id[key])
+                let body = {
                     production_id: orderlines_to_sync_by_production_id[key].production_id,
                     product_id: products_to_sync_by_orderline_id[index].product_id,
                     options: products_to_sync_by_orderline_id[index].options,
                     extra_components: products_to_sync_by_orderline_id[index].extra_components
-                })
+                }
+                console.log(body)
+                orderlines.push(body)
             }
             let response = await fetch("http://158.69.63.47:8080/order", {
                 method: "POST",
@@ -186,7 +190,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             if (response.status === 200)
                 return
             if (retry > 0)
-                await this._fixQueue(retry - 1)
+                await this.fixQueueForCurrentOrder(retry - 1)
         } catch (e) {
             throw e
         }
