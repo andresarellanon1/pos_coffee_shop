@@ -24,6 +24,8 @@ class MrpProduction(models.Model):
         return
 
     def create_single(self, product_payload):
+        logger.info(self.env['product.product'].browse(
+            int(product_payload['id'])).pos_production)
         if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
             return
         if not product_payload['qty'] == 1:
@@ -42,23 +44,17 @@ class MrpProduction(models.Model):
             'bom_id': bom.id,
         }
         mrp_order = self.sudo().create(vals)
+        logger.info(mrp_order)
         components = []
         for bom_line in mrp_order.bom_id.bom_line_ids:
             bom_line_qty = bom_line.product_qty
-            # check if bom_line is in extra components, if so allow flexible consuming
+            #  allow flexible consuming only if bom_line is in extra components
             _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
                 product_payload['components'])))
             if len(_prodComp) > 0:
                 bom_line_qty = _prodComp[0]['qty']
-            for variant in bom_line.bom_product_template_attribute_value_ids:
-                if variant.name not in mrp_order.product_id.display_name:
-                    bom_line_qty = 0
-                logger.info("variant name:")
-                logger.info(variant.name)
-                logger.info("mrp_order display_name")
-                logger.info(mrp_order.product_id)
-                logger.info("bom line calculated qty")
-                logger.info(bom_line_qty)
+            elif not all(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
+                bom_line_qty = 0
             components.append((0, 0, {
                 'raw_material_production_id': mrp_order.id,
                 'name': mrp_order.name,
