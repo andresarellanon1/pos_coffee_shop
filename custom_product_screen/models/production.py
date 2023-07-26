@@ -50,15 +50,15 @@ class MrpProduction(models.Model):
                 product_payload['components'])))
             if len(_prodComp) > 0:
                 bom_line_qty = _prodComp[0]['qty']
-            # elif all(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
-                # do nothing
-            for variant in bom_line.bom_product_template_attribute_value_ids):
-                if not all(variant.name in mrp_order.product_id.display_name):
-                    bom_line_qty=0
+            for variant in bom_line.bom_product_template_attribute_value_ids:
+                if variant.name not in mrp_order.product_id.display_name:
+                    bom_line_qty = 0
                 logger.info("variant name:")
                 logger.info(variant.name)
                 logger.info("mrp_order display_name")
                 logger.info(mrp_order.product_id)
+                logger.info("bom line calculated qty")
+                logger.info(bom_line_qty)
             components.append((0, 0, {
                 'raw_material_production_id': mrp_order.id,
                 'name': mrp_order.name,
@@ -70,7 +70,7 @@ class MrpProduction(models.Model):
                 'location_dest_id': bom_line.product_id.with_company(self.env.user.company_id.id).property_stock_production.id,
                 'company_id': mrp_order.company_id.id,
             }))
-        mrp_production={
+        mrp_production = {
             'product_id': product_payload['id'],
             'product_uom_qty': product_payload['qty'],
             'product_uom': product_payload['uom_id'],
@@ -97,7 +97,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     pos_production = fields.Boolean(string='POS Manufacture',
-                                    help = "Check if the product should be manufactured when sold in POS")
+                                    help="Check if the product should be manufactured when sold in POS")
 
     @ api.onchange('pos_production')
     def onchange_pos_production(self):
