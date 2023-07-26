@@ -57,6 +57,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     args: [1, argBody],
                 })
                 this.db.add_orderline_to_sync_by_production_id(id, orderline.id)
+                return id
             }
         } catch (e) {
             throw e

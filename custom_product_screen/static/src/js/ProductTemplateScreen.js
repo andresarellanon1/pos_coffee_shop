@@ -158,7 +158,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.error(e)
         }
     }
-    // CALLED ON ANY SESSION WHEN THE PRODUCT SPAWNS 
     async _onProductSpawned(event) {
         NumberBuffer.reset()
         this.trigger('hide-loader')
