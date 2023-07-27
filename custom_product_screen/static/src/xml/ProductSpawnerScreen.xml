@@ -7,8 +7,16 @@
 					<CustomOrderWidget />
 				</div>
 				<div class="col-8 sm-col-10 h-100 d-flex flex-column border-end match_bg px-2">
-					<div class="container-fuild">
-						<img width="80px" height="80px" t-att-src="imageUrl" t-att-alt="props.product.display_name" />
+					<div class="container-fluid">
+						<div class="d-flex w-100 h-auto">
+							<img class="mr-3 border rounded" height="80px" width="80px" t-att-src="imageUrl"  />
+							<div class="media-body px-2">
+								<h6 class="mt-0 mb-0">
+									<t t-esc="props.product.display_name"/>
+									<t t-esc="env.pos.format_currency(props.product.lst_price)" />
+								</h6>
+							</div>
+						</div>
 						<div class="row flex-grow align-items-center">
 							<div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id">
 								<div class="" t-esc="attribute.name" />
