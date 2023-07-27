@@ -14,6 +14,7 @@ class BaseAttribute extends PosComponent {
             selected_value: parseFloat(this.values[0].id),
             custom_value: '',
         })
+        $(this.el).find('.checkmark-container').css("background-color", "#fff")
     }
 
     getValue() {
