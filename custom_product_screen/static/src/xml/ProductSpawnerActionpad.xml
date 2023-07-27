@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductSpawnerActionpad" owl="1">
 		<div class="d-flex grid gap-4">
-			<button class="w-100 h-100 btn border border-danger text-danger " t-on-click="() => this.trigger('close-temp-screen')">
+			<button class="w-100 h-100 btn btn-danger " t-on-click="() => this.trigger('close-temp-screen')">
 				Cancelar
 			</button>
-			<button class="w-100 h-100 btn border border-success text-success " t-on-click="() => this.trigger('spawn-product')">
+			<button class="w-100 h-100 btn btn-success text-success " t-on-click="() => this.trigger('spawn-product')">
 				Aceptar
 			</button>
 		</div>
