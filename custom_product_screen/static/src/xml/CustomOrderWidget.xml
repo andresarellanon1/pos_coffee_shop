@@ -7,7 +7,7 @@
 					Sin registros
 				</div>
 				<t t-if="isEmployee">
-					<button class="w-50 h-100 py-2 btn bg-danger text-light " t-on-click="() => this.trigger('click-sync-next-order')">
+					<button class="w-50 py-2 btn bg-success text-light " t-on-click="() => this.trigger('click-sync-next-order')">
 						Siguiente
 					</button>
 				</t>
