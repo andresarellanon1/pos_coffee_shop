@@ -18,6 +18,8 @@ class ProductSpawnerScreen extends PosComponent {
     }
     get imageUrl() {
         let product = this.props.product
+        console.warn('product')
+        console.log(product)
         return `/web/image?model=product.template&id=${product.id}&field=image_128`
     }
     async spawnProduct(event) {
