@@ -13,7 +13,7 @@
 							<div class="media-body px-2">
 								<h6 class="mt-0 mb-0">
 									<t t-esc="props.product.display_name"/>
-									$<t t-esc="props.product.lst_price" />
+									$<t t-esc="props.product.list_price" />
 								</h6>
 							</div>
 						</div>
