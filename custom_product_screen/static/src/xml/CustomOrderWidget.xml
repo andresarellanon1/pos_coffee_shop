@@ -39,9 +39,6 @@
 							</button>
 						</t>
 					</div>
-					<div class="d-flex row container-fluid w-100 ">
-						<NumpadWidget t-if="isEmployee" activeMode="env.pos.numpadMode" />
-					</div>
 					<div class="fs-6 fst-italic fw-ligth">
 						<t t-esc="order.name" />
 					</div>
