@@ -25,16 +25,16 @@
 						<OrderSummary order="order" />
 					</div>
 					<div class="col-5 d-flex flex-column grid gap-2">
-						<button class="btn btn-danger d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('clear-order')">
+						<button class="w-100 h-100 py-2 btn bg-danger text-light d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('clear-order')">
 							Cancelar
 						</button>
 						<t t-if="isEmployee">
-							<button class="btn btn-success d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-pay')">
+							<button class="w-100 h-100 py-2 btn bg-success text-light d-flex flex-grow-1" t-on-click="() => this.trigger('click-pay')">
 								Terminar pedido
 							</button>
 						</t>
 						<t t-else="">
-							<button class="btn btn-success d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-send')">
+							<button class="w-100 h-100 py-2 btn bg-success text-light d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-send')">
 								Terminar pedido
 							</button>
 						</t>
