@@ -15,7 +15,7 @@
 				</t>
 			</div>
 			<div t-else="" class="w-100 h-100 pt-2 grid d-flex flex-column justify-content-center align-items-center">
-				<ul class="d-flex flex-column w-100 h-100">
+				<ul class="d-flex flex-column pt-2 w-100 h-100">
 					<li t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="d-flex w-100 h-auto">
 						<CustomOrderline line="orderline" />
 					</li>
