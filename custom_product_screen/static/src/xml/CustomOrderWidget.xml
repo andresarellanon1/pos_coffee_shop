@@ -15,12 +15,12 @@
 				</t>
 			</div>
 			<div t-else="" class="w-100 h-100 pt-2 grid d-flex flex-column justify-content-center align-items-center">
-				<ul class="d-flex flex-column pt-2 w-100 h-100">
-					<li t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="d-flex w-100 h-auto">
+				<ul class="d-flex flex-column pt-2 w-100 h-75 overflow-auto">
+					<li t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="d-flex container-fluid flex-column justify-content-center align-items-start h-auto border-bottom">
 						<CustomOrderline line="orderline" />
 					</li>
 				</ul>
-				<div class="d-flex w-100 row container-fluid py-4 bottom-m left-0 mb-2 border rounded" style="display: absolute;">
+				<div class="d-flex h-25 row container-fluid py-4 bottom-m left-0 mb-2 border rounded " style="display: absolute;">
 					<div class="col-7 d-flex flex-column container-fluid">
 						<t t-set="_total" t-value="getTotal()" />
 						<t t-set="_tax" t-value="getTax()" />
@@ -39,18 +39,25 @@
 							)
 						</h6>
 					</div>
-					<div class="col-5 d-flex flex-column grid gap-2">
-						<button class="w-100 h-100 py-2 btn bg-danger text-light d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('clear-order')">
-							Cancelar
+					<div class="col-5 d-flex flex-column grid gap-2 h-100">
+						<button class="w-100 h-100 py-2 btn bg-danger text-light d-flex flex-grow-1 d-flex justify-content-center align-items-center" t-on-click="() => this.trigger('clear-order')">
+							<h6>
+								Cancelar
+							</h6>
 						</button>
 						<t t-if="isEmployee">
-							<button class="w-100 h-100 py-2 btn bg-success text-light d-flex flex-grow-1" t-on-click="() => this.trigger('click-pay')">
-								Terminar pedido
+							<button class="w-100 h-100 py-2 btn bg-success text-light d-flex flex-grow-1 d-flex justify-content-center align-items-center" t-on-click="() => this.trigger('click-pay')">
+								<h6>
+									Terminar pedido
+								</h6>
 							</button>
 						</t>
 						<t t-else="">
-							<button class="w-100 h-100 py-2 btn bg-success text-light d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-send')">
-								Terminar pedido
+							<button class="w-100 h-100 py-2 btn bg-success text-light d-flex flex-grow-1 d-flex justify-content-center align-items-center" t-on-click="() => this.trigger('click-send')">
+								T
+								<h6>
+									erminar pedido
+								</h6>
 							</button>
 						</t>
 					</div>

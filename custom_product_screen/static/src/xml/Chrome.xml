@@ -16,7 +16,7 @@
 			</Transition>
 		</xpath>
 		<xpath expr="//div[hasclass('pos-branding')]" position="replace">
-			<img t-if="!env.isMobile" class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')" src="/point_of_sale/static/src/img/logenio.png" alt="Logo" />
+			<img t-if="!env.isMobile" class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')" src="/custom_product_screen/static/src/img/logenio.png" alt="Logo" />
 			<CashMoveButton t-if="showCashMoveButton()" />
 		</xpath>
 	</t>
