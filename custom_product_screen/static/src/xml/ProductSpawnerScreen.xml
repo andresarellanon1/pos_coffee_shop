@@ -19,13 +19,13 @@
 						</div>
 						<div class="row flex-grow align-items-center">
 							<div t-foreach="getAttributes" t-as="attribute" t-key="attribute.id">
-								<t t-if="getIndex >= attribute_index ">
+								<t t-if="getIndex >= attribute_index">
 									<div class="" t-esc="attribute.name" />
 									<CustomRadioProductAttribute attribute="attribute" />
 								</t>
 							</div>
 						</div>
-						<div class="row justify-content-center">
+						<div t-if="getIndex === getAttributes.length - 1" class="row justify-content-center">
 							<div class="col-6 d-flex flex-column justify-content-start align-items-stretch">
 								<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
 									<t t-if="extra_index%2 === 0">
@@ -46,7 +46,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="container-fluid h-100 pt-2 pb-2">
+					<div t-if="getIndex === getAttributes.length - 1" class="container-fluid h-100 pt-2 pb-2">
 						<ProductSpawnerActionpad />
 					</div>
 				</div>
