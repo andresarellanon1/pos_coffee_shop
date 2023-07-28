@@ -11,9 +11,13 @@ class ProductSpawnerScreen extends PosComponent {
         this.product_template_id = this.props.product.id
         useSubEnv({ attribute_components: [], extra_components: [] })
         useListener('spawn-product', this.spawnProduct)
-        useExternalListener(window, 'update-variant', this._computeExtras)
+        useExternalListener(window, 'update-variant', () => {
+            this._computeExtras()
+            this._computeIndex()
+        })
         this.state = useState({
-            extra_components: []
+            extra_components: [],
+            index: 0
         })
     }
     get imageUrl() {
@@ -78,7 +82,11 @@ class ProductSpawnerScreen extends PosComponent {
         return this.env.pos.db.get_product_by_category(this.env.pos.db.get_categ_by_name('Extra'))
     }
     get getDisplayExtras() {
-        return this.state.extra_components
+        let buff = []
+        for (let index in this.state.extra_components) {
+            if (index > this.state.index) buff.push(this.state.extra_components[index])
+        }
+        return buff
     }
     get selectedAttributes() {
         let selected_attributes_values = []
@@ -101,6 +109,16 @@ class ProductSpawnerScreen extends PosComponent {
                 .includes(extra.id))
         for (let extra_component of this.env.extra_components) {
             extra_component.reset()
+        }
+    }
+    _computeIndex(event) {
+        try {
+            if (this.state.index >= this.state.extra_components.length)
+                return
+            else
+                this.state.index += 1
+        } catch (e) {
+            console.error(e)
         }
     }
 }
