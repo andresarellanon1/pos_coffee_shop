@@ -3,6 +3,7 @@
 import Registries from 'point_of_sale.Registries'
 import PosComponent from 'point_of_sale.PosComponent'
 import { useRef } from '@odoo/owl'
+import { float_is_zero } from 'web.utils'
 
 class CustomOrderWidget extends PosComponent {
     setup() {
