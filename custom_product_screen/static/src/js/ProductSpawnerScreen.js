@@ -98,7 +98,7 @@ class ProductSpawnerScreen extends PosComponent {
     }
     _computeExtras(event) {
         //NOTE: this method is not for this but i will make use of the listener to update the state.index
-        this.state.index += 1
+        if (!this.state.index > this.getAttributes.length) this.state.index += 1
         // WARNING: Any changes to this block may result in undesired stock.move/stock.move.line
         // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed 
         this.state.extra_components = []
