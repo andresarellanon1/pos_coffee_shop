@@ -9,7 +9,6 @@ import NumberBuffer from 'point_of_sale.NumberBuffer'
 
 class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     setup() {
-
         super.setup()
         useExternalListener(window, 'click-pay', this._onClickPay)
         useExternalListener(window, 'click-send', this._onClickSend)

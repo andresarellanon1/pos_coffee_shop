@@ -278,16 +278,5 @@ patch(Order.prototype, "prototype patch", {
         this.add_orderline(line)
         this.select_orderline(this.get_last_orderline())
         return Promise.resolve(line)
-    },
-    get_screen_data: function () {
-        const screen = this.screen_data['value']
-        if (!screen) {
-            if (this.get_paymentlines().length > 0) return { name: 'PaymentScreen' }
-            return { name: 'ProductTemplateScreen' }
-        }
-        if (!this.finalized && this.get_paymentlines().length > 0) {
-            return { name: 'PaymentScreen' }
-        }
-        return screen
     }
 })

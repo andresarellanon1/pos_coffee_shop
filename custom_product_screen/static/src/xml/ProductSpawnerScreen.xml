@@ -18,9 +18,9 @@
 					<div class="container-fluid h-50 d-flex flex-column justify-content-start align-items-stretch d-grid gap-2 p-0">
 						<div t-foreach="getAttributes" t-as="attribute" t-key="attribute.id" class="container-fluid h-100 p-0">
 							<div t-if="getIndex >= attribute_index" class="container-fluid h-100 d-flex flex-column p-0">
-								<div class="container-fluid p-0">
+								<h6 class="container-fluid p-0">
 									<t t-esc="attribute.name" />
-								</div>
+								</h6>
 								<CustomRadioProductAttribute attribute="attribute" />
 							</div>
 						</div>

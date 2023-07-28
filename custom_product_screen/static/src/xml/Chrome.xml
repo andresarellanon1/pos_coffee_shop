@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <templates id="template" xml:space="preserve">
 	<t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
 		<xpath expr="//div[hasclass('pos')]" position="inside">
-			<Transition visible="_isLoading" name="'o-swing'" leaveDuration="800" t-slot-scope="transition">
+			<Transition visible="_isLoading" name="'o-swing'" leaveDuration="200" t-slot-scope="transition">
 				<div class="loader" t-att-class="transition.className">
-					<div class="lds-ellipsis"><div></div><div></div><div></div></div>
+					<div class="lds-ellipsis">
+						<div>
+						</div>
+						<div>
+						</div>
+						<div>
+						</div>
+					</div>
 				</div>
-			</Transition> 
+			</Transition>
+		</xpath>
+		<xpath expr="//div[hasclass('pos-branding')]" position="replace">
+			<img t-if="!env.isMobile" class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')" src="/point_of_sale/static/src/img/logenio.png" alt="Logo" />
+			<CashMoveButton t-if="showCashMoveButton()" />
 		</xpath>
 	</t>
 </templates>
