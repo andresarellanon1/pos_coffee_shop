@@ -88,7 +88,7 @@ class ProductSpawnerScreen extends PosComponent {
         console.warn('getting attributes')
         let indexed_attributes_values = []
         for (let attribute of this.props.attributes) {
-            if (this.state.index >= this.props.attributes.length) {
+            if (this.state.index === this.props.attributes.length -1) {
                 this.state.index = 0
             }
             else {
