@@ -82,11 +82,22 @@ class ProductSpawnerScreen extends PosComponent {
         return this.env.pos.db.get_product_by_category(this.env.pos.db.get_categ_by_name('Extra'))
     }
     get getDisplayExtras() {
-        let buff = []
-        for (let index in this.state.extra_components) {
-            if (index > this.state.index) buff.push(this.state.extra_components[index])
+        return this.state.extra_components
+    }
+    get getAttributes() {
+        let indexed_attributes_values = []
+        for (let attribute_component of this.env.attribute_components) {
+            let attribute = attribute_component.getValue()
+            if (this.state.index >= this.env.attribute_components) {
+                this.state.index = 0
+            }
+            else {
+                indexed_attributes_values.push(attribute)
+                this.state.index += 1
+            }
         }
-        return buff
+        return indexed_attributes_values
+
     }
     get selectedAttributes() {
         let selected_attributes_values = []

@@ -18,7 +18,7 @@
 							</div>
 						</div>
 						<div class="row flex-grow align-items-center">
-							<div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id">
+							<div t-foreach="getAttributes" t-as="attribute" t-key="attribute.id">
 								<div class="" t-esc="attribute.name" />
 								<CustomRadioProductAttribute attribute="attribute" />
 							</div>
