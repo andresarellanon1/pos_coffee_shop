@@ -93,6 +93,9 @@ class ProductSpawnerScreen extends PosComponent {
         }
         return selected_attributes_values
     }
+    get getIndex() {
+        return this.state.index
+    }
     _computeExtras(event) {
         //NOTE: this method is not for this but i will make use of the listener to update the state.index
         this.state.index += 1

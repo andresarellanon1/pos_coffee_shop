@@ -19,8 +19,10 @@
 						</div>
 						<div class="row flex-grow align-items-center">
 							<div t-foreach="getAttributes" t-as="attribute" t-key="attribute.id">
-								<div class="" t-esc="attribute.name" />
-								<CustomRadioProductAttribute attribute="attribute" />
+								<t t-if="attribute_index >= getIndex">
+									<div class="" t-esc="attribute.name" />
+									<CustomRadioProductAttribute attribute="attribute" />
+								</t>
 							</div>
 						</div>
 						<div class="row justify-content-center">
