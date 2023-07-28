@@ -4,7 +4,7 @@
 		<div class="container-fluid h-100" t-att-class="{ oe_hidden: !props.isShown }">
 			<div class="row d-flex h-100">
 				<div class="col-4 h-100 d-flex flex-column border-end match_bg">
-					<CustomOrderWidget isSkip="skipNextMO" />
+					<CustomOrderWidget />
 				</div>
 				<div class="col-8 h-100 d-flex flex-column  match_bg px-2">
 					<ProductTemplateWidget />
