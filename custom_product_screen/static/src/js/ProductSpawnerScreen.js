@@ -88,7 +88,7 @@ class ProductSpawnerScreen extends PosComponent {
         let indexed_attributes_values = []
         for (let attribute_component of this.env.attribute_components) {
             let attribute = attribute_component.getValue()
-            if (this.state.index >= this.env.attribute_components) {
+            if (this.state.index >= this.env.attribute_components.length) {
                 this.state.index = 0
             }
             else {
