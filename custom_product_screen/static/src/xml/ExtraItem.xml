@@ -4,11 +4,15 @@
 		<div t-attf-id="extra_item_{{props.extra.id}" class="d-flex w-100 justify-content-between align-items-center pt-2">
 			<t t-esc="props.extra.display_name" />
 			<div class="d-flex grid gap-2">
-				<div class="btn btn-success rounded-circle " t-on-click="() => this.removeExtra()"> - </div>
+				<div class="p-6">
+					<div class="btn btn-success rounded-circle " t-on-click="() => this.removeExtra()"> - </div>
+				</div>
 				<div class="px-2">
 					<t t-esc="getCount" />
 				</div>
-				<div class="btn btn-success rounded-circle" t-on-click="() => this.addExtra()">  + </div>
+				<div class="p-6">
+					<div class="btn btn-success rounded-circle" t-on-click="() => this.addExtra()">  + </div>
+				</div>
 			</div>
 			<div class="ml-2" >
 				<t t-esc="getPriceExtra" />
