@@ -11,10 +11,7 @@ class ProductSpawnerScreen extends PosComponent {
         this.product_template_id = this.props.product.id
         useSubEnv({ attribute_components: [], extra_components: [] })
         useListener('spawn-product', this.spawnProduct)
-        useExternalListener(window, 'update-variant', () => {
-            this._computeExtras()
-            this._computeIndex()
-        })
+        useExternalListener(window, 'update-variant', this._computeExtras)
         this.state = useState({
             extra_components: [],
             index: 0
@@ -85,16 +82,13 @@ class ProductSpawnerScreen extends PosComponent {
         return this.state.extra_components
     }
     get getAttributes() {
-        console.warn('getting attributes')
         let indexed_attributes_values = []
-        for (let attribute of this.props.attributes) {
-            if (this.state.index === this.props.attributes.length -1) {
+        for (let index of this.state.index) {
+            if (this.state.index === this.props.attributes.length - 1) {
                 this.state.index = 0
+                break
             }
-            else {
-                indexed_attributes_values.push(attribute)
-                this.state.index += 1
-            }
+            indexed_attributes_values.push(this.props.attrbiutes[index])
         }
         return indexed_attributes_values
 
@@ -108,6 +102,8 @@ class ProductSpawnerScreen extends PosComponent {
         return selected_attributes_values
     }
     _computeExtras(event) {
+        //NOTE: this method is not for this but i will make use of the listener to update the state.index
+        this.state.index += 1
         // WARNING: Any changes to this block may result in undesired stock.move/stock.move.line
         // WARNING: Adding a product that is a component in a BOM to the 'Extra' PoS category will make it appear here and be flexible consumed 
         this.state.extra_components = []
@@ -120,16 +116,6 @@ class ProductSpawnerScreen extends PosComponent {
                 .includes(extra.id))
         for (let extra_component of this.env.extra_components) {
             extra_component.reset()
-        }
-    }
-    _computeIndex(event) {
-        try {
-            if (this.state.index >= this.state.extra_components.length)
-                return
-            else
-                this.state.index += 1
-        } catch (e) {
-            console.error(e)
         }
     }
 }
