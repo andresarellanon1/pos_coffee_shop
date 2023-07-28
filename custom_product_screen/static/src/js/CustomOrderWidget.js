@@ -35,7 +35,7 @@ class CustomOrderWidget extends PosComponent {
         return {
             hasTax: !float_is_zero(taxAmount, this.env.pos.currency.decimal_places),
             displayAmount: this.env.pos.format_currency(taxAmount),
-        };
+        }
     }
 }
 CustomOrderWidget.template = 'custom_product_screen.CustomOrderWidget'
