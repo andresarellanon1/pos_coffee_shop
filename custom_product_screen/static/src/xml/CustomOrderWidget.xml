@@ -22,7 +22,12 @@
 				</ul>
 				<div class="d-flex w-100 row container-fluid py-4 bottom-m left-0 mb-2 border rounded" style="display: absolute;">
 					<div class="col-7 d-flex flex-column">
-						<OrderSummary order="order" />
+						<t t-set="_total" t-value="getTotal()" />
+						<t t-set="_tax" t-value="getTax()" />
+						$<t t-esc="_total" />
+						<t t-if="_tax.hasTax">
+							(<t t-esc="_tax.displayAmount" />)
+						</t>
 					</div>
 					<div class="col-5 d-flex flex-column grid gap-2">
 						<button class="w-100 h-100 py-2 btn bg-danger text-light d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('clear-order')">

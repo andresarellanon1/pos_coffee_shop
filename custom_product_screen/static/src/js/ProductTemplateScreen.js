@@ -97,18 +97,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClickPay(event) {
         try {
             this.trigger('show-loader')
-            console.warn('untrimed')
-            console.log(this.currentOrder.orderlines)
             await this.env.pos.createCurrentOrderMrpProduction()
-            console.warn('child orderlines:')
             for (let key in this.env.pos.db.child_orderline_by_orderline_id) {
-                console.log(key)
                 let orderline = this.currentOrder.orderlines.find(orderline => `${orderline.id}` === key)
                 if (!orderline) continue
                 this.currentOrder.remove_orderline(orderline)
             }
-            console.warn('trimed')
-            console.log(this.currentOrder.orderlines)
             this.showScreen('PaymentScreen')
             this.trigger('hide-loader')
         } catch (e) {
