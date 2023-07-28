@@ -7,15 +7,15 @@
 				<div class="p-6 border">
 					<div class="btn btn-success rounded-circle " t-on-click="() => this.removeExtra()"> - </div>
 				</div>
-				<div class="px-2">
+				<div class="px-2 py-2">
 					<t t-esc="getCount" />
+					($<t t-esc="getPriceExtra" />)
 				</div>
 				<div class="p-6 border">
 					<div class="btn btn-success rounded-circle" t-on-click="() => this.addExtra()">  + </div>
 				</div>
 			</div>
 			<div class="ml-2" >
-				<t t-esc="getPriceExtra" />
 			</div>
 		</div>
 	</t>
