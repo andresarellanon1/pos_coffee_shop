@@ -17,10 +17,6 @@ class ProductSpawnerScreen extends PosComponent {
             index: 0
         })
     }
-    get imageUrl() {
-        let product = this.props.product
-        return `/web/image?model=product.template&id=${product.id}&field=image_128`
-    }
     async spawnProduct(event) {
         this.trigger('show-loader')
         let selected_attributes = []
