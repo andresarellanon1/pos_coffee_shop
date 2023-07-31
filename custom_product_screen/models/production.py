@@ -88,6 +88,35 @@ class MrpProduction(models.Model):
         })
         return mrp_order.id
 
+    def queryBoms(self):
+        domain = []
+        params = {
+            'search_params': {
+                'domain': domain,
+                'fields': [
+                    'display_name', 'bom_line_ids', 'product_id', 'id',
+                    'product_qty', 'product_tmpl_id', 'product_uom_id'
+                ],
+                'order': 'sequence,display_name',
+            }
+        }
+        return self.env['mrp.bom'].search_read(**params['search_params'])
+
+    def queryBomLines(self):
+        domain = []
+        params = {
+            'search_params': {
+                'domain': domain,
+                'fields': [
+                    'display_name', 'bom_id', 'bom_product_template_attribute_value_ids',
+                    'id', 'product_id', 'product_qty', 'product_uom_id',
+                    'product_tmpl_id', 'sequence', 'tracking'
+                ],
+                'order': 'sequence,display_name',
+            }
+        }
+        return self.env['mrp.bom.line'].search_read(**params['search_params'])
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
