@@ -2,9 +2,7 @@
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
 import 'swiper/css'
-import { ref, useFetch, useState } from '.nuxt/imports'
-import { TransitionRoot } from '@headlessui/vue'
-import { parsePayload } from 'nuxt/dist/app/composables/payload'
+import { ref, useFetch } from '.nuxt/imports'
 
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
 const PRODUCTION_DELTA_MAX = 180000
