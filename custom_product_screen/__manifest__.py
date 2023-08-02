@@ -5,7 +5,7 @@
     'description': 'Sobre escribe estilos y funcionalidad de componentes del punto de venta y agrega soporte para multiples pantallas (lectura-escritura y solo lectura)',
     'author': 'Quadro Soluciones',
     'images': [],
-    'depends': ['point_of_sale', 'pos_enterprise', 'mrp', 'hr'],
+    'depends': ['point_of_sale', 'pos_enterprise', 'mrp'],
     'installable': True,
     'data': [
         'security/ir.model.access.csv',

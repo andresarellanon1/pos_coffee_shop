@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
-		<div class="grid d-flex w-100 h-100 flex-column align-items-center justify-content-center">
-			<div t-if="_orderlinesArray.length === 0" class="w-100 h-100 grid d-flex flex-column gap-4 justify-content-center align-items-center">
+		<div class="container-fluid">
+			<div t-if="_orderlinesArray.length === 0" class="w-100 vh-100 overflow-hidden grid d-flex flex-column gap-4 justify-content-center align-items-center">
 				<div class="order-empty">
 					Sin registros
 				</div>
@@ -14,7 +14,7 @@
 				<t t-else="">
 				</t>
 			</div>
-			<div t-else="" class="w-100 h-100 pt-2 grid d-flex flex-column justify-content-center align-items-center">
+			<div t-else="" class="w-100 vh-100 overflow-hidden pt-2 grid d-flex flex-column justify-content-center align-items-center">
 				<ul class="d-flex flex-column pt-2 w-100 h-75 overflow-auto">
 					<li t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="d-flex container-fluid flex-column justify-content-center align-items-start h-auto border-bottom">
 						<CustomOrderline line="orderline" />
