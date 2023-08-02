@@ -15,6 +15,7 @@ interface Production {
   priority: string
   origin: string
   component: {
+    id: number
     display_name: string
     qty: number
   }[]
@@ -23,7 +24,15 @@ interface Production {
     display_name: string
   }
 }
+interface Products {
+  id: number
+  categ: string
+  pos_categ: string
+  display_name: string
+  pos_production: boolean
+}
 const productionQueue = ref<{ [key: string]: { origin: string; item: Production[]; delta: number } }>({})
+const allowedProductIds = ref<number[]>([])
 const markAsDone = async (production: Production[]) => {
   try {
     const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
@@ -63,8 +72,22 @@ const fetchNextMrpProduction = async () => {
     }
   })
   if (production.value === null) return
-  console.warn('production blob')
-  console.log(production.value)
+  const { data: products } = await useFetch<Products[]>('http://158.69.63.47:8080/products', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+    }
+  })
+  if (products.value === null) return
+  for (let product of products.value) {
+    if (product.pos_categ === 'Extra' && product.categ === 'Component') {
+      allowedProductIds.value.push(product.id)
+    }
+  }
+  production.value.map(p => {
+    p.component.filter(c => allowedProductIds.value.includes(c.id))
+    return p
+  })
   if (Array.isArray(production.value) && production.value.length > 0)
     productionQueue.value[production.value[0].origin] = {
       origin: production.value[0].origin,
@@ -95,12 +118,8 @@ const syncCaches = async () => {
     }
   })
   if (cache.value === null) return
-  console.warn('cache keys')
-  console.log(Object.keys(cache.value))
   for (let key in productionQueue.value) {
-    console.log(`Evaluating key: ${key}`)
     if (Object.keys(cache.value).find(k => key === k)) continue
-    console.log('Not found key. Deleteing.')
     delete productionQueue.value[key]
   }
 }
