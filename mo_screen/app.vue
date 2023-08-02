@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
+import { Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative } from 'swiper'
 import 'swiper/css'
 import { ref, useFetch } from '.nuxt/imports'
-
-const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
+const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative]
 const PRODUCTION_DELTA_MAX = 180000
 const SYNC_TIMEOUT_MAX = 10000
 const tock = ref(10)
@@ -158,7 +157,7 @@ const cardClick = (index: string) => {
       </div>
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
         :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between cursor-pointer">
-        <SwiperSlide v-for="key in Object.keys(productionQueue)" :key="key" @click="cardClick(key)"
+        <SwiperSlide v-for="key in Object.keys(productionQueue).reverse()" :key="key" @click="cardClick(key)"
           class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-xs cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
           <div class="w-full justify-end text-end "
             :class="[productionQueue[key].delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
