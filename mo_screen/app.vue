@@ -174,7 +174,7 @@ const cardClick = (index: string) => {
               <div class="text-gray-900 w-full h-full">
                 <div v-for="extra in production.component" :key="extra.display_name"
                   class="w-full flex font-light text-center">
-                  <span v-if="extra.qty > 0"> {{ extra.display_name }} ({{ extra.qty }}) </span>
+                  <span v-if="extra.qty > 0"> {{ extra.id }} {{ extra.display_name }} ({{ extra.qty }}) </span>
                 </div>
               </div>
             </div>
