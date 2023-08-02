@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductSpawnerScreen" owl="1">
-		<div class="container-fluid ">
-			<div class="d-flex vh-100">
-				<div class="col-4 sm-col-2 h-100 d-flex flex-column border-end match_bg">
-					<CustomOrderWidget />
+		<div class="d-flex vh-100 container-fluid">
+			<div class="col-4 sm-col-2 h-100 d-flex flex-column border-end match_bg">
+				<CustomOrderWidget />
+			</div>
+			<div class="col-8 sm-col-10 container-fluid h-100 d-flex flex-column match_bg justify-content-start align-items-center">
+				<div class="d-flex pt-2 w-100 h-auto " t-on-click="() => this.trigger('close-temp-screen')">
+					<h6 class="btn">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+							<path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+						</svg>
+						<t t-esc="props.product.display_name" />
+					</h6>
 				</div>
-				<div class="col-8 sm-col-10 container-fluid h-100 d-flex flex-column match_bg justify-content-start align-items-center">
-					<div class="d-flex pt-2 w-100 h-auto " t-on-click="() => this.trigger('close-temp-screen')">
-						<h6 class="btn">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
-								<path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
-							</svg>
-							<t t-esc="props.product.display_name" />
-						</h6>
-					</div>
-					<div class="container-fluid h-50 d-flex flex-column justify-content-start align-items-stretch d-grid gap-2 p-0">
-						<div t-foreach="getAttributes" t-as="attribute" t-key="attribute.id" class="container-fluid h-100 p-0">
-							<div t-if="getIndex >= attribute_index" class="container-fluid h-100 d-flex flex-column p-0">
-								<h6 class="container-fluid p-0">
-									<t t-esc="attribute.name" />
-								</h6>
+				<div class="container-fluid h-50 d-flex flex-column justify-content-center align-items-stretch d-grid gap-2 p-0 ">
+					<div t-foreach="getAttributes" t-as="attribute" t-key="attribute.id" class="container-fluid h-100 p-0 ">
+						<div t-if="getIndex >= attribute_index" class="container-fluid h-100 p-0 ">
+							<h6 class="container-fluid p-0 row justify-content-center">
+								<t t-esc="attribute.name" />
+							</h6>
+							<div class="container-fluid p-0 h-auto ">
 								<CustomRadioProductAttribute attribute="attribute" />
 							</div>
 						</div>
 					</div>
-					<div t-if="getIndex === getAttributes.length" class="container-fluid h-50 d-flex d-grid gap-2 py-2">
-						<div class="col-5 d-flex flex-column justify-content-start align-items-stretch p-0">
-							<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
-								<t t-if="extra_index%2 === 0">
-									<div class="row justify-content-center">
-										<ExtraItem extra="extra" />
-									</div>
-								</t>
+				</div>
+				<div t-if="getIndex === getAttributes.length" class="container-fluid h-50 d-flex d-grid gap-2 py-2">
+					<div class="col-5 d-flex flex-column justify-content-start align-items-evenly p-0 gap-1">
+						<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
+							<t t-if="extra_index%2 === 0">
+								<div class="d-flex justify-content-center align-items-center ">
+									<ExtraItem extra="extra" />
+								</div>
 							</t>
-						</div>
-						<div class="col-5 d-flex flex-column justify-content-start align-items-stretch p-0">
-							<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id">
-								<t t-if="extra_index%2 !== 0">
-									<div class="row justify-content-center">
-										<ExtraItem extra="extra" />
-									</div>
-								</t>
+						</t>
+					</div>
+					<div class="col-5 d-flex flex-column justify-content-start align-items-evenly p-0 gap-1">
+						<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
+							<t t-if="extra_index%2 !== 0">
+								<div class="d-flex justify-content-center align-items-center ">
+									<ExtraItem extra="extra" />
+								</div>
 							</t>
-						</div>
-						<div class="col-2 d-flex flex-column justify-content-start align-items-stretch p-0">
-							<button class="container-fluid h-100 btn bg-success text-light " t-on-click="() => this.trigger('spawn-product')">
-								Aceptar
-							</button>
-						</div>
+						</t>
+					</div>
+					<div class="col-2 d-flex flex-column justify-content-start align-items-stretch p-0">
+						<button class="container-fluid h-100 btn bg-success text-light " t-on-click="() => this.trigger('spawn-product')">
+							Aceptar
+						</button>
 					</div>
 				</div>
 			</div>
