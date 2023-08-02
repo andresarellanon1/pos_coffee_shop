@@ -5,7 +5,7 @@
 			<h6 class="col">
 				<t t-esc="props.extra.display_name" />
 				($
-				<t t-esc="getPriceExtra" />
+				<t t-esc="env.pos.format_currency(getPriceExtra)" />
 				)
 			</h6>
 			<div class="h-100 d-flex grid gap-2 justify-content-between align-items-center col p-0">
