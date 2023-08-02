@@ -80,22 +80,23 @@ const fetchNextMrpProduction = async () => {
   })
   if (products.value === null) return
   allowedProductIds.value = []
+  console.log(products)
   for (let product of products.value) {
-    console.log(product)
     if (product.pos_categ === 'Extra' && product.categ === 'Component') {
       allowedProductIds.value.push(product.id)
     }
   }
-  production.value.map(p => {
-    p.component.filter(c => allowedProductIds.value.includes(c.id))
-    return p
-  })
-  if (Array.isArray(production.value) && production.value.length > 0)
+  if (Array.isArray(production.value) && production.value.length > 0) {
+    production.value.map(p => {
+      p.component = p.component.filter(c => allowedProductIds.value.includes(c.id))
+      return p
+    })
     productionQueue.value[production.value[0].origin] = {
       origin: production.value[0].origin,
       item: production.value,
       delta: PRODUCTION_DELTA_MAX,
     }
+  }
 }
 const checkIntervalDone = () => {
   for (let key in productionQueue.value) {
