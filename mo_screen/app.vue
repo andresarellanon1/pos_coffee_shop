@@ -79,6 +79,7 @@ const fetchNextMrpProduction = async () => {
     }
   })
   if (products.value === null) return
+  allowedProductIds.value = []
   for (let product of products.value) {
     if (product.pos_categ === 'Extra' && product.categ === 'Component') {
       allowedProductIds.value.push(product.id)
