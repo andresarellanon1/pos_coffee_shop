@@ -150,6 +150,7 @@ const cardClick = (index: string) => {
     </div>
     <div v-if="Object.keys(productionQueue).length !== 0">
       <div class="flex space-x-2 w-full text-center justify-center">
+        {{ allowedProductIds }}
         <div>Órdenes de fabricación en fila: </div>
         <div>{{ productionQueue?.length }}</div>
       </div>
