@@ -16,6 +16,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         useExternalListener(window, 'clear-orderline', this._onClearOrderline)
         useExternalListener(window, 'click-sync-next-order', this._onClickNext)
         useExternalListener(window, 'product-spawned', this._onProductSpawned)
+        useExternalListener(window, 'product-dupe', this._onProductDupe)
         useListener('click-product', this._clickProduct)
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
@@ -43,6 +44,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         return this.env.pos.db.isEmployee
     }
     // Handlers
+    async _onProductDupe(event) {
+        let id = event.detail
+        let orderlines = order.get_orderlines()
+        let orderline = orderline.find(line => line.id === id)
+        console.warn('product dupe', orderline)
+    }
     async _clickProduct(event) {
         let productTemplate = event.detail
         let attributes = _.map(productTemplate.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
@@ -70,6 +77,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.error(e)
         }
     }
+    // TODO: fix, remove 1 at a time
     async _onClearOrderline(event) {
         try {
             this.trigger('show-loader')
@@ -91,8 +99,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         }
     }
     /*
-   * NOTE: Call on main PoS session
-   */
+    * NOTE: Call on main PoS session
+    */
     async _onClickPay(event) {
         try {
             this.trigger('show-loader')
