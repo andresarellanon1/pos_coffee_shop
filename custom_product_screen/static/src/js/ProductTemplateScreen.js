@@ -46,7 +46,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     // Handlers
     async _onProductDupe(event) {
         let id = event.detail
-        let orderlines = order.get_orderlines()
+        let orderlines = this.currentOrder.get_orderlines()
         let orderline = orderline.find(line => line.id === id)
         console.warn('product dupe', orderline)
     }
