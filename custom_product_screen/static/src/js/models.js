@@ -113,6 +113,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     clearSingleMrpProduction: async function(orderline_id) {
         try {
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
+            if(!this.db.orderlineSkipMO.map(line => line.id).includes(orderline.id)) return
             for (let key in orderlines_to_sync_by_production_id) {
                 if (orderlines_to_sync_by_production_id[key].orderline_id !== orderline_id) continue
                 let production_ids = await rpc.query({
@@ -133,6 +134,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     },
     /*
     * NOTE: this method expects the orderlines to have a production id created and stored in memory beforehand
+    * currently the methods to create and confirm the mrp.production are called right before this using await keyword
     */
     sendOrderToMainPoS: async function(retry) {
         try {

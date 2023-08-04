@@ -77,17 +77,14 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.error(e)
         }
     }
-    // TODO: fix, remove 1 at a time
     async _onClearOrderline(event) {
         try {
             this.trigger('show-loader')
-            console.warn('clearing orderline')
-            console.log(event.detail)
             let orderline_id = event.detail
             await this.env.pos.clearCurrentOrderMrpProduction(orderline_id)
-            let order = this.currentOrder
-            this.env.pos.removeOrder(order)
-            this.env.pos.add_new_order()
+            let orderline = this.currentOrder.orderlines.find(orderline => `${orderline.id}` === key)
+            if (orderline)
+                this.currentOrder.remove_orderline(orderline)
             this.trigger('hide-loader')
         } catch (e) {
             this.trigger('hide-loader')
