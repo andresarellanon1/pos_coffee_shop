@@ -81,8 +81,8 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         try {
             this.trigger('show-loader')
             let orderline_id = event.detail
-            await this.env.pos.clearCurrentOrderMrpProduction(orderline_id)
-            let orderline = this.currentOrder.orderlines.find(orderline => `${orderline.id}` === key)
+            await this.env.pos.clearSingleMrpProduction(orderline_id)
+            let orderline = this.currentOrder.orderlines.find(orderline => orderline.id === orderline_id)
             if (orderline)
                 this.currentOrder.remove_orderline(orderline)
             this.trigger('hide-loader')

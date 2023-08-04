@@ -79,7 +79,6 @@ const fetchNextMrpProduction = async () => {
   })
   if (products.value === null) return
   allowedProductIds.value = []
-  console.log(products)
   for (let product of products.value) {
     if (product.pos_categ === 'Extra' && product.categ === 'Component') {
       allowedProductIds.value.push(product.id)
@@ -120,9 +119,29 @@ const syncCaches = async () => {
     }
   })
   if (cache.value === null) return
+  const { data: products } = await useFetch<Products[]>('http://158.69.63.47:8080/products', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+    }
+  })
+  if (products.value === null) return
+  allowedProductIds.value = []
+  for (let product of products.value) {
+    if (product.pos_categ === 'Extra' && product.categ === 'Component') {
+      allowedProductIds.value.push(product.id)
+    }
+  }
   for (let key in productionQueue.value) {
-    if (Object.keys(cache.value).find(k => key === k)) continue
-    delete productionQueue.value[key]
+    let cacheKey = Object.keys(cache.value).find(k => key === k)
+    if (!cacheKey)
+      delete productionQueue.value[key]
+    else {
+      productionQueue.value[key].item = cache.value[cacheKey].map(ca => {
+        ca.component = ca.component.filter(c => allowedProductIds.value.includes(c.id))
+        return ca
+      })
+    }
   }
 }
 
@@ -158,23 +177,23 @@ const cardClick = (index: string) => {
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
         :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between cursor-pointer">
         <SwiperSlide v-for="key in Object.keys(productionQueue).reverse()" :key="key" @click="cardClick(key)"
-          class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-xs cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
-          <div class="w-full justify-end text-end "
-            :class="[productionQueue[key].delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
-            {{ productionQueue[key].delta / 1000 }}
-          </div>
-          <div class="text-dark-200 h-auto w-full flex flex-col items-center">
-            <div class="flex text-xs font-light font-sans">
-              {{ productionQueue[key].item[0].origin }}
-            </div>
-            <div v-for="production in productionQueue[key].item" :key="production.id" class="w-full overflow-y-auto">
-              <div class="w-full flex flex-col items-center justify-baseline border-b border-black">
-                {{ production.product.display_name }}
-                {{ production.display_name }}
+          class="flex flex-col w-full h-auto p-2 text-center font-bold text-xs ">
+          <div class="text-dark-200 h-auto w-full flex flex-col items-center space-y-2">
+            <div
+              class="flex p-2 w-full justify-between items-center text-xs font-light font-sans cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
+              <span class="w-full"> {{ productionQueue[key].item[0].origin }} </span>
+              <div class="w-full justify-end text-end "
+                :class="[productionQueue[key].delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
+                {{ productionQueue[key].delta / 1000 }}
               </div>
+            </div>
+            <div v-for="production in productionQueue[key].item" :key="production.id"
+              class="flex flex-col justify-center items-center p-2 w-full overflow-y-auto cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
+              <span class="w-full font-light"> {{ production.display_name }} </span>
+              <span class="w-full"> {{ production.product.display_name }}</span>
               <div class="text-gray-900 w-full h-full">
                 <div v-for="extra in production.component" :key="extra.display_name"
-                  class="w-full flex font-light text-center">
+                  class="w-full flex flex-col justify-center items-center font-light text-center">
                   <span v-if="extra.qty > 0"> {{ extra.display_name }} ({{ extra.qty }}) </span>
                 </div>
               </div>
