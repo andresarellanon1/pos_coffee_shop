@@ -271,7 +271,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         }
     },
     dupeSpawn: async function(orderline) {
-        let product = this.db.product_by_id[orderline.product_id]
+        let product = this.db.product_by_id[orderline.product.id]
         let options = {
             draftPackLotLines: undefined,
             quantity: 1,
