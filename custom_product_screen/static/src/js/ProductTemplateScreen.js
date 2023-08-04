@@ -49,29 +49,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         let orderlines = this.currentOrder.get_orderlines()
         let orderline = orderlines.find(line => line.id === id)
         console.warn('product dupe', orderline)
-        let product = this.db.product_by_id[orderline.product_id]
-        let options = {
-            draftPackLotLines: undefined,
-            quantity: 1,
-            price_extra: orderline.price_extra,
-            description: orderline.product.display_name,
-        }
-        let parent_orderline = await this._addProduct(product, options)
-        this.db.orderlineSkipMO.push(parent_orderline)
-        let extra_components = products_to_sync_by_orderline_id[orderline.id].extra_components
-        for (let component of extra_components) {
-            let extra = this.db.product_by_id[component.id]
-            let options = {
-                draftPackLotLines: undefined,
-                quantity: component.qty,
-                price_extra: 0.0,
-                description: extra.display_name,
-            }
-            let child_orderline = await this._addProduct(extra, options)
-            this.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
-        }
-        // NOTE: Emulate spawing orderline for product as it was from method spawnProduct
-        this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, orderline.product.id, options, extra_components)
+        this.env.pos.dupeSpawn(orderline)
     }
     async _clickProduct(event) {
         let productTemplate = event.detail
