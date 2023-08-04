@@ -295,8 +295,37 @@ patch(PosGlobalState.prototype, "prototype patch", {
         }
         // NOTE: Emulate spawing orderline for product as it was from method spawnProduct
         this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, orderline.product.id, options, extra_components)
+    },
+    markSingleAsScrap: async function (orderline_id) {
+        let order = this.currentOrder
+        let orderlines = order.get_orderlines()
+        let orderline = orderlines.find(line => line.id === orderline_id)
+        if (!orderline) return
+        await rpc.query({
+            model: 'stock.scrap',
+            method: 'mark_as_scrap',
+            args: [1, {
+                'id': orderline.product.id,
+                'qty': 1,
+                'origin': '',
+            }],
+        })
+    },
+    markCurrentOrderAsScrap: async function () {
+        let order = this.currentOrder
+        let orderlines = order.get_orderlines()
+        for (let orderline of orderlines) {
+            await rpc.query({
+                model: 'stock.scrap',
+                method: 'mark_as_scrap',
+                args: [1, {
+                    'id': orderline.product.id,
+                    'qty': 1,
+                    'origin': '',
+                }],
+            })
+        }
     }
-
 })
 
 patch(Order.prototype, "prototype patch", {

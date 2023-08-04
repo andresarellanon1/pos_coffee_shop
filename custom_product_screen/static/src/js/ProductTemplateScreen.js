@@ -75,6 +75,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 body: JSON.stringify(e)
             })
             console.error(e)
+            await this.env.pos.markCurrentOrderAsScrap()
         }
     }
     async _onClearOrderline(event) {
@@ -93,6 +94,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 body: JSON.stringify(e)
             })
             console.error(e)
+            await this.env.pos.markSingleAsScrap(event.detail)
         }
     }
     /*
