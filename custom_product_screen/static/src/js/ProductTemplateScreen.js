@@ -69,10 +69,10 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.env.pos.add_new_order()
             this.trigger('hide-loader')
         } catch (e) {
+            console.warn('could not clear, scrapping')
             let order = this.currentOrder
             this.env.pos.removeOrder(order)
             this.env.pos.add_new_order()
-            this.trigger('hide-loader')
             await this.env.pos.markCurrentOrderAsScrap()
             this.trigger('hide-loader')
         }
