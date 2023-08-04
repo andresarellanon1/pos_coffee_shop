@@ -280,7 +280,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         }
         let parent_orderline = await this._addProduct(product, options)
         this.db.orderlineSkipMO.push(parent_orderline)
-        let extra_components = products_to_sync_by_orderline_id[orderline.id].extra_components
+        let extra_components = this.db.products_to_sync_by_orderline_id[orderline.id].extra_components
         for (let component of extra_components) {
             let extra = this.db.product_by_id[component.id]
             let options = {
