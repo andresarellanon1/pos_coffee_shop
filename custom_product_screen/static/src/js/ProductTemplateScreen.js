@@ -69,13 +69,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.env.pos.add_new_order()
             this.trigger('hide-loader')
         } catch (e) {
+            let order = this.currentOrder
+            this.env.pos.removeOrder(order)
+            this.env.pos.add_new_order()
             this.trigger('hide-loader')
-            this.showPopup('ErrorPopup', {
-                title: 'Error al cancelar orden',
-                body: JSON.stringify(e)
-            })
-            console.error(e)
             await this.env.pos.markCurrentOrderAsScrap()
+            this.trigger('hide-loader')
         }
     }
     async _onClearOrderline(event) {
@@ -88,13 +87,12 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 this.currentOrder.remove_orderline(orderline)
             this.trigger('hide-loader')
         } catch (e) {
+            let orderline_id = event.detail
+            await this.env.pos.markSingleAsScrap(orderline_id)
+            let orderline = this.currentOrder.orderlines.find(orderline => orderline.id === orderline_id)
+            if (orderline)
+                this.currentOrder.remove_orderline(orderline)
             this.trigger('hide-loader')
-            this.showPopup('ErrorPopup', {
-                title: 'Error al cancelar orden',
-                body: JSON.stringify(e)
-            })
-            console.error(e)
-            await this.env.pos.markSingleAsScrap(event.detail)
         }
     }
     /*
