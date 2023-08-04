@@ -182,13 +182,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let orderlines_ids = order.get_orderlines().map(line => line.id)
             let orderlinesRemote_ids = this.db.orderlineSkipMO.map(line => line.id)
             let isFix = orderlines_ids.every(line_id => orderlinesRemote_ids.includes(line_id))
-            console.warn('fixing queue')
-            console.warn('orderlines_ids')
-            console.log(orderlines_ids)
-            console.warn('orderlinesRemote_ids')
-            console.log(orderlinesRemote_ids)
-            console.warn('isFix')
-            console.log(isFix)
             if (isFix) return
             let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
                 method: "POST",
