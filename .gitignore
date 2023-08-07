@@ -6,6 +6,7 @@ lazy-lock.json
 .stylua.toml
 .vscode
 .pyc
+.env
 **.pyc
 **/**.pyc
 node_modules

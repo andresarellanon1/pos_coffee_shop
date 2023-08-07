@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative } from 'swiper'
 import 'swiper/css'
 import { ref, useFetch } from '.nuxt/imports'
+
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative]
 const PRODUCTION_DELTA_MAX = 180000
 const SYNC_TIMEOUT_MAX = 10000
@@ -33,11 +34,13 @@ interface Products {
 const productionQueue = ref<{ [key: string]: { origin: string; item: Production[]; delta: number } }>({})
 const allowedProductIds = ref<number[]>([])
 const markAsDone = async (production: Production[]) => {
+  const runtimeConfig = useRuntimeConfig()
   try {
     const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
       method: "GET",
       headers: {
         "Accept": "*",
+        "Authorization": `${runtimeConfig.jwt_secret}`,
       }
     })
     if (version.value !== null)
@@ -46,7 +49,8 @@ const markAsDone = async (production: Production[]) => {
           method: "POST",
           headers: {
             "Accept": "*",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `${runtimeConfig.jwt_secret}`,
           },
           body: JSON.stringify({ id: prod.id })
         })
@@ -57,10 +61,14 @@ const markAsDone = async (production: Production[]) => {
 }
 // fetch 1 order at a time (List<OrderPayload>)
 const fetchNextMrpProduction = async () => {
+  const runtimeConfig = useRuntimeConfig()
+  console.warn(runtimeConfig)
+  console.warn('next mrp production', runtimeConfig.jwt_secret)
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `${runtimeConfig.jwt_secret}`,
     }
   })
   if (version.value === null) return
@@ -68,6 +76,7 @@ const fetchNextMrpProduction = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `${runtimeConfig.jwt_secret}`,
     }
   })
   if (production.value === null) return
@@ -75,6 +84,7 @@ const fetchNextMrpProduction = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `${runtimeConfig.jwt_secret}`,
     }
   })
   if (products.value === null) return
@@ -105,10 +115,12 @@ const checkIntervalDone = () => {
   }
 }
 const syncCaches = async () => {
+  const runtimeConfig = useRuntimeConfig()
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `${runtimeConfig.jwt_secret}`,
     }
   })
   if (version.value === null) return
@@ -116,6 +128,7 @@ const syncCaches = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `${runtimeConfig.jwt_secret}`,
     }
   })
   if (cache.value === null) return
@@ -123,6 +136,7 @@ const syncCaches = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `${runtimeConfig.jwt_secret}`,
     }
   })
   if (products.value === null) return
