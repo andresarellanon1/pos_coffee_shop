@@ -302,7 +302,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let orderlines = order.get_orderlines()
             let orderline = orderlines.find(line => line.id === orderline_id)
             if (!orderline) return
-            let id = await rpc.query({
+            await rpc.query({
                 model: 'stock.scrap',
                 method: 'mark_as_scrap',
                 args: [1, {
@@ -311,7 +311,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     'origin': '',
                 }],
             })
-            console.warn('scrap id:,', id)
         } catch (e) {
             throw e
         }
