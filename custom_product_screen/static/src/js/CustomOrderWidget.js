@@ -41,3 +41,8 @@ class CustomOrderWidget extends PosComponent {
 CustomOrderWidget.template = 'custom_product_screen.CustomOrderWidget'
 Registries.Component.add(CustomOrderWidget)
 
+
+
+
+
+

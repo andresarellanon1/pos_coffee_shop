@@ -297,25 +297,12 @@ patch(PosGlobalState.prototype, "prototype patch", {
         this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, orderline.product.id, options, extra_components)
     },
     markSingleAsScrap: async function (orderline_id) {
-        let order = this.currentOrder
-        let orderlines = order.get_orderlines()
-        let orderline = orderlines.find(line => line.id === orderline_id)
-        if (!orderline) return
-        await rpc.query({
-            model: 'stock.scrap',
-            method: 'mark_as_scrap',
-            args: [1, {
-                'id': orderline.product.id,
-                'qty': 1,
-                'origin': '',
-            }],
-        })
-    },
-    markCurrentOrderAsScrap: async function () {
-        let order = this.currentOrder
-        let orderlines = order.get_orderlines()
-        for (let orderline of orderlines) {
-            await rpc.query({
+        try {
+            let order = this.currentOrder
+            let orderlines = order.get_orderlines()
+            let orderline = orderlines.find(line => line.id === orderline_id)
+            if (!orderline) return
+            let id = await rpc.query({
                 model: 'stock.scrap',
                 method: 'mark_as_scrap',
                 args: [1, {
@@ -324,6 +311,28 @@ patch(PosGlobalState.prototype, "prototype patch", {
                     'origin': '',
                 }],
             })
+            console.warn('scrap id:,', id)
+        } catch (e) {
+            throw e
+        }
+    },
+    markCurrentOrderAsScrap: async function () {
+        try {
+            let order = this.currentOrder
+            let orderlines = order.get_orderlines()
+            let ids = orderlines.map(line => {
+                return {
+                    id: line.product.id,
+                    origin: ''
+                }
+            })
+            await rpc.query({
+                model: 'stock.scrap',
+                method: 'mark_as_scrap_list',
+                args: [1, ids],
+            })
+        } catch (e) {
+            throw e
         }
     }
 })

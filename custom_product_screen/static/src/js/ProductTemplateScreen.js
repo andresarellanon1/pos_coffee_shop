@@ -45,10 +45,20 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     }
     // Handlers
     async _onProductDupe(event) {
-        let id = event.detail
-        let orderlines = this.currentOrder.get_orderlines()
-        let orderline = orderlines.find(line => line.id === id)
-        await this.env.pos.dupeSpawn(orderline)
+        try {
+            this.trigger('show-loader')
+            let id = event.detail
+            let orderlines = this.currentOrder.get_orderlines()
+            let orderline = orderlines.find(line => line.id === id)
+            await this.env.pos.dupeSpawn(orderline)
+            this.trigger('hide-loader')
+        } catch (e) {
+            this.trigger('hide-loader')
+            this.showPopup('ErrorPopup', {
+                title: 'Error al preparar pantalla de cobro',
+                body: JSON.stringify(e)
+            })
+        }
     }
     async _clickProduct(event) {
         let productTemplate = event.detail
@@ -63,18 +73,23 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClearOrder(event) {
         try {
             this.trigger('show-loader')
+            console.log('errre')
             await this.env.pos.clearCurrentOrderMrpProduction()
             let order = this.currentOrder
             this.env.pos.removeOrder(order)
             this.env.pos.add_new_order()
             this.trigger('hide-loader')
         } catch (e) {
-            console.warn('could not clear, scrapping')
             let order = this.currentOrder
-            this.env.pos.removeOrder(order)
-            this.env.pos.add_new_order()
-            await this.env.pos.markCurrentOrderAsScrap()
-            this.trigger('hide-loader')
+            this.env.pos.markCurrentOrderAsScrap()
+                .catch((e) => {
+                    console.error(e)
+                })
+                .finally(() => {
+                    this.trigger('hide-loader')
+                    this.env.pos.removeOrder(order)
+                    this.env.pos.add_new_order()
+                })
         }
     }
     async _onClearOrderline(event) {
@@ -88,11 +103,19 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             this.trigger('hide-loader')
         } catch (e) {
             let orderline_id = event.detail
-            await this.env.pos.markSingleAsScrap(orderline_id)
-            let orderline = this.currentOrder.orderlines.find(orderline => orderline.id === orderline_id)
-            if (orderline)
-                this.currentOrder.remove_orderline(orderline)
-            this.trigger('hide-loader')
+            this.env.pos.markSingleAsScrap(orderline_id)
+                .then((val) => {
+                    console.log(val)
+                    let orderline = this.currentOrder.orderlines.find(orderline => orderline.id === orderline_id)
+                    if (orderline)
+                        this.currentOrder.remove_orderline(orderline)
+                })
+                .catch((e) => {
+                    console.error(e)
+                })
+                .finally(() => {
+                    this.trigger('hide-loader')
+                })
         }
     }
     /*
@@ -101,6 +124,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClickPay(event) {
         try {
             this.trigger('show-loader')
+            console.log('here')
             await this.env.pos.createCurrentOrderMrpProduction()
             for (let key in this.env.pos.db.child_orderline_by_orderline_id) {
                 let orderline = this.currentOrder.orderlines.find(orderline => `${orderline.id}` === key)

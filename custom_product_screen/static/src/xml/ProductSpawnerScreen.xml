@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductSpawnerScreen" owl="1">
-		<div class="d-flex vh-100 container-fluid">
-			<div class="col-4 sm-col-2 h-100 d-flex flex-column border-end match_bg">
+		<div class="d-flex row h-100 container-fluid p-0 m-0">
+			<div class="col-4 sm-col-2 pb-2 h-100 d-flex flex-column border-end match_bg">
 				<CustomOrderWidget />
 			</div>
 			<div class="col-8 sm-col-10 h-100 px-2 d-flex flex-column match_bg success align-items-stretch">
