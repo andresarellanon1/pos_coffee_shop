@@ -40,7 +40,7 @@ const markAsDone = async (production: Production[]) => {
       method: "GET",
       headers: {
         "Accept": "*",
-        "Authorization": `${runtimeConfig.jwt_secret}`,
+        "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
       }
     })
     if (version.value !== null)
@@ -50,7 +50,7 @@ const markAsDone = async (production: Production[]) => {
           headers: {
             "Accept": "*",
             "Content-Type": "application/json",
-            "Authorization": `${runtimeConfig.jwt_secret}`,
+            "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
           },
           body: JSON.stringify({ id: prod.id })
         })
@@ -68,7 +68,7 @@ const fetchNextMrpProduction = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
-      "Authorization": `${runtimeConfig.jwt_secret}`,
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (version.value === null) return
@@ -76,7 +76,7 @@ const fetchNextMrpProduction = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
-      "Authorization": `${runtimeConfig.jwt_secret}`,
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (production.value === null) return
@@ -120,7 +120,7 @@ const syncCaches = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
-      "Authorization": `${runtimeConfig.jwt_secret}`,
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (version.value === null) return
@@ -128,7 +128,7 @@ const syncCaches = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
-      "Authorization": `${runtimeConfig.jwt_secret}`,
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (cache.value === null) return
@@ -136,7 +136,7 @@ const syncCaches = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
-      "Authorization": `${runtimeConfig.jwt_secret}`,
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (products.value === null) return
