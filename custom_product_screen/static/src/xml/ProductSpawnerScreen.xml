@@ -1,47 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductSpawnerScreen" owl="1">
-		<div class="container-fluid h-100">
-			<div class="row d-flex h-100">
-				<div class="col-4 sm-col-2 h-100 d-flex flex-column border-end match_bg">
-					<CustomOrderWidget />
-				</div>
-				<div class="col-8 sm-col-10 h-100 d-flex flex-column border-end match_bg px-2">
-					<div class="container-fuild">
-						<div class="row flex-grow align-items-center">
-							<div class="col-2 col-md-4 h-full">
-								<ProductTemplateItem product="props.product" />
-							</div>
-							<div class="col-10 col-md-8 h-full">
-								<div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id">
-									<div class="" t-esc="attribute.name" />
-									<CustomRadioProductAttribute attribute="attribute" />
-								</div>
-							</div>
-						</div>
-						<div class="row justify-content-center">
-							<div class="col-6 d-flex flex-column justify-content-start align-items-stretch">
-								<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
-									<t t-if="extra_index%2 === 0">
-										<div class="row justify-content-center">
-											<ExtraItem extra="extra" />
-										</div>
-									</t>
-								</t>
-							</div>
-							<div class="col-6 d-flex flex-column justify-content-start align-items-stretch">
-								<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id">
-									<t t-if="extra_index%2 !== 0">
-										<div class="row justify-content-center">
-											<ExtraItem extra="extra" />
-										</div>
-									</t>
-								</t>
+		<div class="d-flex row h-100 container-fluid p-0 m-0">
+			<div class="col-4 sm-col-2 pb-2 h-100 d-flex flex-column border-end match_bg">
+				<CustomOrderWidget />
+			</div>
+			<div class="col-8 sm-col-10 h-100 px-2 d-flex flex-column match_bg success align-items-stretch">
+				<div class="container-fluid h-auto d-flex flex-column justify-content-start align-items-stretch d-grid gap-2 p-0 ">
+					<div class="d-flex pt-2 w-100 h-auto" t-on-click="() => this.trigger('close-temp-screen')">
+						<h6 class="btn">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+								<path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+							</svg>
+							<t t-esc="props.product.display_name" />
+						</h6>
+					</div>
+					<div t-foreach="getAttributes" t-as="attribute" t-key="attribute.id" class="container-fluid h-auto flex-grow-1 p-0 ">
+						<div t-if="getIndex >= attribute_index" class="container-fluid h-100 p-0 ">
+							<h6 class="container-fluid p-0 row justify-content-center">
+								<t t-esc="attribute.name" />
+							</h6>
+							<div class="container-fluid p-0 ">
+								<CustomRadioProductAttribute attribute="attribute" />
 							</div>
 						</div>
 					</div>
-					<div class="pads">
-						<ProductSpawnerActionpad />
+				</div>
+				<div t-att-class="{ oe_hidden: getIndex !== getAttributes.length }" class="container-fluid h-auto d-flex d-grid gap-2 py-2 flex-grow-1">
+					<div class="col-5 d-flex flex-column justify-content-start align-items-evenly p-0 gap-1">
+						<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
+							<t t-if="extra_index%2 === 0">
+								<div class="d-flex justify-content-center align-items-center ">
+									<ExtraItem extra="extra" />
+								</div>
+							</t>
+						</t>
+					</div>
+					<div class="col-5 d-flex flex-column justify-content-start align-items-evenly p-0 gap-1">
+						<t t-foreach="getDisplayExtras" t-as="extra" t-key="extra.id" t-as-index="index">
+							<t t-if="extra_index%2 !== 0">
+								<div class="d-flex justify-content-center align-items-center ">
+									<ExtraItem extra="extra" />
+								</div>
+							</t>
+						</t>
+					</div>
+					<div class="col-2 d-flex flex-column justify-content-start align-items-stretch p-0">
+						<button class="container-fluid h-100 btn bg-success text-light " t-on-click="() => this.trigger('spawn-product')">
+							Aceptar
+						</button>
 					</div>
 				</div>
 			</div>

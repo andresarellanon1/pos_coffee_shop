@@ -3,12 +3,12 @@
 }
 
 .checkmark-container {
+    background: #fff;
 }
 
 .checkmark-container input {
     display: none;
 }
-
 
 .long-button {
    width:140%; 

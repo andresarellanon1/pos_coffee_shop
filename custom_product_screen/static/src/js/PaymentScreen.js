@@ -8,9 +8,11 @@ patch(PaymentScreen.prototype, "getter/setter patch", {
         return !this.error ? 'ReceiptScreen' : 'ProducTemplateScreen'
     }
 })
-patch(PaymentScreen.prototype, "prototype patch", {
+patch(PaymentScreen.prototype, "async prototype patch", {
     _finalizeValidation: async function() {
+        let _super = this._super.bind(this)
         await this.env.pos.confirmCurrentOrderMrpProduction()
-        this._super()
+        await this.env.pos.fixQueueForCurrentOrder(3)
+        await _super(...arguments)
     }
 })

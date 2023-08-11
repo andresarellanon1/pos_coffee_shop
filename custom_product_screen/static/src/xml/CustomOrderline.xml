@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="custom_product_screen.CustomOrderline" owl="1">
+		<h6 class="container-fluid d-flex justify-content-between align-items-center mt-0 mb-0 ">
+			<div class="d-flex w-100">
+				<t t-esc="props.line.product.display_name" />
+				<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
+			</div>
+			<div class="d-flex w-auto grid gap-1 justify-content-end align-items-center ">
+				<div class="btn" t-on-click="()=>this.trigger('clear-orderline', props.line.id)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z" />
+					</svg>
+				</div>
+				<div class="btn" t-on-click="()=>this.trigger('product-dupe', props.line.id)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="blue" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+					</svg>
+				</div>
+			</div>
+		</h6>
+		<div t-foreach="childOrderlines" t-as="cline" t-key="cline.id" class="container-fluid d-flex justify-content-between align-items-center mt-0 mb-0 pl-2">
+			<div class="col-12 d-flex w-100 justify-content-between" t-att-data-orderline-id="cline.id">
+				<span>
+					<t t-esc="cline.product.display_name" />
+					(
+					<t t-esc="cline.quantity" />
+					)
+				</span>
+				<span>
+					<!--
+					<t
+					t-esc="env.pos.format_currency(cline.get_display_price())" />
+					-->
+				</span>
+			</div>
+		</div>
+	</t>
+</templates>

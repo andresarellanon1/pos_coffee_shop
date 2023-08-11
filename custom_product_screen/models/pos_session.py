@@ -103,7 +103,7 @@ class PosSession(models.Model):
             'search_params': {
                 'domain': domain,
                 'fields': [
-                    'display_name', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
+                    'display_name', 'list_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking',
                     'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'bom_ids'
                 ],

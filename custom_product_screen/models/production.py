@@ -1,5 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import logging
+logger = logging.getLogger(__name__)
 
 
 class MrpProduction(models.Model):
@@ -17,16 +19,41 @@ class MrpProduction(models.Model):
             return
         mrp_order = self.env['mrp.production'].search(
             [('id', '=', product_payload['production_id'])])
+        mrp_order.update({
+            'state': 'progress'})
+        return
+
+    def create_single(self, product_payload):
+        logger.info(self.env['product.product'].browse(
+            int(product_payload['id'])).pos_production)
+        if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
+            return
+        if not product_payload['qty'] == 1:
+            return
+        bom = self.env['mrp.bom'].search(
+            [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
+        if not bom:
+            return
+        vals = {
+            'origin': 'POS-' + product_payload['pos_reference'],
+            'state': 'confirmed',
+            'product_id': product_payload['id'],
+            'product_tmpl_id': product_payload['product_tmpl_id'],
+            'product_uom_id': product_payload['uom_id'],
+            'product_qty': product_payload['qty'],
+            'bom_id': bom.id,
+        }
+        mrp_order = self.sudo().create(vals)
+        logger.info(mrp_order)
         components = []
         for bom_line in mrp_order.bom_id.bom_line_ids:
-            # default qty of BoM
             bom_line_qty = bom_line.product_qty
-            # check if bom_line is in components, if so allow flexible consuming
+            #  allow flexible consuming only if bom_line is in extra components
             _prodComp = list(filter(lambda n: n['id'] == bom_line.product_id.id, list(
                 product_payload['components'])))
             if len(_prodComp) > 0:
                 bom_line_qty = _prodComp[0]['qty']
-            elif not any(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
+            elif not all(variant.name in mrp_order.product_id.display_name for variant in bom_line.bom_product_template_attribute_value_ids):
                 bom_line_qty = 0
             components.append((0, 0, {
                 'raw_material_production_id': mrp_order.id,
@@ -36,7 +63,7 @@ class MrpProduction(models.Model):
                 'product_uom_qty': bom_line_qty,
                 'picking_type_id': mrp_order.picking_type_id.id,
                 'location_id': mrp_order.location_src_id.id,
-                'location_dest_id': bom_line.product_id.with_company(self.company_id.id).property_stock_production.id,
+                'location_dest_id': bom_line.product_id.with_company(self.env.user.company_id.id).property_stock_production.id,
                 'company_id': mrp_order.company_id.id,
             }))
         mrp_production = {
@@ -59,46 +86,6 @@ class MrpProduction(models.Model):
             'move_raw_ids': components,
             'move_finished_ids': [(0, 0, mrp_production)]
         })
-
-        return
-
-    def create_single(self, product_payload):
-        if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
-            return
-        # NOTE: for the coffeshop use case
-        # each mrp.production(manufacturingorde) should be created for each individual product, meaning only product_payload[qty] == 1 allowed
-        # make sure to send the products 1 by 1 from the POS javascript files
-        # and to not merge theorderlines in the pos live data
-        if not product_payload['qty'] == 1:
-            return
-        # NOTE: do not remove this block to define the bom
-        # it looks time consuming to justify wheter or not to discriminate mrp.bom(s) without product_id
-        # NOTE: ps by default it will give priority to bom_prod
-        bom_count = self.env['mrp.bom'].search(
-            [('product_tmpl_id', '=', product_payload['product_tmpl_id'])])
-        if bom_count:
-            bom_temp = self.env['mrp.bom'].search(
-                [('product_tmpl_id', '=', product_payload['product_tmpl_id']), ('product_id', '=', False)])
-            bom_prod = self.env['mrp.bom'].search(
-                [('product_id', '=', product_payload['id'])])
-        if bom_prod:
-            bom = bom_prod[0]  # priority
-        elif bom_temp:
-            bom = bom_temp[0]
-        else:
-            bom = []
-        if not bom:
-            return
-        vals = {
-            'origin': 'POS-' + product_payload['pos_reference'],
-            'state': 'confirmed',
-            'product_id': product_payload['id'],
-            'product_tmpl_id': product_payload['product_tmpl_id'],
-            'product_uom_id': product_payload['uom_id'],
-            'product_qty': product_payload['qty'],
-            'bom_id': bom.id,
-        }
-        mrp_order = self.sudo().create(vals)
         return mrp_order.id
 
 

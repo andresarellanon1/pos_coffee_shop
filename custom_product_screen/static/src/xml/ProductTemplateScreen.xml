@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductTemplateScreen" owl="1">
-		<div class="container-fluid h-100" t-att-class="{ oe_hidden: !props.isShown }">
-			<div class="row d-flex h-100">
-				<div class="col-4 h-100 d-flex flex-column border-end match_bg">
-					<CustomOrderWidget isSkip="skipNextMO" />
-				</div>
-				<div class="col-8 h-100 d-flex flex-column  match_bg px-2">
-					<ProductTemplateWidget />
-				</div>
+		<div class="row h-100 container-fluid p-0 m-0" t-att-class="{ oe_hidden: !props.isShown }">
+			<div class="col-4 h-100 pb-2 d-flex flex-column border border-end match_bg">
+				<CustomOrderWidget />
+			</div>
+			<div class="col-8 h-100 d-flex flex-column  match_bg px-2">
+				<ProductTemplateWidget />
 			</div>
 		</div>
 	</t>

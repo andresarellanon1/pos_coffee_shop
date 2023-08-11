@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Pagination, Scrollbar, Autoplay, Parallax } from 'swiper'
+import { Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative } from 'swiper'
 import 'swiper/css'
-import { ref, useFetch, useState } from '.nuxt/imports'
-import { TransitionRoot } from '@headlessui/vue'
-import { parsePayload } from 'nuxt/dist/app/composables/payload'
+import { ref, useFetch } from '.nuxt/imports'
 
-const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax]
+const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative]
 const PRODUCTION_DELTA_MAX = 180000
 const SYNC_TIMEOUT_MAX = 10000
 const tock = ref(10)
@@ -17,6 +15,7 @@ interface Production {
   priority: string
   origin: string
   component: {
+    id: number
     display_name: string
     qty: number
   }[]
@@ -25,13 +24,23 @@ interface Production {
     display_name: string
   }
 }
-const productionQueue = ref<{ [key: string]: { origin: string; item: Production[]; delta: number; done: boolean } }>({})
+interface Products {
+  id: number
+  categ: string
+  pos_categ: string
+  display_name: string
+  pos_production: boolean
+}
+const productionQueue = ref<{ [key: string]: { origin: string; item: Production[]; delta: number } }>({})
+const allowedProductIds = ref<number[]>([])
 const markAsDone = async (production: Production[]) => {
+  const runtimeConfig = useRuntimeConfig()
   try {
     const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
       method: "GET",
       headers: {
         "Accept": "*",
+        "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
       }
     })
     if (version.value !== null)
@@ -40,24 +49,26 @@ const markAsDone = async (production: Production[]) => {
           method: "POST",
           headers: {
             "Accept": "*",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
           },
           body: JSON.stringify({ id: prod.id })
         })
-        productionQueue.value[prod.origin].done = done.value !== null && done.value === prod.id
-        if (productionQueue.value[prod.origin].done) continue
-        else break
       }
   } catch (e) {
     console.error(e)
   }
 }
 // fetch 1 order at a time (List<OrderPayload>)
-const syncOrders = async () => {
+const fetchNextMrpProduction = async () => {
+  const runtimeConfig = useRuntimeConfig()
+  console.warn(runtimeConfig)
+  console.warn('next mrp production', runtimeConfig.jwt_secret)
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (version.value === null) return
@@ -65,33 +76,51 @@ const syncOrders = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
-  if (production.value !== null) {
-    if (Array.isArray(production.value) && production.value?.length > 0)
-      productionQueue.value[production.value[0].origin] = {
-        origin: production.value[0].origin,
-        item: production.value,
-        delta: PRODUCTION_DELTA_MAX,
-        done: false
-      }
+  if (production.value === null) return
+  const { data: products } = await useFetch<Products[]>('http://158.69.63.47:8080/products', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+      "Authorization": `${runtimeConfig.jwt_secret}`,
+    }
+  })
+  if (products.value === null) return
+  allowedProductIds.value = []
+  for (let product of products.value) {
+    if (product.pos_categ === 'Extra' && product.categ === 'Component') {
+      allowedProductIds.value.push(product.id)
+    }
+  }
+  if (Array.isArray(production.value) && production.value.length > 0) {
+    production.value.map(p => {
+      p.component = p.component.filter(c => allowedProductIds.value.includes(c.id))
+      return p
+    })
+    productionQueue.value[production.value[0].origin] = {
+      origin: production.value[0].origin,
+      item: production.value,
+      delta: PRODUCTION_DELTA_MAX,
+    }
   }
 }
-const checkInterval = () => {
+const checkIntervalDone = () => {
   for (let key in productionQueue.value) {
     if (productionQueue.value[key].delta <= 1000)
       markAsDone(productionQueue.value[key].item)
     else
       productionQueue.value[key].delta -= 1000
-    if (productionQueue.value[key].done)
-      delete productionQueue.value[key]
   }
 }
-const fetchQueueCache = async () => {
+const syncCaches = async () => {
+  const runtimeConfig = useRuntimeConfig()
   const { data: version } = await useFetch('http://158.69.63.47:8080/version', {
     method: "GET",
     headers: {
       "Accept": "*",
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (version.value === null) return
@@ -99,32 +128,45 @@ const fetchQueueCache = async () => {
     method: "GET",
     headers: {
       "Accept": "*",
-    }
-  })
-  const { data: queue } = await useFetch<string[]>('http://158.69.63.47:8080/getProductionQueue', {
-    method: "GET",
-    headers: {
-      "Accept": "*",
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
     }
   })
   if (cache.value === null) return
-  if (queue.value === null) return
-  console.warn(queue.value)
-  console.warn(cache.value)
-  console.log(productionQueue.value)
+  const { data: products } = await useFetch<Products[]>('http://158.69.63.47:8080/products', {
+    method: "GET",
+    headers: {
+      "Accept": "*",
+      "Authorization": `Bearer ${runtimeConfig.jwt_secret}`,
+    }
+  })
+  if (products.value === null) return
+  allowedProductIds.value = []
+  for (let product of products.value) {
+    if (product.pos_categ === 'Extra' && product.categ === 'Component') {
+      allowedProductIds.value.push(product.id)
+    }
+  }
   for (let key in productionQueue.value) {
-    if (Object.keys(cache.value).find(k => key === k)) continue
-    productionQueue.value[key].done = true
+    let cacheKey = Object.keys(cache.value).find(k => key === k)
+    if (!cacheKey)
+      delete productionQueue.value[key]
+    else {
+      productionQueue.value[key].item = cache.value[cacheKey].map(ca => {
+        ca.component = ca.component.filter(c => allowedProductIds.value.includes(c.id))
+        return ca
+      })
+    }
   }
 }
 
-const tick_interval = setInterval(() => {
-  syncOrders().then(() => fetchQueueCache())
+const tick_interval = setInterval(async () => {
+  await syncCaches()
+  await fetchNextMrpProduction()
 }, SYNC_TIMEOUT_MAX)
 const tock_interval = setInterval(() => {
   tock.value -= 1
   if (tock.value === 0) tock.value = 10
-  checkInterval()
+  checkIntervalDone()
 }, 1000)
 onBeforeUnmount(() => {
   clearInterval(tick_interval)
@@ -148,24 +190,24 @@ const cardClick = (index: string) => {
       </div>
       <Swiper :modules="modules" :slides-per-view="5" :space-between="5" navigation :scrollbar="{ draggable: true }"
         :pagination="{ clickable: true }" class="flex w-full h-auto pace-x-12 justify-between cursor-pointer">
-        <SwiperSlide v-for="key in Object.keys(productionQueue)" :key="key" @click="cardClick(key)"
-          class="flex flex-col w-full h-auto p-2 shadow-lg text-center font-bold text-xs cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
-          <div class="w-full justify-end text-end "
-            :class="[productionQueue[key].delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
-            {{ productionQueue[key].delta / 1000 }}
-          </div>
-          <div class="text-dark-200 h-auto w-full flex flex-col items-center">
-            <div class="flex text-xs font-light font-sans">
-              {{ productionQueue[key].item[0].origin }}
-            </div>
-            <div v-for="production in productionQueue[key].item" :key="production.id" class="w-full overflow-y-auto">
-              <div class="w-full flex flex-col items-center justify-baseline border-b border-black">
-                {{ production.product.display_name }}
-                {{ production.display_name }}
+        <SwiperSlide v-for="key in Object.keys(productionQueue).reverse()" :key="key" @click="cardClick(key)"
+          class="flex flex-col w-full h-auto p-2 text-center font-bold text-xs ">
+          <div class="text-dark-200 h-auto w-full flex flex-col items-center space-y-2">
+            <div
+              class="flex p-2 w-full justify-between items-center text-xs font-light font-sans cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
+              <span class="w-full"> {{ productionQueue[key].item[0].origin }} </span>
+              <div class="w-full justify-end text-end "
+                :class="[productionQueue[key].delta < 60000 ? 'text-red-700' : 'text-emerald-700']">
+                {{ productionQueue[key].delta / 1000 }}
               </div>
+            </div>
+            <div v-for="production in productionQueue[key].item" :key="production.id"
+              class="flex flex-col justify-center items-center p-2 w-full overflow-y-auto cursor-pointer bg-white hover:bg-gray-100 border border-black  rounded">
+              <span class="w-full font-light"> {{ production.display_name }} </span>
+              <span class="w-full"> {{ production.product.display_name }}</span>
               <div class="text-gray-900 w-full h-full">
                 <div v-for="extra in production.component" :key="extra.display_name"
-                  class="w-full flex font-light text-center">
+                  class="w-full flex flex-col justify-center items-center font-light text-center">
                   <span v-if="extra.qty > 0"> {{ extra.display_name }} ({{ extra.qty }}) </span>
                 </div>
               </div>

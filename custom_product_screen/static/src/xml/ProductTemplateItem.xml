@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductTemplateItem" owl="1">
-		<article class="col bg-white border btn btn-light d-flex flex-column justify-content-center align-items-center shadow" tabindex="0" t-on-click="() => this.trigger('click-product', props.product)" t-att-data-product-id="props.product.id" t-attf-aria-labelledby="article_product_{{props.product.id}}">
+		<article class="col bg-white border btn btn-light d-flex flex-column justify-content-center align-items-center " tabindex="0" t-on-click="() => this.trigger('click-product', props.product)" t-att-data-product-id="props.product.id" t-attf-aria-labelledby="article_product_{{props.product.id}}">
 			<img width="80px" height="80px" t-att-src="imageUrl" t-att-alt="props.product.display_name" />
 			<div class="" t-attf-id="article_product_{{props.product.id}}">
 				<t t-esc="props.product.display_name" />

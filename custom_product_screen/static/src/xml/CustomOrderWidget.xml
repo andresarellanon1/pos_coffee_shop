@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
-		<div class="grid d-flex w-100 h-100 flex-column align-items-center justify-content-center">
-			<div t-if="_orderlinesArray.length === 0" class="w-100 h-100 grid d-flex flex-column gap-4 justify-content-center align-items-center">
-				<div class="order-empty">
-					Sin registros
-				</div>
-				<t t-if="isEmployee">
-					<button class="w-75 btn border border-success text-success shadow" t-on-click="() => this.trigger('click-sync-next-order')">
-						Siguiente
-					</button>
-				</t>
-				<t t-else="">
-				</t>
+		<div t-if="_orderlinesArray.length === 0" class="h-100 w-100 grid d-flex flex-column gap-4 justify-content-center align-items-center">
+			<div class="order-empty">
+				Sin registros
 			</div>
-			<div t-else="" class="w-100 h-100 grid d-flex flex-column justify-content-center align-items-center">
-				<ul class="d-flex h-100 w-100 row container-fluid">
-					<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id">
-						<Orderline line="orderline" />
-					</t>
-				</ul>
-				<div class="d-flex w-100 row container-fluid py-4">
-					<div class="col-7 d-flex flex-column">
-						<OrderSummary order="order" />
+			<t t-if="isEmployee">
+				<button class="w-50 py-2 btn bg-success text-light " t-on-click="() => this.trigger('click-sync-next-order')">
+					Siguiente
+				</button>
+			</t>
+			<t t-else="">
+			</t>
+		</div>
+		<div t-else="" class="h-100 w-100 d-flex flex-column justify-content-between align-items-center position-relative ">
+			<ul class="d-flex flex-column w-100 h-75 overflow-auto position-absolute ">
+				<li t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="d-flex m-0 p-0 h-auto container-fluid flex-column justify-content-center align-items-start top-0 left-0 ">
+					<CustomOrderline line="orderline" />
+				</li>
+			</ul>
+			<div class="h-25 pb-2 d-flex flex-column justify-content-between align-items-between container-fluid grid gap-2 position-absolute bottom-0 left-0 ">
+				<div class="row p-0 m-0 contanier-fluid h-100">
+					<div class="col-7 h-100 d-flex flex-column container-fluid justify-content-center align-items-center">
+						<t t-set="_total" t-value="getTotal()" />
+						<t t-set="_tax" t-value="getTax()" />
+						<h6 class="d-flex container-fluid justify-content-between">
+							<span>
+								Total:
+							</span>
+							<t t-esc="_total" />
+						</h6>
+						<h6 t-if="_tax.hasTax" class="d-flex container-fluid justify-content-between">
+							<span>
+								IVA:
+							</span>
+							(
+							<t t-esc="_tax.displayAmount" />
+							)
+						</h6>
 					</div>
-					<div class="col-5 d-flex flex-column grid gap-2">
-						<button class="btn border border-danger text-danger shadow d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('clear-order')">
-							Cancelar
-						</button>
-						<t t-if="isEmployee">
-							<button class="btn border border-success text-success shadow d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-pay')">
-								Terminar pedido
-							</button>
-						</t>
-						<t t-else="">
-							<button class="btn border border-success text-success shadow d-flex flex-grow-1 w-100" t-on-click="() => this.trigger('click-send')">
-								Terminar pedido
-							</button>
-						</t>
+					<div class="col-5 d-flex flex-column py-2">
+						<CustomActionpad />
 					</div>
 				</div>
-				<div class="d-flex row container-fluid w-100">
-					<NumpadWidget t-if="isEmployee" activeMode="env.pos.numpadMode" />
+				<div class="row p-0 m-0 contanier-fluid h-auto">
+					<t t-esc="currentOrder.name" />
 				</div>
-			</div>
-			<div class="fs-6 fst-italic fw-ligth">
-				<t t-esc="order.name" />
 			</div>
 		</div>
 	</t>
