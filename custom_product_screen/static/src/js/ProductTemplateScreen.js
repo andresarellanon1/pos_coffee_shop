@@ -43,7 +43,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     get isEmployee() {
         return this.env.pos.db.isEmployee
     }
-    // Handlers
     async _onProductDupe(event) {
         try {
             this.trigger('show-loader')
@@ -118,9 +117,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
                 })
         }
     }
-    /*
-    * NOTE: Call on main PoS session
-    */
     async _onClickPay(event) {
         try {
             this.trigger('show-loader')
@@ -142,9 +138,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             console.error(e)
         }
     }
-    /*
-    * NOTE: Call on main PoS session
-    */
     async _onClickNext(event) {
         try {
             this.trigger('show-loader')
@@ -163,11 +156,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             })
             console.error(e)
         }
-    }
-    /*
-    * NOTE: on sending the current order to the main PoS it's required to create and inmediately confirm the mrp.production
-    * NOTE: Call on client PoS session
-    */
+}
     async _onClickSend(event) {
         try {
             this.trigger('show-loader')

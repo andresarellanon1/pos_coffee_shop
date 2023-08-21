@@ -94,7 +94,7 @@ patch(PosDB.prototype, "prototype patch", {
             extra_components: extra_components
         }
     },
-    // NOTE: "products_to_sync_by_orderline_id" and "orderlines_to_sync_by_production_id" are the same logic unit but "orderlines_to_sync_by_production_id" need the mrp.production to be generated in order to store the reference
+    // NOTE: "products_to_sync_by_orderline_id" and "orderlines_to_sync_by_production_id" are the same logic unit but "orderlines_to_sync_by_production_id" need to create mrp.production and store the reference
     add_orderline_to_sync_by_production_id: function(production_id, orderline_id) {
         this.orderlines_to_sync_by_production_id[production_id] = {
             production_id: production_id,

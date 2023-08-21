@@ -22,6 +22,7 @@ class ProductTemplateWidget extends PosComponent {
     async loadProductTemplateFromDB() {
         try {
             let limit = 30
+            // TODO: add limit customizable UI
             // TODO: Corroborar query columnas de busqueda
             let ProductTemplateIds = await this.rpc({
                 model: 'product.template',
@@ -34,7 +35,7 @@ class ProductTemplateWidget extends PosComponent {
                 }
             })
             if (ProductTemplateIds.length) {
-                await this.env.pos._addProductsTemplate(ProductTemplateIds, false)
+                await this.env.pos.await this.currentOrder.add_product_prosime_resolve(product, options)sTemplate(ProductTemplateIds, false)
             }
             this._updateProductList()
             return ProductIds

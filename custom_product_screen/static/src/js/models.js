@@ -91,7 +91,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    // NOTE: Clears mrp production for the current matching origin (order name)
     clearCurrentOrderMrpProduction: async function () {
         try {
             let origin = `POS-${this.currentOrder.name}`
@@ -133,8 +132,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         }
     },
     /*
-    * NOTE: this method expects the orderlines to have a production id created and stored in memory beforehand
-    * currently the methods to create and confirm the mrp.production are called right before this using await keyword
+    * NOTE: this method expects the orderlines to have a production id created and stored in memory 
     */
     sendOrderToMainPoS: async function (retry) {
         try {
@@ -201,9 +199,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    /*
-    * NOTE: on fetching next order emulate the spawning of a new orderline but add it to the skipMO list
-    */
     fetchOrderFromClientPoS: async function (retry) {
         try {
             await this.fetchVersion(3)
@@ -230,7 +225,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             this.currentOrder.uid = orderPayload.uid
             for (let payload of orderPayload.orderlines) {
                 let product = this.db.product_by_id[payload.product_id]
-                let parent_orderline = await this._addProduct(product, payload.options)
+                let parent_orderline = await this.currentOrder.add_product_but_well_done(product, options)(product, payload.options)
                 this.db.orderlineSkipMO.push(parent_orderline)
                 for (let component of payload.extra_components) {
                     let extra = this.db.product_by_id[component.id]
@@ -240,12 +235,10 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         price_extra: 0.0,
                         description: extra.display_name,
                     }
-                    let child_orderline = await this._addProduct(extra, options)
+                    let child_orderline = await this.currentOrder.add_product_but_well_done(product, options)(extra, options)
                     this.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
                 }
-                // NOTE: Emulate spawing orderline for product locally (from method spawnProduct)
                 this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, payload.product_id, payload.options, payload.extra_components)
-                // NOTE: Emulate creating mrp.production locally  (from method createCurrentOrderMrpProduction)
                 this.db.add_orderline_to_sync_by_production_id(payload.production_id, parent_orderline.id)
             }
         } catch (e) {
@@ -280,7 +273,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             price_extra: orderline.price_extra,
             description: orderline.product.display_name,
         }
-        let parent_orderline = await this._addProduct(product, options)
+        let parent_orderline = await this.currentOrder.add_product_but_well_done(product, options)(product, options)
         let extra_components = this.db.products_to_sync_by_orderline_id[orderline.id].extra_components
         for (let component of extra_components) {
             let extra = this.db.product_by_id[component.id]
@@ -290,10 +283,9 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 price_extra: 0.0,
                 description: extra.display_name,
             }
-            let child_orderline = await this._addProduct(extra, options)
+            let child_orderline = await this.currentOrder.add_product_but_well_done(product, options)(extra, options)
             this.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
         }
-        // NOTE: Emulate spawing orderline for product as it was from method spawnProduct
         this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, orderline.product.id, options, extra_components)
     },
     markSingleAsScrap: async function (orderline_id) {
