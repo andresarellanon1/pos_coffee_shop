@@ -11,16 +11,17 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.8.0",
-    "@types/node": "^18.16.19",
-    "eslint": "^8.45.0",
+    "@types/node": "^18.17.4",
+    "eslint": "^8.46.0",
     "eslint-plugin-nuxt3-auto-import": "github:LuckyWindsck/eslint-plugin-nuxt3-auto-import",
     "ionicons": "^7.1.2",
-    "nuxt": "^3.6.2",
+    "nuxt": "^3.6.5",
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.7.14",
+    "@headlessui/vue": "^1.7.15",
     "axios": "^1.4.0",
+    "nuxt-storage": "^1.2.2",
     "swiper": "^9.4.1"
   }
 }

@@ -5,8 +5,16 @@
     },
     "python.formatting.provider": "none",
     "workbench.colorCustomizations": {
+<<<<<<< HEAD
         "activityBar.background": "#5B101F",
         "titleBar.activeBackground": "#7F172B",
         "titleBar.activeForeground": "#FEFBFC"
     }
+=======
+        "activityBar.background": "#351972",
+        "titleBar.activeBackground": "#4A239F",
+        "titleBar.activeForeground": "#FDFCFE"
+    },
+    "vue.codeActions.enabled": false
+>>>>>>> taildwindwift
 }

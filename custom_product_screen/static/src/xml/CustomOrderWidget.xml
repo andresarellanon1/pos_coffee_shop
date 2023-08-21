@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
-		<div t-if="_orderlinesArray.length === 0" class="h-100 w-100 grid d-flex flex-column gap-4 justify-content-center align-items-center">
-			<div class="order-empty">
-				Sin registros
-			</div>
-			<t t-if="isEmployee">
-				<button class="w-50 py-2 btn bg-success text-light " t-on-click="() => this.trigger('click-sync-next-order')">
-					Siguiente
-				</button>
+		<div class="h-full w-full">
+			<t t-if="_orderlinesArray.length === 0" class="h-full">
+				<div class="order-empty">
+					Sin registros
+				</div>
+				<t t-if="isEmployee">
+					<button class="w-48 py-2 bg-success text-light " t-on-click="() => this.trigger('click-sync-next-order')">
+						Siguiente
+					</button>
+				</t>
+				<t t-else="">
+				</t>
 			</t>
-			<t t-else="">
-			</t>
-		</div>
-		<div t-else="" class="h-100 w-100 d-flex flex-column justify-content-between align-items-center position-relative ">
-			<ul class="d-flex flex-column w-100 h-75 overflow-auto position-absolute ">
-				<li t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="d-flex m-0 p-0 h-auto container-fluid flex-column justify-content-center align-items-start top-0 left-0 ">
-					<CustomOrderline line="orderline" />
-				</li>
-			</ul>
-			<div class="h-25 pb-2 d-flex flex-column justify-content-between align-items-between container-fluid grid gap-2 position-absolute bottom-0 left-0 ">
-				<div class="row p-0 m-0 contanier-fluid h-100">
-					<div class="col-7 h-100 d-flex flex-column container-fluid justify-content-center align-items-center">
+			<!-- <t t-else="" class="flex flex-col justify-between bg-emerald-500">
+				<div class="h-75 overflow-y-auto">
+					<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="flex h-auto flex-col justify-center items-start ">
+						<CustomOrderline line="orderline" />
+					</t>
+				</div>
+				<div class="h-25">
+					<div class="w-25 h-full flex justify-center items-center">
 						<t t-set="_total" t-value="getTotal()" />
 						<t t-set="_tax" t-value="getTax()" />
-						<h6 class="d-flex container-fluid justify-content-between">
+						<h6 class="flex w-ful justify-between">
 							<span>
 								Total:
 							</span>
 							<t t-esc="_total" />
 						</h6>
-						<h6 t-if="_tax.hasTax" class="d-flex container-fluid justify-content-between">
+						<h6 t-if="_tax.hasTax" class="flex w-full justify-between">
 							<span>
 								IVA:
 							</span>
@@ -39,14 +39,14 @@
 							)
 						</h6>
 					</div>
-					<div class="col-5 d-flex flex-column py-2">
+					<div class="w-75 h-full flex flex-col">
 						<CustomActionpad />
 					</div>
 				</div>
-				<div class="row p-0 m-0 contanier-fluid h-auto">
+				<div class="flex w-full">
 					<t t-esc="currentOrder.name" />
 				</div>
-			</div>
+			</t> -->
 		</div>
 	</t>
 </templates>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductTemplateScreen" owl="1">
-		<div class="row h-100 container-fluid p-0 m-0" t-att-class="{ oe_hidden: !props.isShown }">
-			<div class="col-4 h-100 pb-2 d-flex flex-column border border-end match_bg">
+		<div class="flex w-full h-full" t-att-class="{ oe_hidden: !props.isShown }">
+			<div class="w-1/4 h-full flex flex-col pb-2 border-l">
 				<CustomOrderWidget />
 			</div>
-			<div class="col-8 h-100 d-flex flex-column  match_bg px-2">
+			<div class="w-3/4 h-full flex p-2">
 				<ProductTemplateWidget />
-			</div>
+			</div> 
 		</div>
 	</t>
 </templates>
