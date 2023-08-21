@@ -225,7 +225,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             this.currentOrder.uid = orderPayload.uid
             for (let payload of orderPayload.orderlines) {
                 let product = this.db.product_by_id[payload.product_id]
-                let parent_orderline = await this.currentOrder.add_product_but_well_done(product, options)(product, payload.options)
+                let parent_orderline = await this.currentOrder.add_product_prosime_resolve(product, payload.options)
                 this.db.orderlineSkipMO.push(parent_orderline)
                 for (let component of payload.extra_components) {
                     let extra = this.db.product_by_id[component.id]
@@ -235,7 +235,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                         price_extra: 0.0,
                         description: extra.display_name,
                     }
-                    let child_orderline = await this.currentOrder.add_product_but_well_done(product, options)(extra, options)
+                    let child_orderline = await this.currentOrder.add_product_prosime_resolve(extra, options)
                     this.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
                 }
                 this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, payload.product_id, payload.options, payload.extra_components)
@@ -244,9 +244,6 @@ patch(PosGlobalState.prototype, "prototype patch", {
         } catch (e) {
             throw e
         }
-    },
-    _addProduct: async function (product, options) {
-        return await this.currentOrder.add_product_but_well_done(product, options)
     },
     fetchVersion: async function (retry) {
         try {
@@ -273,7 +270,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             price_extra: orderline.price_extra,
             description: orderline.product.display_name,
         }
-        let parent_orderline = await this.currentOrder.add_product_but_well_done(product, options)(product, options)
+        let parent_orderline = await this.currentOrder.add_product_prosime_resolve(product, options)
         let extra_components = this.db.products_to_sync_by_orderline_id[orderline.id].extra_components
         for (let component of extra_components) {
             let extra = this.db.product_by_id[component.id]
@@ -283,7 +280,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 price_extra: 0.0,
                 description: extra.display_name,
             }
-            let child_orderline = await this.currentOrder.add_product_but_well_done(product, options)(extra, options)
+            let child_orderline = await this.currentOrder.add_product_prosime_resolve(extra, options)
             this.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
         }
         this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, orderline.product.id, options, extra_components)
@@ -329,7 +326,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
 })
 
 patch(Order.prototype, "prototype patch", {
-    add_product_but_well_done: async function (product, options) {
+    add_product_prosime_resolve: async function (product, options) {
         this.assert_editable()
         options = options || {}
         var line = Orderline.create({}, { pos: this.pos, order: this, product: product })

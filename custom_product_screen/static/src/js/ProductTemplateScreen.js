@@ -54,7 +54,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
         } catch (e) {
             this.trigger('hide-loader')
             this.showPopup('ErrorPopup', {
-                title: 'Error al preparar pantalla de cobro',
+                title: 'Error al duplicar producto',
                 body: JSON.stringify(e)
             })
         }
@@ -156,7 +156,7 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
             })
             console.error(e)
         }
-}
+    }
     async _onClickSend(event) {
         try {
             this.trigger('show-loader')

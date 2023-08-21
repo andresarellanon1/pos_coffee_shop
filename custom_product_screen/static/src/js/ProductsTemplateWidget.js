@@ -19,38 +19,6 @@ class ProductTemplateWidget extends PosComponent {
         this.render(true)
         this.trigger('switch-category', 0)
     }
-    async loadProductTemplateFromDB() {
-        try {
-            let limit = 30
-            // TODO: add limit customizable UI
-            // TODO: Corroborar query columnas de busqueda
-            let ProductTemplateIds = await this.rpc({
-                model: 'product.template',
-                method: 'search',
-                args: [['&', ['available_in_pos', '=', true]]],
-                context: this.env.session.user_context,
-                kwargs: {
-                    offset: this.state.currentOffset,
-                    limit: limit,
-                }
-            })
-            if (ProductTemplateIds.length) {
-                await this.env.pos.await this.currentOrder.add_product_prosime_resolve(product, options)sTemplate(ProductTemplateIds, false)
-            }
-            this._updateProductList()
-            return ProductIds
-        } catch (error) {
-            const identifiedError = identifyError(error)
-            if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {
-                return this.showPopup('OfflineErrorPopup', {
-                    title: this.env._t('Network Error'),
-                    body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
-                })
-            } else {
-                throw error
-            }
-        }
-    }
 }
 ProductTemplateWidget.template = 'custom_product_screen.ProductTemplateWidget'
 Registries.Component.add(ProductTemplateWidget)

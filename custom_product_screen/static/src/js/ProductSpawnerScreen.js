@@ -41,7 +41,7 @@ class ProductSpawnerScreen extends PosComponent {
             price_extra: price_extra,
             description: ""
         }
-        let parent_orderline = await this.currentOrder.add_product_prosime_resolve(product, options)(product, options)
+        let parent_orderline = await this._addProduct(product, options)
         for (let extra_component of this.env.extra_components) {
             let component = extra_component.getValue()
             if (component.count <= 0 || component.count > 5) continue
@@ -51,7 +51,7 @@ class ProductSpawnerScreen extends PosComponent {
                 price_extra: 0.0,
                 description: component.display_name,
             }
-            let child_orderline = await this.currentOrder.add_product_prosime_resolve(product, options)(component.extra, options)
+            let child_orderline = await this._addProduct(component.extra, options)
             extra_components.push({ id: component.extra.id, qty: component.count })
             this.env.pos.db.add_child_orderline_by_orderline_id(parent_orderline.id, child_orderline.id)
         }
@@ -60,7 +60,7 @@ class ProductSpawnerScreen extends PosComponent {
         this.trigger('close-temp-screen')
     }
 
-    async await this.currentOrder.add_product_prosime_resolve(product, options)(product, options) {
+    async _addProduct(product, options) {
         return await this.currentOrder.add_product_prosime_resolve(product, options)
     }
     get currentOrder() {
@@ -77,7 +77,6 @@ class ProductSpawnerScreen extends PosComponent {
     }
     get getAttributes() {
         return this.props.attributes
-
     }
     get selectedAttributes() {
         let selected_attributes_values = []

@@ -14,7 +14,7 @@
 				<t t-else="">
 				</t>
 			</t>
-			<!-- <t t-else="" class="flex flex-col justify-between bg-emerald-500">
+			<t t-else="" class="flex flex-col justify-between bg-emerald-500">
 				<div class="h-75 overflow-y-auto">
 					<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="flex h-auto flex-col justify-center items-start ">
 						<CustomOrderline line="orderline" />
@@ -46,7 +46,7 @@
 				<div class="flex w-full">
 					<t t-esc="currentOrder.name" />
 				</div>
-			</t> -->
+			</t>
 		</div>
 	</t>
 </templates>
