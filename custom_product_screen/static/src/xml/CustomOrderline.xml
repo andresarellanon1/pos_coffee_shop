@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderline" owl="1">
-		<h6 class="flex w-full justify-between items-center  ">
-			<div class="flex w-full">
+		<div class="flex w-full justify-between items-center  ">
+			<h6 class="flex w-full truncate">
 				<t t-esc="props.line.product.display_name" />
 				<t t-esc="env.pos.format_currency(props.line.get_price_with_tax())" />
-			</div>
-			<div class="flex w-auto justify-end items-center ">
+			</h6>
+			<div class="flex w-auto justify-end items-center">
 				<div class="cursor-pointer" t-on-click="()=>this.trigger('clear-orderline', props.line.id)">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
 						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z" />
@@ -18,7 +18,7 @@
 					</svg>
 				</div>
 			</div>
-		</h6>
+		</div>
 		<div t-foreach="childOrderlines" t-as="cline" t-key="cline.id" class="flex w-full justify-between items-center pl-2">
 			<div class="w-full flex w-full justify-between" t-att-data-orderline-id="cline.id">
 				<span>

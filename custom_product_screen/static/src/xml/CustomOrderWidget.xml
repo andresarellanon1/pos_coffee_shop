@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
 		<div class="h-full w-full">
-			<t t-if="_orderlinesArray.length === 0" class="h-full">
+			<div t-if="_orderlinesArray.length === 0" class="h-full">
 				<div class="order-empty">
 					Sin registros
 				</div>
@@ -13,40 +13,15 @@
 				</t>
 				<t t-else="">
 				</t>
-			</t>
-			<t t-else="" class="flex flex-col justify-between bg-emerald-500">
-				<div class="h-75 overflow-y-auto">
-					<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="flex h-auto flex-col justify-center items-start ">
-						<CustomOrderline line="orderline" />
-					</t>
-				</div>
-				<div class="h-25">
-					<div class="w-25 h-full flex justify-center items-center">
-						<t t-set="_total" t-value="getTotal()" />
-						<t t-set="_tax" t-value="getTax()" />
-						<h6 class="flex w-ful justify-between">
-							<span>
-								Total:
-							</span>
-							<t t-esc="_total" />
-						</h6>
-						<h6 t-if="_tax.hasTax" class="flex w-full justify-between">
-							<span>
-								IVA:
-							</span>
-							(
-							<t t-esc="_tax.displayAmount" />
-							)
-						</h6>
-					</div>
-					<div class="w-75 h-full flex flex-col">
-						<CustomActionpad />
-					</div>
-				</div>
+			</div>
+			<div t-else="" class="flex flex-col justify-between bg-emerald-500 overflow-y-auto">
+				<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="flex h-auto flex-col justify-center items-start ">
+					<CustomOrderline line="orderline" />
+				</t>
 				<div class="flex w-full">
 					<t t-esc="currentOrder.name" />
 				</div>
-			</t>
+			</div>
 		</div>
 	</t>
 </templates>
