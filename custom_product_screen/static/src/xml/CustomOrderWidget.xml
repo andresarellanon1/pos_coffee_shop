@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
-		<div class="h-full w-full">
-			<div t-if="_orderlinesArray.length === 0" class="h-full">
-				<div class="order-empty">
+		<div class="h-full w-full flex flex-col items-center justify-between relative">
+			<div t-if="_orderlinesArray.length === 0" class="h-full w-full flex flex-col justify-center items-center border">
+				<div class="font-bold">
 					Sin registros
 				</div>
 				<t t-if="isEmployee">
@@ -14,13 +14,13 @@
 				<t t-else="">
 				</t>
 			</div>
-			<div t-else="" class="flex flex-col justify-between bg-emerald-500 overflow-y-auto">
-				<t t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="flex h-auto flex-col justify-center items-start ">
+			<div t-else="" class="absolute flex flex-col justify-start h-3/4 w-full overflow-y-scroll">
+				<p t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="flex flex-col justify-center items-start ">
 					<CustomOrderline line="orderline" />
-				</t>
-				<div class="flex w-full">
-					<t t-esc="currentOrder.name" />
-				</div>
+				</p>
+			</div>
+			<div class="absolute flex justify-center items-center w-full h-1/4 bottom-0">
+				<t t-esc="currentOrder.name" />
 			</div>
 		</div>
 	</t>
