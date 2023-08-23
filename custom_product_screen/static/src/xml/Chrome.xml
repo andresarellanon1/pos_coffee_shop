@@ -4,7 +4,7 @@
 		<xpath expr="//div[hasclass('pos-topheader')]" position="replace">
             <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
                 <div t-if="tempScreen.isShown" class="block-top-header" />
-                <div class="flex w-full h-full justify-between bg-rose-700">
+                <div class="flex w-full h-full justify-between bg-amber-500">
                     <div class="flex">
                         <img t-if="!env.isMobile" class="" t-on-click="() => this.trigger('toggle-debug-widget')"
                          src="/custom_product_screen/static/src/img/logenio.png" alt="Logo" />

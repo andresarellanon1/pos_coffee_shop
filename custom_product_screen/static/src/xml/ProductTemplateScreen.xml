@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.ProductTemplateScreen" owl="1">
 		<div class="flex w-full h-full" t-att-class="{ oe_hidden: !props.isShown }">
-			<div class="w-1/4 h-full flex flex-col pb-2 border-l">
+			<div class="w-1/3 h-full flex flex-col pb-2 border-l">
 				<CustomOrderWidget />
 			</div>
-			<div class="w-3/4 h-full flex p-2">
+			<div class="w-2/3 h-full flex p-2">
 				<ProductTemplateWidget />
 			</div> 
 		</div>

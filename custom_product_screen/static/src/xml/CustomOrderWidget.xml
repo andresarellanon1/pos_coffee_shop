@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
-		<div class="h-full w-full flex flex-col items-center justify-between relative">
+		<div class="h-full w-full flex flex-col items-center justify-between">
 			<div t-if="_orderlinesArray.length === 0" class="h-full w-full flex flex-col justify-center items-center border">
 				<div class="font-bold">
 					Sin registros
@@ -14,13 +14,40 @@
 				<t t-else="">
 				</t>
 			</div>
-			<div t-else="" class="absolute flex flex-col justify-start h-3/4 w-full overflow-y-scroll">
-				<p t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" class="flex flex-col justify-center items-start ">
-					<CustomOrderline line="orderline" />
-				</p>
-			</div>
-			<div class="absolute flex justify-center items-center w-full h-1/4 bottom-0">
-				<t t-esc="currentOrder.name" />
+			<div t-else="" class="w-full h-full flex flex-col relative items-center justify-start">
+				<div class="absolute flex flex-col justify-start items-start h-3/4 w-full overflow-y-auto pt-1">
+					<CustomOrderline t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" line="orderline" />
+				</div>
+				<div class="absolute flex flex-col justify-between items-center w-full h-1/4 bottom-0 match-bg border-t border-t-black">
+					<div class="flex w-full">
+						<div class="w-full flex flex-col space-y-2">
+							<t t-set="_total" t-value="getTotal()" />
+							<t t-set="_tax" t-value="getTax()" />
+							<h6 class="flex w-full justify-start space-x-2">
+								<span>
+								Total:
+								</span>
+								<span>
+									<t t-esc="_total" />
+								</span>
+							</h6>
+							<h6 t-if="_tax.hasTax" class="flex w-full justify-start space-x-2">
+								<span>
+								IVA:
+								</span>
+							(
+								<t t-esc="_tax.displayAmount" />
+							)
+							</h6>
+						</div>
+						<div class="w-full flex flex-col space-y-2">
+							<CustomActionpad />
+						</div>
+					</div>
+					<div class="flex w-full justify-center items-center">
+						<t t-esc="currentOrder.name" />
+					</div>
+				</div>
 			</div>
 		</div>
 	</t>
