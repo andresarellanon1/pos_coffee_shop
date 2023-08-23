@@ -72,7 +72,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClearOrder(event) {
         try {
             this.trigger('show-loader')
-            console.log('errre')
             await this.env.pos.clearCurrentOrderMrpProduction()
             let order = this.currentOrder
             this.env.pos.removeOrder(order)
@@ -120,7 +119,6 @@ class ProductTemplateScreen extends ControlButtonsMixin(PosComponent) {
     async _onClickPay(event) {
         try {
             this.trigger('show-loader')
-            console.log('here')
             await this.env.pos.createCurrentOrderMrpProduction()
             for (let key in this.env.pos.db.child_orderline_by_orderline_id) {
                 let orderline = this.currentOrder.orderlines.find(orderline => `${orderline.id}` === key)

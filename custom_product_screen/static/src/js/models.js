@@ -154,6 +154,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 method: "POST",
                 headers: {
                     "Accept": "*",
+                    "Authorization": this.db.auth,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
@@ -187,6 +188,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 method: "POST",
                 headers: {
                     "Accept": "*",
+                    "Authorization": this.db.auth,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ uid: `POS-${uid}` })
@@ -206,6 +208,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 method: "GET",
                 headers: {
                     "Accept": "*",
+                    "Authorization": this.db.auth,
                     "Content-Type": "application/json"
                 },
             })
@@ -251,6 +254,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 method: "GET",
                 headers: {
                     "Accept": "*",
+                    "Authorization": this.db.auth,
                     "Content-Type": "*"
                 },
             })
@@ -258,6 +262,35 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 return
             if (retry > 0)
                 await this.fetchVersion(retry - 1)
+        } catch (e) {
+            throw e
+        }
+    },
+    login: async function (user_id, password, retry) {
+        try {
+            let user = await rpc.query({
+                model: 'res.users',
+                method: 'read',
+                args: [user_id, ['login']],
+            })
+            if (user && user[0] && user[0].login) {
+                let response = await fetch("http://158.69.63.47:8080/login", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "*",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ user: user[0].login, password: password })
+                })
+                if (response.status === 200) {
+                    let token = await response.json()
+                    this.db.auth = token
+                    return true
+                }
+                if (retry > 0)
+                    await this.fixQueueForCurrentOrder(retry - 1)
+            }
+            return false
         } catch (e) {
             throw e
         }

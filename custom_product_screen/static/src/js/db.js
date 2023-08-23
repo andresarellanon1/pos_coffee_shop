@@ -14,9 +14,10 @@ patch(PosDB.prototype, "prototype patch", {
         this.products_to_sync_by_orderline_id = {}
         this.orderlines_to_sync_by_production_id = {}
         this.orderlineSkipMO = []
+        this.auth = ''
         this._super(options)
     },
-    add_products_templates: function(products) {
+    add_products_templates: function (products) {
         if (!(products instanceof Array)) {
             products = [products]
         }
@@ -26,13 +27,13 @@ patch(PosDB.prototype, "prototype patch", {
             this.products_template_by_id[product.id] = product
         }
     },
-    add_boms: function(boms) {
+    add_boms: function (boms) {
         for (let bom of boms) {
             this.boms_by_template_id[bom.product_tmpl_id[0]] = bom
             this.bom_lines_by_bom_id[bom.id] = []
         }
     },
-    add_bom_lines: function(lines) {
+    add_bom_lines: function (lines) {
         try {
             for (let line of lines)
                 this.bom_lines_by_bom_id[line.bom_id[0]].push(line)
@@ -43,7 +44,7 @@ patch(PosDB.prototype, "prototype patch", {
         }
     },
     // TODO: optimime to O(1)
-    get_product_template_by_menu: function(menu_id) {
+    get_product_template_by_menu: function (menu_id) {
         var list = []
         let categ_id = this.get_categ_by_name('Display') // TODO: move string literal to CONST string
         if (this.products_template_by_id) {
@@ -56,7 +57,7 @@ patch(PosDB.prototype, "prototype patch", {
         return list
     },
     // TODO: optimize to O(1)
-    get_product_by_attr: function(selected_attributes, product_template_id) {
+    get_product_by_attr: function (selected_attributes, product_template_id) {
         let product
         let words = selected_attributes.map((value) => { return value.name })
         for (let key in this.product_by_id) {
@@ -69,7 +70,7 @@ patch(PosDB.prototype, "prototype patch", {
         return product
     },
     // TODO: optimize to O(1)
-    get_categ_by_name: function(name) {
+    get_categ_by_name: function (name) {
         let categ_id
         for (let key in this.category_by_id) {
             if (this.category_by_id[key].name !== name) continue
@@ -79,14 +80,14 @@ patch(PosDB.prototype, "prototype patch", {
     },
     // NOTE: Prepare extra components to show on UI based on the extra component orderline id
     // NOTE: Also used to filter unwanted orderlines before making inventory moves based on orderlines  
-    add_child_orderline_by_orderline_id: function(parent_orderline_id, orderline_id) {
+    add_child_orderline_by_orderline_id: function (parent_orderline_id, orderline_id) {
         this.child_orderline_by_orderline_id[orderline_id] = {
             orderline_id: orderline_id,
             parent_orderline_id: parent_orderline_id
         }
     },
     // NOTE: Prepare orderlines and products to create mrp.production for each "parent orderline product", the child_orderlines_ids are no longer relevant so we store the raw list of components
-    add_product_to_sync_by_orderline_id: function(orderline_id, product_id, options, extra_components) {
+    add_product_to_sync_by_orderline_id: function (orderline_id, product_id, options, extra_components) {
         this.products_to_sync_by_orderline_id[orderline_id] = {
             orderline_id: orderline_id,
             product_id: product_id,
@@ -95,14 +96,14 @@ patch(PosDB.prototype, "prototype patch", {
         }
     },
     // NOTE: "products_to_sync_by_orderline_id" and "orderlines_to_sync_by_production_id" are the same logic unit but "orderlines_to_sync_by_production_id" need to create mrp.production and store the reference
-    add_orderline_to_sync_by_production_id: function(production_id, orderline_id) {
+    add_orderline_to_sync_by_production_id: function (production_id, orderline_id) {
         this.orderlines_to_sync_by_production_id[production_id] = {
             production_id: production_id,
             orderline_id: orderline_id
         }
     },
     // TODO: move to pos global state
-    _isEmployee: async function() {
+    _isEmployee: async function () {
         this.isEmployee = await rpc.query({
             model: 'pos.config',
             method: 'type_user',

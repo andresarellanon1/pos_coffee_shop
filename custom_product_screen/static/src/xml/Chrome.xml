@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-	<t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
-		<xpath expr="//div[hasclass('pos-topheader')]" position="replace">
+    <t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos')]" position="inside">
+            <Transition visible="_isLoading" name="'o-swing'" leaveDuration="200" t-slot-scope="transition">
+                <div class="loader" t-att-class="transition.className">
+                    <div class="lds-ellipsis">
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                    </div>
+                </div>
+            </Transition>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-topheader')]" position="replace">
             <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
                 <div t-if="tempScreen.isShown" class="block-top-header" />
                 <div class="flex w-full h-full justify-between bg-amber-500">
                     <div class="flex">
-                        <img t-if="!env.isMobile" class="" t-on-click="() => this.trigger('toggle-debug-widget')"
-                         src="/custom_product_screen/static/src/img/logenio.png" alt="Logo" />
+                        <img t-if="!env.isMobile" class="" t-on-click="() => this.trigger('toggle-debug-widget')" src="/custom_product_screen/static/src/img/logenio.png" alt="Logo" />
                         <CashMoveButton t-if="showCashMoveButton()" />
                     </div>
                     <div class="flex space-x-2 h-full items-center pr-2 font-white" t-if="state.uiState === 'READY'">
@@ -17,5 +30,5 @@
                 </div>
             </div>
         </xpath>
-	</t>
+    </t>
 </templates>
