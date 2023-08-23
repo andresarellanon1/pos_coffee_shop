@@ -19,7 +19,7 @@
 					<CustomOrderline t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" line="orderline" />
 				</div>
 				<div class="absolute flex flex-col justify-between items-center w-full h-1/4 bottom-0 match-bg border-t border-t-black">
-					<div class="flex w-full">
+					<div class="flex w-full pt-2">
 						<div class="w-full flex flex-col space-y-2">
 							<t t-set="_total" t-value="getTotal()" />
 							<t t-set="_tax" t-value="getTax()" />
