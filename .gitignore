@@ -9,6 +9,8 @@ lazy-lock.json
 .env
 **.pyc
 **/**.pyc
+*.pyc
+*/*.pyc
 node_modules
 __pycache__
 modules/__pycache__
