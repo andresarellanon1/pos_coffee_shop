@@ -1,52 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- Define the List View -->
-        <record id="q_endpoint_list_view" model="ir.ui.view">
-            <field name="name">q_endpoint.list.view</field>
-            <field name="model">q_endpoint_catalog.q_endpoint</field>
-            <field name="arch" type="xml">
-                <tree string="Q Endpoint List">
+    <record id="q_endpoint_list_view" model="ir.ui.view">
+        <field name="name">q_endpoint.list.view</field>
+        <field name="model">q_endpoint_catalog.q_endpoint</field>
+        <field name="arch" type="xml">
+            <tree string="Q Endpoint List">
+                <field name="name" />
+                <field name="url" />
+                <field name="method" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Define the Form View -->
+    <record id="q_endpoint_form_view" model="ir.ui.view">
+        <field name="name">q_endpoint.form.view</field>
+        <field name="model">q_endpoint_catalog.q_endpoint</field>
+        <field name="arch" type="xml">
+            <form string="REST Endpoint">
+                <group>
                     <field name="name" />
                     <field name="url" />
                     <field name="method" />
-                </tree>
-            </field>
-        </record>
+                    <field name="body" />
+                    <field name="response" />
+                    <field name="headers" />
+                    <field name="is_authorization_required" />
+                    <field name="authorization"
+                        attrs="{'invisible': [('is_authorization_required', '=', False)]}" />
+                </group>
+            </form>
+        </field>
+    </record>
+    <!-- Action for the List View -->
+    <record id="q_endpoint_catalog_menu_action" model="ir.actions.act_window">
+        <field name="name">Endpoint Catalog</field>
+        <field name="res_model">q_endpoint_catalog.q_endpoint</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="q_endpoint_list_view" />
+    </record>
 
-        <!-- Define the Form View -->
-        <record id="q_endpoint_form_view" model="ir.ui.view">
-            <field name="name">q_endpoint.form.view</field>
-            <field name="model">q_endpoint_catalog.q_endpoint</field>
-            <field name="arch" type="xml">
-                <form string="REST Endpoint">
-                    <group>
-                        <field name="name" />
-                        <field name="url" />
-                        <field name="method" />
-                        <field name="body" />
-                        <field name="response" />
-                        <field name="headers" />
-                        <field name="is_authorization_required" />
-                        <field name="authorization"
-                            attrs="{'invisible': [('is_authorization_required', '=', False)]}" />
-                    </group>
-                </form>
-            </field>
-        </record>
-        <!-- Action for the List View -->
-        <record id="q_endpoint_catalog_menu_action" model="ir.actions.act_window">
-            <field name="name">Endpoint Catalog</field>
-            <field name="res_model">q_endpoint_catalog.q_endpoint</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="q_endpoint_list_view" />
-        </record>
+    <!-- Menu Item for Your App Icon -->
+    <menuitem id="menu_q_endpoint" name="QEndpoint" parent="base.menu_root"
+        action="q_endpoint_catalog_menu_action" sequence="10"
+        web_icon="q_endpoint_catalog/static/src/img/icon.png" web_icon_data="true" />
 
-        <!-- Menu Item for Your App Icon -->
-        <menuitem id="menu_q_endpoint" name="QEndpoint" parent="base.menu_root"
-            action="q_endpoint_catalog_menu_action" sequence="10"
-            web_icon="q_endpoint_catalog/static/src/img/icon.png" web_icon_data="true" />
-
-    </data>
 </odoo>
 
