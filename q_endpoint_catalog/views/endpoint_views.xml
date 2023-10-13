@@ -8,7 +8,7 @@
         <!-- Action for the List View -->
         <record id="q_endpoint_catalog_menu_action" model="ir.actions.act_window">
             <field name="name">Endpoint Catalog</field>
-            <field name="res_model">q_endpoint_catalog.q_endpoint</field>
+            <field name="res_model">q_endpoint</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="q_endpoint_list_view" />
         </record>
@@ -16,7 +16,7 @@
         <!-- Define the List View -->
         <record id="q_endpoint_list_view" model="ir.ui.view">
             <field name="name">q_endpoint.list.view</field>
-            <field name="model">q_endpoint_catalog.q_endpoint</field>
+            <field name="model">q_endpoint</field>
             <field name="arch" type="xml">
                 <tree string="Q Endpoint List">
                     <field name="name" />
@@ -29,7 +29,7 @@
         <!-- Define the Form View -->
         <record id="q_endpoint_form_view" model="ir.ui.view">
             <field name="name">q_endpoint.form.view</field>
-            <field name="model">q_endpoint_catalog.q_endpoint</field>
+            <field name="model">q_endpoint</field>
             <field name="arch" type="xml">
                 <form string="REST Endpoint">
                     <group>

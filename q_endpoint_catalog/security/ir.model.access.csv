@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_q_endpoint_catalog,q_endpoint_catalog,model_q_endpoint_catalog.q_endpoint,,1,1,1,1
+access_q_endpoint_catalog,q_endpoint_catalog,model_q_endpoint,,1,1,1,1
+
 
 
