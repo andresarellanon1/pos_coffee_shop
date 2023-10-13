@@ -3,7 +3,7 @@ from odoo import models, fields, api
 
 
 class QEndpoint(models.Model):
-    _name = 'q_endpoint'
+    _name = 'q_endpoint_catalog.q_endpoint'
     _description = 'REST Endpoint Catalog'
 
     name = fields.Char('Endpoint Name', required=True)
