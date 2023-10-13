@@ -1,8 +1,4 @@
 <odoo>
-    <!-- Menu Item for Your App Icon -->
-    <menuitem id="menu_q_endpoint" name="QEndpoint" parent="base.menu_root"
-        action="q_endpoint_catalog_menu_action" sequence="10"
-        web_icon="q_endpoint_catalog/static/src/img/icon.png" web_icon_data="true" />
 
     <!-- Action for the List View -->
     <record id="q_endpoint_catalog_menu_action" model="ir.actions.act_window">
@@ -45,5 +41,10 @@
             </form>
         </field>
     </record>
+    <!-- Menu Item for Your App Icon -->
+    <menuitem id="menu_q_endpoint" name="QEndpoint" parent="base.menu_root"
+        action="q_endpoint_catalog_menu_action" sequence="10"
+        web_icon="q_endpoint_catalog/static/src/img/icon.png" web_icon_data="true" />
+
 </odoo>
 
