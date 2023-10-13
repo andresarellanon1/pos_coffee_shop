@@ -4,7 +4,7 @@
         <field name="name">q_endpoint.list.view</field>
         <field name="model">q_endpoint_catalog.q_endpoint</field>
         <field name="arch" type="xml">
-            <tree string="Q Endpoint List">
+            <tree string="REST Endpoint List">
                 <field name="name" />
                 <field name="url" />
                 <field name="method" />
@@ -17,23 +17,25 @@
         <field name="model">q_endpoint_catalog.q_endpoint</field>
         <field name="arch" type="xml">
             <form string="REST Endpoint">
-                <group>
-                    <field name="name" />
-                    <field name="url" />
-                    <field name="method" />
-                    <field name="body" />
-                    <field name="response" />
-                    <field name="headers" />
-                    <field name="is_authorization_required" />
-                    <field name="authorization"
-                        attrs="{'invisible': [('is_authorization_required', '=', False)]}" />
-                </group>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="url" />
+                        <field name="method" />
+                        <field name="body" />
+                        <field name="response" />
+                        <field name="headers" />
+                        <field name="is_authorization_required" />
+                        <field name="authorization"
+                            attrs="{'invisible': [('is_authorization_required', '=', False)]}" />
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
 
     <record id="q_endpoint_catalog_menu_action" model="ir.actions.act_window">
-        <field name="name">Endpoint Catalog</field>
+        <field name="name">REST Endpoint Catalog</field>
         <field name="res_model">q_endpoint_catalog.q_endpoint</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="q_endpoint_list_view" />
