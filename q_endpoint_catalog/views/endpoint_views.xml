@@ -19,6 +19,7 @@
             <form string="REST Endpoint">
                 <sheet>
                     <group>
+                        <field name="contact_id" />
                         <field name="name" />
                         <field name="url" />
                         <field name="method" />
