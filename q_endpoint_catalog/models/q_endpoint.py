@@ -14,9 +14,9 @@ class QEndpoint(models.Model):
         ('PUT', 'PUT'),
         ('DELETE', 'DELETE')
     ], 'HTTP Method', required=True)
-    body = fields.Text('Request Body')
-    response = fields.Text('Response')
-    headers = fields.Text('Headers')
+    body = fields.Text('Request Body', help='Enter a valid JSON for the request body.')
+    response = fields.Text('Response', help='Enter a valid JSON for the request response.')
+    headers = fields.One2many('q_endpoint_catalog.headers', 'endpoint_id', 'Headers')
     is_authorization_required = fields.Boolean('Authorization Required')
     authorization = fields.Text('Authorization header')
 
@@ -27,3 +27,12 @@ class QEndpoint(models.Model):
         """
         if not self.is_authorization_required:
             self.authorization = False  # Clear the authorization value
+
+
+class QEndpointHeaders(models.Model):
+    _name = 'q_endpoint_catalog.headers'
+    _description = 'Headers'
+
+    name = fields.Text('Header')
+    value = fields.Text('Value')
+    endpoint_id = fields.Many2one('q_endpoint_catalog.q_endpoint', 'Endpoint')
