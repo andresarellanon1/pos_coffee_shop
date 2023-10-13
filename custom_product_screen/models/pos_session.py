@@ -45,7 +45,8 @@ class PosSession(models.Model):
         product_template_attribute_values = self.env['product.template.attribute.value'].search(
             domain)
 
-        def key(ptav): return (ptav.attribute_line_id.id, ptav.attribute_id.id)
+        def key(ptav):
+            return (ptav.attribute_line_id.id, ptav.attribute_id.id)
         res = {}
         for key, group in groupby(
                 sorted(product_template_attribute_values, key=key), key=key):
