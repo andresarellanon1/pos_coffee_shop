@@ -18,7 +18,7 @@ class QEndpoint(models.Model):
     response = fields.Text('Response')
     headers = fields.Text('Headers')
     is_authorization_required = fields.Boolean('Authorization Required')
-    authorization = fields.Text('Authorization header', required=lambda self: self.is_authorization_required)
+    authorization = fields.Text('Authorization header')
 
     @api.onchange('is_authorization_required')
     def _onchange_is_authorization_required(self):
