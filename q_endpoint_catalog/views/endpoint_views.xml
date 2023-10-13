@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- QEndpoint List View -->
     <record id="q_endpoint_list_view" model="ir.ui.view">
         <field name="name">q_endpoint.list.view</field>
         <field name="model">q_endpoint_catalog.q_endpoint</field>
         <field name="arch" type="xml">
-            <tree string="REST Endpoint List">
+            <tree string="Q Endpoint List">
                 <field name="name" />
                 <field name="url" />
                 <field name="method" />
@@ -12,25 +13,57 @@
         </field>
     </record>
 
+    <!-- QEndpoint Form View -->
     <record id="q_endpoint_form_view" model="ir.ui.view">
         <field name="name">q_endpoint.form.view</field>
         <field name="model">q_endpoint_catalog.q_endpoint</field>
         <field name="arch" type="xml">
             <form string="REST Endpoint">
-                <sheet>
-                    <group>
-                        <field name="name" />
-                        <field name="url" />
-                        <field name="method" />
-                        <field name="body" />
-                        <field name="response" />
-                        <field name="headers" />
-                        <field name="is_authorization_required" />
-                        <field name="authorization"
-                            attrs="{'invisible': [('is_authorization_required', '=', False)]}" />
-                    </group>
-                </sheet>
+                <group>
+                    <field name="name" />
+                    <field name="url" />
+                    <field name="method" />
+                    <field name="body" widget="html" />
+                    <field name="response" widget="one2many_list" />
+                    <field name="headers" widget="one2many_list" />
+                </group>
             </form>
+        </field>
+    </record>
+
+    <!-- QEndpoint Kanban View -->
+    <record id="q_endpoint_kanban_view" model="ir.ui.view">
+        <field name="name">q_endpoint.kanban.view</field>
+        <field name="model">q_endpoint_catalog.q_endpoint</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_content">
+                            <div class="oe_kanban_header">
+                                <strong>
+                                    <field name="name" />
+                                </strong>
+                                <br />
+                                <span>
+                                    <field name="method" />
+                                </span>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <p>
+                                    <field name="url" />
+                                </p>
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="headers" widget="statinfo"
+                                        options="{'mode': 'count'}" />
+                                    <field name="response" widget="statinfo"
+                                        options="{'mode': 'count'}" />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
