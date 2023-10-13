@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- QEndpoint List View -->
     <record id="q_endpoint_list_view" model="ir.ui.view">
         <field name="name">q_endpoint.list.view</field>
         <field name="model">q_endpoint_catalog.q_endpoint</field>
@@ -13,25 +12,25 @@
         </field>
     </record>
 
-    <!-- QEndpoint Form View -->
     <record id="q_endpoint_form_view" model="ir.ui.view">
         <field name="name">q_endpoint.form.view</field>
         <field name="model">q_endpoint_catalog.q_endpoint</field>
         <field name="arch" type="xml">
             <form string="REST Endpoint">
-                <group>
-                    <field name="name" />
-                    <field name="url" />
-                    <field name="method" />
-                    <field name="body" widget="html" />
-                    <field name="response" widget="one2many_list" />
-                    <field name="headers" widget="one2many_list" />
-                </group>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="url" />
+                        <field name="method" />
+                        <field name="body" widget="one2many_list" />
+                        <field name="response" widget="one2many_list" />
+                        <field name="headers" widget="one2many_list" />
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
 
-    <!-- QEndpoint Kanban View -->
     <record id="q_endpoint_kanban_view" model="ir.ui.view">
         <field name="name">q_endpoint.kanban.view</field>
         <field name="model">q_endpoint_catalog.q_endpoint</field>
@@ -77,5 +76,11 @@
     <menuitem id="menu_q_endpoint" name="QEndpoint"
         action="q_endpoint_catalog_menu_action" sequence="10"
         web_icon="q_endpoint_catalog,static/description/icon.png" />
+    <menuitem id="menu_q_endpoint_response_list" name="Response Attributes"
+        parent="menu_q_endpoint" action="action_q_endpoint_response_list" sequence="10" />
+    <menuitem id="menu_q_endpoint_request_body_list" name="Request Body"
+        parent="menu_q_endpoint" action="action_q_endpoint_request_body_list" sequence="20" />
+    <menuitem id="menu_q_endpoint_headers_list" name="Headers" parent="menu_q_endpoint"
+        action="action_q_endpoint_headers_list" sequence="30" />
 
 </odoo>

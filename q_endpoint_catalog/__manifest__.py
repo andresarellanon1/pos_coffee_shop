@@ -5,11 +5,14 @@
     'description': 'Manages a catalog of REST endpoints. Define URL, Method, Body, Response, Headers and hardcode Authorization (or not). Call from python functions or modules on demand. ',
     'author': 'Quadro Soluciones',
     'images': [],
-    'depends': ['base'],
+    'depends': ['base', 'contacts'],
     'installable': True,
     'application': True,
     'data': [
         'security/ir.model.access.csv',
+        'views/body_views.xml',
+        'views/response_views.xml',
+        'views/header_views.xml',
         'views/endpoint_views.xml',
     ],
     'assets': {

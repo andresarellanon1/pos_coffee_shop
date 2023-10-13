@@ -16,9 +16,10 @@ class QEndpoint(models.Model):
         ('PUT', 'PUT'),
         ('DELETE', 'DELETE')
     ], 'HTTP Method', required=True, help='Select the HTTP method for the REST request.')
-    body = fields.One2many('q_endpoint_catalog.request_body', 'endpoint_id', 'Request Body')
+    body = fields.One2many('q_endpoint_catalog.request_body', 'endpoint_id', 'Request Body', help='Define the actual attributes and values of the request body.')
     response = fields.One2many('q_endpoint_catalog.response_attributes', 'endpoint_id', 'Response Attributes', help='Define the expected attributes of the response.')
     headers = fields.One2many('q_endpoint_catalog.headers', 'endpoint_id', 'Headers', help='Manage a list of headers to include in the request.')
+    contact_id = fields.Many2one('res.partner', 'Contact', help='Select a contact from the Contacts module.')
 
     @api.constrains('body')
     def _check_request_body(self):
@@ -107,8 +108,26 @@ class QEndpoint(models.Model):
             return f"Type Safety Error: {str(e)}"
 
         return "Success"
-    # Usage example from another module
-    # q_endpoint_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(record_id)
+        # Usage example from another module
+        # q_endpoint_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(record_id)
+
+    def get_endpoint_ids_by_contact_name(self, contact_name):
+        """
+        Retrieve a list of endpoint IDs related to a contact by contact name.
+
+        :param str contact_name: The name of the contact for whom to retrieve related endpoints.
+
+        :return: A list of endpoint IDs associated with the specified contact, or an empty list if no matches are found.
+        :rtype: list
+        """
+        contact = self.env['res.partner'].search([('name', '=', contact_name)])
+        if contact:
+            endpoints = self.search([('contact_id', '=', contact.id)])
+            return endpoints.ids
+        return []
+        # Example usage:
+        # contact_name = "John Doe"  # Replace with the contact name you want to search for
+        # endpoint_ids = self.env['q_endpoint_catalog.q_endpoint'].get_endpoint_ids_by_contact_name(contact_name)
 
 
 class QEndpointResponseAttributes(models.Model):
@@ -149,4 +168,5 @@ class QEndpointRequestBody(models.Model):
         ('list', 'List'),
         ('object', 'Object'),
     ], 'Attribute Type', required=True)
+    value = fields.Text('Value', help='Enter the value of the body attribute.')
     endpoint_id = fields.Many2one('q_endpoint_catalog.q_endpoint', 'Endpoint', ondelete='cascade')
