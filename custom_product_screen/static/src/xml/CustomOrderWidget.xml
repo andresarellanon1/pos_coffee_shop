@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="custom_product_screen.CustomOrderWidget" owl="1">
-		<div class="h-full w-full flex flex-col items-center justify-between">
-			<div t-if="_orderlinesArray.length === 0" class="h-full w-full flex flex-col justify-center items-center border">
+		<div class="h-full w-full flex flex-col items-center justify-between border-r border-r-gray-700 px-1">
+			<div t-if="_orderlinesArray.length === 0" class="h-full w-full flex flex-col justify-center items-center">
 				<div class="font-bold">
 					Sin registros
 				</div>
@@ -18,7 +18,7 @@
 				<div class="absolute flex flex-col justify-start items-start h-3/4 w-full overflow-y-auto pt-1 space-y-2">
 					<CustomOrderline t-foreach="_orderlinesArray" t-as="orderline" t-key="orderline.id" line="orderline" />
 				</div>
-				<div class="absolute flex flex-col justify-between items-center w-full h-1/4 bottom-0 match-bg border-t border-t-black">
+				<div class="absolute flex flex-col justify-between items-center w-full h-1/4 bottom-0 match-bg border-t border-t-gray-700">
 					<div class="flex w-full pt-2">
 						<div class="w-full flex flex-col space-y-2">
 							<t t-set="_total" t-value="getTotal()" />

@@ -695,13 +695,22 @@ video {
   border-left-width: 1px;
 }
 
+.border-r {
+  border-right-width: 1px;
+}
+
 .border-t {
   border-top-width: 1px;
 }
 
-.border-t-black {
+.border-r-gray-700 {
   --tw-border-opacity: 1;
-  border-top-color: rgb(0 0 0 / var(--tw-border-opacity));
+  border-right-color: rgb(55 65 81 / var(--tw-border-opacity));
+}
+
+.border-t-gray-700 {
+  --tw-border-opacity: 1;
+  border-top-color: rgb(55 65 81 / var(--tw-border-opacity));
 }
 
 .bg-amber-500 {

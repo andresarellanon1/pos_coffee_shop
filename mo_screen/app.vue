@@ -3,12 +3,11 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative } from 'swiper'
 import 'swiper/css'
 import { ref, useFetch } from '.nuxt/imports'
-import nuxtStorage from 'nuxt-storage'
 
 const isLogin = ref(false)
 const modules = [Navigation, Pagination, Scrollbar, Autoplay, Parallax, EffectCreative]
 const PRODUCTION_DELTA_MAX = 180000
-const SYNC_TIMEOUT_MAX = 3000
+const SYNC_TIMEOUT_MAX = 10000
 const tock = ref(10)
 interface Production {
   id: number
@@ -54,7 +53,6 @@ async function login(data: { user: string, password: string }) {
     })
     if (token.value === null) return
     auth.value.jwt_secret = token.value.token
-    nuxtStorage.localStorage.setData('jwt_secret', token.value)
     isLogin.value = true
   } catch (e) {
     console.error(e)
@@ -97,7 +95,6 @@ async function fetchNextMrpProduction() {
         "Authorization": `Bearer ${auth.value.jwt_secret}`,
       }
     })
-    console.warn(version.value)
     if (error.value?.statusCode === 401) isLogin.value = false
     if (version.value === null) return
     const { data: production } = await useFetch<Production[]>('http://158.69.63.47:8080/production', {
@@ -108,6 +105,7 @@ async function fetchNextMrpProduction() {
       }
     })
     if (production.value === null) return
+    console.warn('production', production.value)
     const { data: products } = await useFetch<Products[]>('http://158.69.63.47:8080/products', {
       method: "GET",
       headers: {
@@ -157,6 +155,7 @@ async function syncCaches() {
       }
     })
     if (cache.value === null) return
+    console.warn(cache.value)
     const { data: products } = await useFetch<Products[]>('http://158.69.63.47:8080/products', {
       method: "GET",
       headers: {

@@ -10,30 +10,30 @@ patch(PosGlobalState.prototype, "getter/setter patch", {
     }
 })
 patch(PosGlobalState.prototype, "prototype patch", {
-    _processData: async function (loadedData) {
+    _processData: async function(loadedData) {
         this._loadProductTemplate(loadedData['product.template'])
         this._loadMrpBom(loadedData['mrp.bom'])
         this._loadBomLines(loadedData['mrp.bom.line'])
         this._super(loadedData)
     },
-    _loadProductTemplate: function (products) {
+    _loadProductTemplate: function(products) {
         this.db._isEmployee()
         this.db.add_products_templates(products)
     },
-    _loadMrpBom: function (boms) {
+    _loadMrpBom: function(boms) {
         this.db.add_boms(boms)
     },
-    _loadBomLines: function (lines) {
+    _loadBomLines: function(lines) {
         this.db.add_bom_lines(lines)
     },
-    add_new_order: function () {
+    add_new_order: function() {
         this.db.child_orderline_by_orderline_id = {}
         this.db.products_to_sync_by_orderline_id = {}
         this.db.orderlines_to_sync_by_production_id = {}
         this.db.orderlineSkipMO = []
         this._super(...arguments)
     },
-    createCurrentOrderMrpProduction: async function () {
+    createCurrentOrderMrpProduction: async function() {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
@@ -64,7 +64,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    confirmCurrentOrderMrpProduction: async function () {
+    confirmCurrentOrderMrpProduction: async function() {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
@@ -91,7 +91,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    clearCurrentOrderMrpProduction: async function () {
+    clearCurrentOrderMrpProduction: async function() {
         try {
             let origin = `POS-${this.currentOrder.name}`
             let production_ids = await rpc.query({
@@ -109,7 +109,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    clearSingleMrpProduction: async function (orderline_id) {
+    clearSingleMrpProduction: async function(orderline_id) {
         try {
             let orderlines_to_sync_by_production_id = this.db.orderlines_to_sync_by_production_id
             if (!this.db.orderlineSkipMO.map(line => line.id).includes(orderline_id)) return
@@ -134,7 +134,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     /*
     * NOTE: this method expects the orderlines to have a production id created and stored in memory 
     */
-    sendOrderToMainPoS: async function (retry) {
+    sendOrderToMainPoS: async function(retry) {
         try {
             await this.fetchVersion(2)
             let products_to_sync_by_orderline_id = this.db.products_to_sync_by_orderline_id
@@ -175,7 +175,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     * NOTE: only requires to fix on click pay for the orders created in the main PoS because the order uids haven't been pushed in the queue yet 
     * NOTE: the client session method "sendOrderToMainPoS" does this as a side effect on its backend handler
     */
-    fixQueueForCurrentOrder: async function (retry) {
+    fixQueueForCurrentOrder: async function(retry) {
         try {
             await this.fetchVersion(3)
             let order = this.currentOrder
@@ -193,6 +193,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 },
                 body: JSON.stringify({ uid: `POS-${uid}` })
             })
+            console.warn('fixed queue', response)
             if (response.status === 200)
                 return
             if (retry > 0)
@@ -201,7 +202,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    fetchOrderFromClientPoS: async function (retry) {
+    fetchOrderFromClientPoS: async function(retry) {
         try {
             await this.fetchVersion(3)
             let response = await fetch("http://158.69.63.47:8080/order", {
@@ -222,7 +223,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    loadDataToCurrentOrder: async function (orderPayload) {
+    loadDataToCurrentOrder: async function(orderPayload) {
         try {
             this.currentOrder.name = orderPayload.name
             this.currentOrder.uid = orderPayload.uid
@@ -248,7 +249,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    fetchVersion: async function (retry) {
+    fetchVersion: async function(retry) {
         try {
             let response = await fetch("http://158.69.63.47:8080/version", {
                 method: "GET",
@@ -266,7 +267,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    login: async function (user_id, password, retry) {
+    login: async function(user_id, password, retry) {
         try {
             let user = await rpc.query({
                 model: 'res.users',
@@ -295,7 +296,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    dupeSpawn: async function (orderline) {
+    dupeSpawn: async function(orderline) {
         let product = this.db.product_by_id[orderline.product.id]
         let options = {
             draftPackLotLines: undefined,
@@ -318,7 +319,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
         }
         this.db.add_product_to_sync_by_orderline_id(parent_orderline.id, orderline.product.id, options, extra_components)
     },
-    markSingleAsScrap: async function (orderline_id) {
+    markSingleAsScrap: async function(orderline_id) {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
@@ -337,7 +338,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             throw e
         }
     },
-    markCurrentOrderAsScrap: async function () {
+    markCurrentOrderAsScrap: async function() {
         try {
             let order = this.currentOrder
             let orderlines = order.get_orderlines()
@@ -359,7 +360,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
 })
 
 patch(Order.prototype, "prototype patch", {
-    add_product_prosime_resolve: async function (product, options) {
+    add_product_prosime_resolve: async function(product, options) {
         this.assert_editable()
         options = options || {}
         var line = Orderline.create({}, { pos: this.pos, order: this, product: product })
