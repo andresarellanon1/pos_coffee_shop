@@ -2,6 +2,7 @@
 
 import { patch } from 'web.utils'
 import LoginScreen from 'pos_hr.LoginScreen'
+import rpc from 'web.rpc'
 
 patch(LoginScreen.prototype, "prototype patch", {
     selectCashier: async function() {
