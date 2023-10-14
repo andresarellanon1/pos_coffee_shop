@@ -150,7 +150,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 }
                 orderlines.push(body)
             }
-            let response = await fetch("http://158.69.63.47:8080/order", {
+            let response = await fetch("https://hercor-pruebas.quadrosoluciones.com/order", {
                 method: "POST",
                 headers: {
                     "Accept": "*",
@@ -184,7 +184,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
             let orderlinesRemote_ids = this.db.orderlineSkipMO.map(line => line.id)
             let isFix = orderlines_ids.every(line_id => orderlinesRemote_ids.includes(line_id))
             if (isFix) return
-            let response = await fetch("http://158.69.63.47:8080/setNextProduction", {
+            let response = await fetch("https://hercor-pruebas.quadrosoluciones.com/setNextProduction", {
                 method: "POST",
                 headers: {
                     "Accept": "*",
@@ -205,7 +205,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     fetchOrderFromClientPoS: async function(retry) {
         try {
             await this.fetchVersion(3)
-            let response = await fetch("http://158.69.63.47:8080/order", {
+            let response = await fetch("https://hercor-pruebas.quadrosoluciones.com/order", {
                 method: "GET",
                 headers: {
                     "Accept": "*",
@@ -251,7 +251,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
     },
     fetchVersion: async function(retry) {
         try {
-            let response = await fetch("http://158.69.63.47:8080/version", {
+            let response = await fetch("https://hercor-pruebas.quadrosoluciones.com/version", {
                 method: "GET",
                 headers: {
                     "Accept": "*",
@@ -275,7 +275,7 @@ patch(PosGlobalState.prototype, "prototype patch", {
                 args: [user_id, ['login']],
             })
             if (user && user[0] && user[0].login) {
-                let response = await fetch("http://158.69.63.47:8080/login", {
+                let response = await fetch("https://hercor-pruebas.quadrosoluciones.com/login", {
                     method: "POST",
                     headers: {
                         "Accept": "*",
