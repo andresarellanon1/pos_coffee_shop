@@ -81,8 +81,10 @@ class QEndpoint(models.Model):
             #             return f"Attribute '{attr.name}' is not of type '{attr_type}'."
             return response_data
         except requests.exceptions.RequestException as e:
+            logger.error(e)
             return f"Request Error: {str(e)}"
         except (json.JSONDecodeError, ValueError) as e:
+            logger.error(e)
             return f"Type Safety Error: {str(e)}"
         # Example usage from another module:
         # q_endpoint_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(record_id, headers=[{'Authorization': 'Bearer Token'}], body_attributes=[{'name': 'new_attr', 'value': 'new_value'}])
