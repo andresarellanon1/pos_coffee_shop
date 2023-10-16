@@ -61,7 +61,7 @@ class QEndpoint(models.Model):
                     request_data[attribute['key']] = attribute['value']
             logger.info(request_data)
             response = methods[record.method](record.url, **headers, data=json.dumps(request_data))
-            # response_data = response.json()
+            response_data = response.json()
             # for attr in record.response:
             #     if attr.name in response_data:
             #         attr_type = attr.type
