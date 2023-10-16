@@ -1,11 +1,10 @@
-from itertools import groupby
-from odoo import models, fields
-from odoo.tools.translate import _, _lt
+from odoo import models, api
 
 
 class pos_config(models.Model):
     _inherit = 'pos.config'
 
+    @api.model
     def type_user(self):
         bandera = False
         actual_user = self.env.user

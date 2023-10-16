@@ -1,10 +1,11 @@
 from itertools import groupby
-from odoo import models, fields, api
+from odoo import models, api
 
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
+    @api.model
     def _pos_ui_models_to_load(self):
         models_to_load = [
             'res.company',
@@ -76,16 +77,6 @@ class PosSession(models.Model):
         products = self.env['product.template'].search_read(
             **params['search_params'])
         return products
-    # i dont remember what this does
-    # def _process_pos_ui_product_template(self, products):
-        # if self.config_id.currency_id != self.company_id.currency_id:
-        #    for product in products:
-        #        product['lst_price'] = self.company_id.currency_id._convert(product['lst_price'], self.config_id.currency_id, self.company_id, fields.Date.today())
-        # categories = self._get_pos_ui_product_category(self._loader_params_product_category())
-        # product_category_by_id = {category['id']: category for category in categories }
-        # for product in products:
-        #    product['categ'] = product_category_by_id[product['categ_id'][0]]
-        #    product['image_128'] = bool(product['image_128'])
 
     def _loader_params_product_template(self):
         domain = [

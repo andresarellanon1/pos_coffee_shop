@@ -19,7 +19,7 @@ class QEndpoint(models.Model):
         ('DELETE', 'DELETE')
     ], 'HTTP Method', required=True, help='Select the HTTP method for the REST request.')
     body = fields.One2many('q_endpoint_catalog.request_body', 'endpoint_id', 'Request Body', help='Optional. Define the actual attributes and values of the request body.')
-    response = fields.One2many('q_endpoint_catalog.response_attributes', 'endpoint_id', 'Optional. Response Attributes', help='Define the expected attributes of the response.')
+    response = fields.One2many('q_endpoint_catalog.response_attributes', 'endpoint_id', 'Response Attributes', help='Optional. Define the expected attributes of the response.')
     headers = fields.One2many('q_endpoint_catalog.headers', 'endpoint_id', 'Headers', help='Optional. Manage a list of headers to include in the request.')
 
     @api.model

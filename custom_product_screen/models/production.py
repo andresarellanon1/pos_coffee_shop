@@ -7,14 +7,31 @@ logger = logging.getLogger(__name__)
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+    @api.model
     def mark_as_done(self, id):
+        """
+        Mark a manufacturing order as done.
+
+        :param int id: The ID of the manufacturing order to mark as done.
+
+        :return: True if the operation was successful.
+        :rtype: bool
+        """
         production = self.env['mrp.production'].search([('id', '=', id)])
         production.qty_producing = 1
         production._set_qty_producing()
         production.button_mark_done()
         return True
 
+    @api.model
     def confirm_single(self, product_payload):
+        """
+        Confirm a single product for production.
+
+        :param dict product_payload: A dictionary containing product information, including 'id' and 'production_id'.
+
+        :return: None
+        """
         if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
             return
         mrp_order = self.env['mrp.production'].search(
@@ -23,9 +40,16 @@ class MrpProduction(models.Model):
             'state': 'progress'})
         return
 
+    @api.model
     def create_single(self, product_payload):
-        logger.info(self.env['product.product'].browse(
-            int(product_payload['id'])).pos_production)
+        """
+        Create a manufacturing order for a single product.
+
+        :param dict product_payload: A dictionary containing product information, including 'id', 'product_tmpl_id', 'uom_id', 'qty', 'components', and 'pos_reference'.
+
+        :return: The ID of the newly created manufacturing order or None if creation is not possible.
+        :rtype: int or None
+        """
         if not self.env['product.product'].browse(int(product_payload['id'])).pos_production:
             return
         if not product_payload['qty'] == 1:

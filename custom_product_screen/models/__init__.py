@@ -1,3 +1,1 @@
-from . import pos_session, production
-from . import pos_config
-from . import scrap
+from . import pos_session, production, pos_config, scrap
