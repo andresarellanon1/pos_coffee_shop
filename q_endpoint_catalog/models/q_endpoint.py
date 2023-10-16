@@ -17,31 +17,12 @@ class QEndpoint(models.Model):
         ('PUT', 'PUT'),
         ('DELETE', 'DELETE')
     ], 'HTTP Method', required=True, help='Select the HTTP method for the REST request.')
-    body = fields.One2many('q_endpoint_catalog.request_body', 'endpoint_id', 'Request Body', help='Define the actual attributes and values of the request body.')
-    response = fields.One2many('q_endpoint_catalog.response_attributes', 'endpoint_id', 'Response Attributes', help='Define the expected attributes of the response.')
-    headers = fields.One2many('q_endpoint_catalog.headers', 'endpoint_id', 'Headers', help='Manage a list of headers to include in the request.')
-
-    def _validate_response_attribute(self, response_data, attr):
-        attr_name = attr.name
-        attr_type = attr.type
-
-        if attr_name not in response_data:
-            raise ValueError(f"Expected attribute '{attr_name}' not found in the response.")
-
-        data_type = {
-            'string': str,
-            'integer': int,
-            'float': float,
-            'boolean': bool,
-            'list': list,
-            'object': dict,
-        }.get(attr_type, None)
-
-        if data_type is None or not isinstance(response_data[attr_name], data_type):
-            raise ValueError(f"Attribute '{attr_name}' is not of type '{attr_type}'.")
+    body = fields.One2many('q_endpoint_catalog.request_body', 'endpoint_id', 'Request Body', help='Optional. Define the actual attributes and values of the request body.')
+    response = fields.One2many('q_endpoint_catalog.response_attributes', 'endpoint_id', 'Optional. Response Attributes', help='Define the expected attributes of the response.')
+    headers = fields.One2many('q_endpoint_catalog.headers', 'endpoint_id', 'Headers', help='Optional. Manage a list of headers to include in the request.')
 
     @api.model
-    def send_request(self, params):
+    def send_request(self, record_id, custom_headers=None, custom_attributes=None):
         """
         Send an HTTP request to the REST endpoint associated with the provided record ID and perform response type validation.
 
@@ -55,9 +36,6 @@ class QEndpoint(models.Model):
         :return: A status message indicating success or an error message.
         :rtype: str
         """
-        record_id = params['record_id']
-        custom_headers = params['custom_headers']
-        custom_attributes = params['custom_attributes']
         record = self.browse(record_id)
 
         headers = {}
@@ -87,19 +65,33 @@ class QEndpoint(models.Model):
 
             response_data = response.json()
 
-            # checks only for declared attributtes, undeclared atributtes are ignored at validation time
+            # Validate declared attributes
             for attr in record.response:
-                self._validate_response_attribute(response_data, attr)
+                if attr.name in response_data:
+                    attr_type = attr.type
+                    data_type = {
+                        'string': str,
+                        'integer': int,
+                        'float': float,
+                        'boolean': bool,
+                        'list': list,
+                        'object': dict,
+                    }.get(attr_type, None)
+
+                    if data_type is not None and not isinstance(response_data[attr.name], data_type):
+                        return f"Attribute '{attr.name}' is not of type '{attr_type}'."
+
+            # No errors found in validation
+            return response_data
 
         except requests.exceptions.RequestException as e:
             return f"Request Error: {str(e)}"
         except (json.JSONDecodeError, ValueError) as e:
             return f"Type Safety Error: {str(e)}"
-
-        return response_data
         # Example usage from another module:
         # q_endpoint_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(record_id, headers=[{'Authorization': 'Bearer Token'}], body_attributes=[{'name': 'new_attr', 'value': 'new_value'}])
 
+    @api.model
     def get_endpoint_ids_by_contact_name(self, contact_name):
         """
         Retrieve a list of endpoint IDs related to a contact by contact name.
