@@ -38,7 +38,8 @@ patch(LoginScreen.prototype, "prototype patch", {
                 method: 'get_endpoint_ids_by_contact_name',
                 args: ['Quadro Soluciones'],
             })
-            let endpoint = endpoints.find(value => value.name = 'PoS External Service Login')
+            console.warn(endpoints)
+            let endpoint = endpoints.find(value => value.name === 'PoS External Service Login')
             console.warn(endpoint)
             this.env.pos.db.auth = await rpc.query({
                 model: 'q_endpoint_catalog.q_endpoint',

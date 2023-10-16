@@ -104,7 +104,7 @@ class QEndpoint(models.Model):
         contact = self.env['res.partner'].search([('name', '=', contact_name)])
         if contact:
             endpoints = self.search([('contact_id', '=', contact.id)])
-            return endpoints.ids
+            return endpoints
         return []
 
 
