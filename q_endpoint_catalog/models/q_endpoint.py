@@ -1,7 +1,8 @@
 from odoo import models, fields, api
-# from odoo.exceptions import ValidationError
 import json
 import requests
+import logging
+logger = logging.getLogger(__name__)
 
 
 class QEndpoint(models.Model):
@@ -37,15 +38,12 @@ class QEndpoint(models.Model):
         :rtype: str
         """
         record = self.browse(record_id)
-
         headers = {}
         for header in record.headers:
             headers[header.name] = header.value
-
         if custom_headers:
             for header in custom_headers:
                 headers[header['key']] = header['value']
-
         try:
             methods = {
                 'GET': requests.get,
@@ -53,19 +51,16 @@ class QEndpoint(models.Model):
                 'PUT': requests.put,
                 'DELETE': requests.delete,
             }
-
             request_data = {}
             if custom_attributes:
                 for attribute in custom_attributes:
                     request_data[attribute['key']] = attribute['value']
-
+            logger.info(record)
+            logger.info("==")
+            logger.info(record.body)
             request_data.update(json.loads(record.body))
-
             response = methods[record.method](record.url, **headers, data=json.dumps(request_data))
-
             response_data = response.json()
-
-            # Validate declared attributes
             for attr in record.response:
                 if attr.name in response_data:
                     attr_type = attr.type
@@ -77,13 +72,9 @@ class QEndpoint(models.Model):
                         'list': list,
                         'object': dict,
                     }.get(attr_type, None)
-
                     if data_type is not None and not isinstance(response_data[attr.name], data_type):
                         return f"Attribute '{attr.name}' is not of type '{attr_type}'."
-
-            # No errors found in validation
             return response_data
-
         except requests.exceptions.RequestException as e:
             return f"Request Error: {str(e)}"
         except (json.JSONDecodeError, ValueError) as e:
