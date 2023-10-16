@@ -41,7 +41,7 @@ class QEndpoint(models.Model):
             raise ValueError(f"Attribute '{attr_name}' is not of type '{attr_type}'.")
 
     @api.model
-    def send_request(self, record_id, custom_headers=None, custom_attributes=None):
+    def send_request(self, params):
         """
         Send an HTTP request to the REST endpoint associated with the provided record ID and perform response type validation.
 
@@ -55,6 +55,9 @@ class QEndpoint(models.Model):
         :return: A status message indicating success or an error message.
         :rtype: str
         """
+        record_id = params['record_id']
+        custom_headers = params['custom_headers']
+        custom_attributes = params['custom_attributes']
         record = self.browse(record_id)
 
         headers = {}
