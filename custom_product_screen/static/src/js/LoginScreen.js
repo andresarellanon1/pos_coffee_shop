@@ -32,7 +32,6 @@ patch(LoginScreen.prototype, "prototype patch", {
             if (employee) {
                 this.env.pos.set_cashier(employee);
             }
-            // Do PoS service login and store token
             let endpoints = await rpc.query({
                 model: 'q_endpoint_catalog.q_endpoint',
                 method: 'get_endpoint_ids_by_contact_name',
@@ -41,7 +40,7 @@ patch(LoginScreen.prototype, "prototype patch", {
             console.warn(endpoints)
             let endpoint = endpoints.find(value => value.name === 'PoS External Service Login')
             console.warn(endpoint)
-            this.env.pos.db.auth = await rpc.query({
+            let response = await rpc.query({
                 model: 'q_endpoint_catalog.q_endpoint',
                 method: 'send_request',
                 args: [
@@ -50,6 +49,8 @@ patch(LoginScreen.prototype, "prototype patch", {
                     []
                 ],
             })
+            console.warn(response)
+            this.env.pos.db.auth = response.token
             console.log(this.env.pos.db.auth)
             return employee;
         }
