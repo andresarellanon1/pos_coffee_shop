@@ -57,13 +57,14 @@ class QEndpoint(models.Model):
             if custom_attributes:
                 for attribute in custom_attributes:
                     request_data[attribute['key']] = attribute['value']
-            logger.info("==")
+            logger.info("=headers=")
             logger.info(headers)
+            logger.info("=body=")
             logger.info(request_data)
             response = methods[record.method](record.url, **headers, data=json.dumps(request_data))
-            logger.info("==")
-            logger.info(response)
+            logger.info("=response=")
             logger.info(response.text)
+            logger.info("=response json=")
             response_data = response.json()
             logger.info(response_data)
             for attr in record.response:
