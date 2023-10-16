@@ -61,20 +61,20 @@ class QEndpoint(models.Model):
                     request_data[attribute['key']] = attribute['value']
             logger.info(request_data)
             response = methods[record.method](record.url, **headers, data=json.dumps(request_data))
-            response_data = response.json()
-            for attr in record.response:
-                if attr.name in response_data:
-                    attr_type = attr.type
-                    data_type = {
-                        'string': str,
-                        'integer': int,
-                        'float': float,
-                        'boolean': bool,
-                        'list': list,
-                        'object': dict,
-                    }.get(attr_type, None)
-                    if data_type is not None and not isinstance(response_data[attr.name], data_type):
-                        return f"Attribute '{attr.name}' is not of type '{attr_type}'."
+            # response_data = response.json()
+            # for attr in record.response:
+            #     if attr.name in response_data:
+            #         attr_type = attr.type
+            #         data_type = {
+            #             'string': str,
+            #             'integer': int,
+            #             'float': float,
+            #             'boolean': bool,
+            #             'list': list,
+            #             'object': dict,
+            #         }.get(attr_type, None)
+            #         if data_type is not None and not isinstance(response_data[attr.name], data_type):
+            #             return f"Attribute '{attr.name}' is not of type '{attr_type}'."
             return response_data
         except requests.exceptions.RequestException as e:
             return f"Request Error: {str(e)}"
