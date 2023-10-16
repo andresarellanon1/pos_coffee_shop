@@ -1,10 +1,19 @@
 /** @odoo-module **/
 
-import { patch } from 'web.utils'
-import LoginScreen from 'pos_hr.LoginScreen'
-import rpc from 'web.rpc'
+import { patch } from 'web.utils';
+import LoginScreen from 'pos_hr.LoginScreen';
+import rpc from 'web.rpc';
 
+/**
+ * Represents a patched version of the LoginScreen class in the Point of Sale.
+ * @extends LoginScreen
+ */
 patch(LoginScreen.prototype, "prototype patch", {
+    /**
+     * Extends the `selectCashier` method to allow selecting a cashier and performing authentication if necessary.
+     *
+     * @returns {Object} The selected cashier employee object.
+     */
     selectCashier: async function() {
         if (this.env.pos.config.module_pos_hr) {
             const employeesList = this.env.pos.employees
@@ -17,6 +26,7 @@ patch(LoginScreen.prototype, "prototype patch", {
                         isSelected: false,
                     };
                 });
+
             let { confirmed, payload: employee } = await this.showPopup('SelectionPopup', {
                 title: this.env._t('Change Cashier'),
                 list: employeesList,
@@ -29,17 +39,19 @@ patch(LoginScreen.prototype, "prototype patch", {
             if (employee && employee.pin) {
                 employee = await this.askPin(employee);
             }
+
             if (employee) {
                 this.env.pos.set_cashier(employee);
             }
+
             let endpoints = await rpc.query({
                 model: 'q_endpoint_catalog.q_endpoint',
                 method: 'get_endpoint_ids_by_contact_name',
                 args: ['Quadro Soluciones'],
-            })
-            console.warn(endpoints)
-            let endpoint = endpoints.find(value => value.name === 'PoS External Service Login')
-            console.warn(endpoint)
+            });
+
+            let endpoint = endpoints.find(value => value.name === 'PoS External Service Login');
+
             let response = await rpc.query({
                 model: 'q_endpoint_catalog.q_endpoint',
                 method: 'send_request',
@@ -48,11 +60,11 @@ patch(LoginScreen.prototype, "prototype patch", {
                     [],
                     []
                 ],
-            })
-            console.warn(response)
-            this.env.pos.db.auth = response.token
-            console.log(this.env.pos.db.auth)
+            });
+
+            this.env.pos.db.auth = `Bearer ${response.token}`;
+
             return employee;
         }
-    },
-})
+    }
+});
