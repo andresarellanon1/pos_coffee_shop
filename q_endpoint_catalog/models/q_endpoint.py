@@ -52,16 +52,16 @@ class QEndpoint(models.Model):
                 'DELETE': requests.delete,
             }
             request_data = {}
-            logger.info("==")
             for body_attr in record.body:
-                logger.info(body_attr.name)
                 request_data[body_attr.name] = body_attr.value
             if custom_attributes:
                 for attribute in custom_attributes:
                     request_data[attribute['key']] = attribute['value']
+            logger.info("==")
             logger.info(request_data)
             response = methods[record.method](record.url, **headers, data=json.dumps(request_data))
             response_data = response.json()
+            logger.info("==")
             logger.info(response_data)
             # for attr in record.response:
             #     if attr.name in response_data:
