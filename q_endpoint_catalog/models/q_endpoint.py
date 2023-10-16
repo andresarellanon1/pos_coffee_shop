@@ -61,7 +61,7 @@ class QEndpoint(models.Model):
             logger.info(headers)
             logger.info("=body=")
             logger.info(request_data)
-            response = methods[record.method](record.url, **headers, data=json.dumps(request_data))
+            response = methods[record.method](record.url, headers=headers, data=json.dumps(request_data))
             logger.info("=response=")
             logger.info(response.text)
             logger.info("=response json=")
