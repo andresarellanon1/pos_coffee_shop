@@ -23,9 +23,9 @@
                         <field name="name" />
                         <field name="url" />
                         <field name="method" />
-                        <field name="body" />
-                        <field name="response" />
-                        <field name="headers" nolabel="1" />
+                        <field name="body" nolabel="1" colspan="2" />
+                        <field name="response" nolabel="1" colspan="2" />
+                        <field name="headers" nolabel="1" colspan="2" />
                     </group>
                 </sheet>
             </form>
