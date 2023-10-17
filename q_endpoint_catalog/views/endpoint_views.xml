@@ -23,8 +23,11 @@
                         <field name="name" />
                         <field name="url" />
                         <field name="method" />
+                        <separator coslpan="2" string="Body" />
                         <field name="body" nolabel="1" colspan="2" />
+                        <separator coslpan="2" string="Response" />
                         <field name="response" nolabel="1" colspan="2" />
+                        <separator coslpan="2" string="Headers" />
                         <field name="headers" nolabel="1" colspan="2" />
                     </group>
                 </sheet>
