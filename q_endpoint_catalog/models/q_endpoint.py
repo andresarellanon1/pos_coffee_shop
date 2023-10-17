@@ -18,9 +18,9 @@ class QEndpoint(models.Model):
         ('PUT', 'PUT'),
         ('DELETE', 'DELETE')
     ], 'HTTP Method', required=True, help='Select the HTTP method for the REST request.')
-    body = fields.One2many('q_endpoint_catalog.request_body', 'endpoint_id', 'Request Body', help='Optional. Define the actual attributes and values of the request body.')
-    response = fields.One2many('q_endpoint_catalog.response_attributes', 'endpoint_id', 'Response Attributes', help='Optional. Define the expected attributes of the response.')
-    headers = fields.One2many('q_endpoint_catalog.headers', 'endpoint_id', 'Headers', help='Optional. Manage a list of headers to include in the request.')
+    body = fields.Many2many('q_endpoint_catalog.request_body', 'endpoint_id', 'Request Body', help='Optional. Define the actual attributes and values of the request body.')
+    response = fields.Many2many('q_endpoint_catalog.response_attributes', 'endpoint_id', 'Response Attributes', help='Optional. Define the expected attributes of the response.')
+    headers = fields.Many2many('q_endpoint_catalog.headers', 'endpoint_id', 'Headers', help='Optional. Manage a list of headers to include in the request.')
 
     @api.model
     def send_request(self, record_id, custom_headers=None, custom_attributes=None):
@@ -57,16 +57,8 @@ class QEndpoint(models.Model):
             if custom_attributes:
                 for attribute in custom_attributes:
                     request_data[attribute['key']] = attribute['value']
-            logger.info("=headers=")
-            logger.info(headers)
-            logger.info("=body=")
-            logger.info(request_data)
             response = methods[record.method](record.url, headers=headers, data=json.dumps(request_data))
-            logger.info("=response=")
-            logger.info(response.text)
-            logger.info("=response json=")
             response_data = response.json()
-            logger.info(response_data)
             for attr in record.response:
                 if attr.name in response_data:
                     attr_type = attr.type
@@ -120,7 +112,6 @@ class QEndpointResponseAttributes(models.Model):
         ('list', 'List'),
         ('object', 'Object')
     ], 'Attribute Type', required=True, help='Select the data type of the expected attribute.')
-    endpoint_id = fields.Many2one('q_endpoint_catalog.q_endpoint', 'Endpoint')
 
 
 class QEndpointHeaders(models.Model):
@@ -129,7 +120,6 @@ class QEndpointHeaders(models.Model):
 
     name = fields.Text('Header', help='Enter the name of the header.')
     value = fields.Text('Value', help='Enter the value of the header.')
-    endpoint_id = fields.Many2one('q_endpoint_catalog.q_endpoint', 'Endpoint')
 
 
 class QEndpointRequestBody(models.Model):
@@ -138,4 +128,3 @@ class QEndpointRequestBody(models.Model):
 
     name = fields.Char('Attribute Name', required=True)
     value = fields.Text('Value', help='Enter the value of the body attribute.')
-    endpoint_id = fields.Many2one('q_endpoint_catalog.q_endpoint', 'Endpoint', ondelete='cascade')
