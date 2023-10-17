@@ -28,6 +28,6 @@
     <record id="action_q_endpoint_response_list" model="ir.actions.act_window">
         <field name="name">Response Attributes</field>
         <field name="res_model">q_endpoint_catalog.response_attributes</field>
-        <field name="view_mode">tree,kanban</field>
+        <field name="view_mode">tree,kanban,form</field>
     </record>
 </odoo>

@@ -23,9 +23,9 @@
                         <field name="name" />
                         <field name="url" />
                         <field name="method" />
-                        <field name="body" widget="one2many_list" />
-                        <field name="response" widget="one2many_list" />
-                        <field name="headers" widget="one2many_list" />
+                        <field name="body" />
+                        <field name="response" />
+                        <field name="headers" />
                     </group>
                 </sheet>
             </form>

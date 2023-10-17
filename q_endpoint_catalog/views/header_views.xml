@@ -28,6 +28,6 @@
     <record id="action_q_endpoint_headers_list" model="ir.actions.act_window">
         <field name="name">Headers</field>
         <field name="res_model">q_endpoint_catalog.headers</field>
-        <field name="view_mode">tree,kanban</field>
+        <field name="view_mode">tree,kanban,form</field>
     </record>
 </odoo>

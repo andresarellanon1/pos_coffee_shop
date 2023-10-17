@@ -28,6 +28,6 @@
     <record id="action_q_endpoint_request_body_list" model="ir.actions.act_window">
         <field name="name">Request Body</field>
         <field name="res_model">q_endpoint_catalog.request_body</field>
-        <field name="view_mode">tree,kanban</field>
+        <field name="view_mode">tree,kanban,form</field>
     </record>
 </odoo>
