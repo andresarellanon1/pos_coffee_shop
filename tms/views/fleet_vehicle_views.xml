@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherited_fleet_vehicle_tms_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.tms.tree</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <tree position="replace">
+                <tree string="Vehicle">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="license_plate"/>
+                    <field invisible="1" name="driver_id"/>
+                    <field name="employee_id"/>
+                    <field name="serial_number"/>
+                    <field name="state_id"/>
+                    <field name="odometer"/>
+                    <field name="odometer_unit"/>
+                </tree>
+            </tree>
+        </field>
+    </record>
+
+    <record id="inherited_fleet_vehicle_tms_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.tms.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="priority">110</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('insurance_days_to_expire','!=', 0)]}">
+                    <h4><center>The date of the insurance policy is expired</center></h4>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='model_id']" name="model_id" position="before">
+                <label class="oe_edit_only" for="name"/>
+                <h1>
+                    <field name="name" placeholder="e.g. T-1"/>
+                </h1>
+            </xpath>
+            <field name="driver_id" position="replace">
+                <field name="driver_id" invisible="1"/>
+                <field name="employee_id" domain="[('driver', '=', True)]"/>
+            </field>
+            <field name="driver_id" position="before">
+                <field name="tollstation_tag"/>
+                <field name="operating_unit_id"/>
+                <field name="fleet_type"/>
+            </field>
+            <field name="car_value" position="after">
+                <field name="active"/>
+            </field>
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="General Information">
+                    <group>
+                        <field name="serial_number"/>
+                        <field name="registration"/>
+                        <field name="supplier_unit"/>
+                        <field name="insurance_policy"/>
+                        <field name="insurance_policy_data"/>
+                        <field name="insurance_expiration"/>
+                        <field name="insurance_supplier_id"/>
+                        <field name="insurance_days_to_expire"/>
+                    </group>
+                    <group string="Additional Properties">
+                        <field name="seats"/>
+                        <field name="doors"/>
+                        <field name="color"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Extra Data">
+                    <group>
+                        <field name="unit_extradata" context="{'default_vehicle_id': active_id, 'active_model_base': active_model}" colspan="2" nolabel="1">
+                            <tree string="Extra Fields">
+                                <field name="type_id"/>
+                                <field name="value_extra"/>
+                            </tree>
+                        </field>
+                        <field name="date_unit_without_operator"/>
+                        <field name="assignment_date"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_search_inherit_tms" model="ir.ui.view">
+        <field name="name">fleet.vehicle.tms.search</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="serial_number"/>
+                <field name="registration"/>
+                <group expand="1" string="Group By">
+                    <filter name="groupby_model_year" string="Year Model" context="{'group_by' : 'model_year'}"/>
+                    <filter name="groupby_registration" string="Registration" context="{'group_by' : 'registration'}"/>
+                    <filter name="groupby_fleet_type" string="Fleet Type" context="{'group_by' : 'fleet_type'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="inherited_fleet_vehicle_tms_view_kanban" model="ir.ui.view">
+        <field name="name">fleet_vehicle_tms_kanban</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//strong" position="before">
+                <strong><field name="name"/></strong><br/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_tms_action" model="ir.actions.act_window">
+        <field name="name">Fleet Vehicles</field>
+        <field name="res_model">fleet.vehicle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

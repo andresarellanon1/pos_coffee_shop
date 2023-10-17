@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="tms_travel_view_tree" model="ir.ui.view">
+        <field name="name">tms.travel.tree</field>
+        <field name="model">tms.travel</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <tree string="Travels" decoration-info="state == 'done'" decoration-success="state == 'progress'" decoration-danger="state == 'draft'"
+                decoration-muted="state == 'cancel'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="unit_id" string="Unit"/>
+                <field name="trailer1_id"/>
+                <field name="dolly_id"/>
+                <field name="trailer2_id"/>
+                <field name="employee_id"/>
+                <field name="waybill_ids" widget="many2many_tags"/>
+                <field name="route_id"/>
+                <field name="state"/>
+                <button name="action_progress" groups="tms.group_traffic,tms.group_expenses" icon="fa-thumbs-up"  states="draft" string="Dispatch Travel" type="object"/>
+                <button name="action_done" groups="tms.group_traffic,tms.group_expenses" icon="fa-check-square" states="progress" string="End Travel" type="object"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tms_travel_view_form" model="ir.ui.view">
+        <field name="name">tms.travel.form</field>
+        <field name="model">tms.travel</field>
+        <field name="arch" type="xml">
+            <form string="Travels">
+                <header>
+                    <button name="action_progress" icon="fa-thumbs-up" type="object"
+                            string="Dispatch" states="draft" groups="tms.group_traffic,tms.group_expenses"
+                            class="oe_highlight"/>
+                    <button name="action_done" icon="fa-check-square" type="object"
+                            string="Finish" states="progress" groups="tms.group_traffic,tms.group_expenses"
+                            class="oe_highlight"/>
+                    <button name="action_cancel" icon="fa-times" type="object"
+                            string="Cancel" states="draft,progress" groups="tms.group_traffic,tms.group_expenses"/>
+                    <button name="action_draft" icon="fa-reply" type="object"
+                            string="Set to draft" states="done,cancel" groups="tms.group_traffic,tms.group_expenses"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="operating_unit_id" attrs="{'readonly': [('state', 'in', ('progress','done', 'closed'))]}"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="kit_id" attrs="{'readonly': [('state', 'in',('progress','done','closed'))]}"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="unit_id" attrs="{'readonly': [('state', 'in', ('progress','done', 'closed'))]}"
+                                domain="[('fleet_type', '=', 'tractor')]"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="trailer1_id"
+                                attrs="{'required': ['|', ('dolly_id', '!=', False), ('trailer2_id', '!=', False)], 'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                context="{'default_fleet_type': 'trailer'}"
+                                domain="[('fleet_type', '=', 'trailer'),('id', '!=', trailer2_id)]"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="dolly_id" attrs="{'required': [('trailer2_id', '!=', False)], 'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                context="{'default_fleet_type': 'dolly'}"
+                                domain="[('fleet_type', '=', 'dolly')]"
+                                options="{'no_create': True, 'no_create_edit':True, 'no_quick_create':True}"/>
+                            <field name="trailer2_id" attrs="{'required': [('dolly_id', '!=', False)], 'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                context="{'default_fleet_type': 'trailer'}"
+                                domain="[('fleet_type', '=', 'trailer'), ('id', '!=', trailer1_id)]"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"/>
+                            <field name="user_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="employee_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="framework"/>
+                        </group>
+                        <separator/>
+                        <group colspan="4">
+                            <field name="route_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                        </group>
+                        <separator/>
+                        <group>
+                            <field name="departure_id"/>
+                        </group>
+                        <group>
+                            <field name="arrival_id"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Vehicle log fuel">
+                            <field name="fuel_log_ids" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}" nolabel="1"
+                                context="{'default_travel_id': active_id, 'default_operating_unit_id': operating_unit_id}">
+                              <tree decoration-info="state == 'confirmed'" decoration-success="state == 'approved'" decoration-danger="state == 'cancel'">
+                                    <field name="name"/>
+                                    <field name="employee_id"/>
+                                    <field name="vendor_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="price_total"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Advances">
+                            <field name="advance_ids" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"
+                                context="{'default_travel_id': active_id, 'default_operating_unit_id': operating_unit_id}"/>
+                        </page>
+                        <page string="Waybills">
+                            <group>
+                                <field name="waybill_ids" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}" nolabel="1" colspan="2">
+                                    <tree string="Waybills" decoration-info="state == 'confirmed'" decoration-success="state == 'approved'"
+                                        decoration-danger="state == 'cancel'">
+                                        <button name="action_approve" icon="gtk-go-forward" states="draft" string="Approve"
+                                            type="object"/>
+                                        <button name="action_confirm" icon="gtk-ok" states="approved" string="Confirm"
+                                            type="object"/>
+                                        <field name="state"/>
+                                        <field name="name"/>
+                                        <field name="date_order"/>
+                                        <field name="partner_id"/>
+                                        <field name="product_qty" sum="Product Quantity"/>
+                                        <field name="amount_untaxed" sum="Amount Untaxed"/>
+                                        <field name="amount_tax" sum="Taxes"/>
+                                        <field name="amount_total" sum="Total "/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Expense driver factor">
+                            <field name="driver_factor_ids" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}" context="{'default_category': 'driver'}"/>
+                        </page>
+                        <page string="History">
+                            <field name="event_ids" context="{'default_travel_id': active_id}"/>
+                            <group>
+                                <separator colspan="2" string="Notes"/>
+                                <field name="notes" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}" nolabel="1" colspan="2"/>
+                            </group>
+                        </page>
+                        <page string="Statistics">
+                            <group>
+                                <group>
+                                    <separator string="Distances (mi./kms)"/>
+                                    <newline/>
+                                    <field name="distance_route" readonly="1"/>
+                                    <field name="distance_loaded" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"/>
+                                    <field name="distance_empty" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"/>
+                                    <field name="distance_driver"/>
+                                    <field name="odometer" attrs="{'invisible': [('state', 'not in', ['done', 'closed'])]}"/>
+                                </group>
+                                <group>
+                                    <separator colspan="4" string="Fuel Efficiency"/>
+                                    <newline/>
+                                    <field name="fuel_efficiency_expected" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}" readonly="1"/>
+                                    <field name="fuel_efficiency_travel" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"/>
+                                    <field name="fuel_efficiency_extraction"/>
+                                </group>
+                            </group>
+                            <separator colspan="4" string="Date and Times"/>
+                            <group col="3">
+                                <group>
+                                    <field name="date_start" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"/>
+                                    <field name="date_start_real" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"/>
+                                </group>
+                                <group>
+                                    <field name="date_end"  attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"/>
+                                    <field name="date_end_real" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}"/>
+                                </group>
+                                <group>
+                                    <field name="travel_duration" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}" widget="float_time"/>
+                                    <field name="travel_duration_real" attrs="{'readonly': [('state', 'in', ('done', 'closed'))]}" widget="float_time"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" placeholder="Share a message..." widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="tms_travel_view_search" model="ir.ui.view">
+        <field name="name">tms.travel.search</field>
+        <field name="model">tms.travel</field>
+        <field name="arch" type="xml">
+            <search string="TMS Travels">
+                <filter name="filter_state_draft" domain="[('state', '=', 'draft')]" string="Pending"/>
+                <filter name="filter_state_progress" domain="[('state', '=', 'progress')]" string="In Progress"/>
+                <filter name="filter_state_done" domain="[('state', '=', 'done')]" string="Done"/>
+                <filter name="filter_state_closed" domain="[('state', '=', 'closed')]" string="Closed"/>
+                <filter name="filter_state_cancel" domain="[('state', '=', 'cancel')]" string="Cancelled"/>
+                <filter name="filter_state_not_cancel" domain="[('state', '!=', 'cancel')]" string="Not Cancelled"/>
+                <field name="name"/>
+                <field name="unit_id" string="Unit"/>
+                <field name="employee_id"/>
+                <field name="route_id"/>
+                <field name="departure_id"/>
+                <field name="arrival_id"/>
+                <field name="operating_unit_id"/>
+                <field name="trailer1_id"/>
+                <field name="dolly_id"/>
+                <field name="trailer2_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <filter name="group_by_unit_id" context="{'group_by': 'unit_id'}" string="Unit"/>
+                <filter name="group_by_employee_id" context="{'group_by': 'employee_id'}" string="Driver 1"/>
+                <filter name="group_by_departure_id" context="{'group_by': 'departure_id'}" string="Departure"/>
+                <filter name="group_by_arrival_id" context="{'group_by': 'arrival_id'}" string="Arrival"/>
+                <filter name="group_by_company_id" context="{'group_by': 'company_id'}" string="Company"/>
+                <filter name="group_by_operating_unit_id" context="{'group_by': 'operating_unit_id'}" string="Base"/>
+                <filter name="group_by_state" context="{'group_by': 'state'}" string="State"/>
+                <filter name="group_by_date" context="{'group_by': 'date'}" string="Date"/>
+                <filter name="group_by_date_start_real" context="{'group_by': 'date_start_real:day'}" string="Day Dispatched"/>
+                <filter name="group_by_date_end_real" context="{'group_by': 'date_end_real:day'}" string="Day Finished"/>
+                <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="tms_travel_view_gantt" model="ir.ui.view">
+        <field name="name">tms.travel.gantt</field>
+        <field name="model">tms.travel</field>
+        <field name="arch" type="xml">
+            <gantt
+                color="unit_id"
+                date_start="date_start"
+                date_stop="date_end"
+                default_group_by="unit_id"
+                consolidation="travel_duration"
+                string="Travels">
+                    <field name="name"/>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="tms_travel_view_calendar" model="ir.ui.view">
+        <field name="name">tms.travel.calendar</field>
+        <field name="model">tms.travel</field>
+        <field name="arch" type="xml">
+            <calendar color="state" date_start="date_start" date_stop="date_end" string="Travels">
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="employee_id"/>
+                <field name="arrival_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="tms_travel_view_kanban" model="ir.ui.view">
+        <field name="name">tms.travel.kanban</field>
+        <field name="model">tms.travel</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div
+                            t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+                                        oe_kanban_global_click_edit oe_semantic_html_override
+                                        oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                            <div class="oe_dropdown_kanban">
+                                <div class="oe_dropdown_toggle">
+                                    <span class="oe_e">#</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li>
+                                            <a type="delete">Delete</a>
+                                        </li>
+                                        <li>
+                                            <ul class="oe_kanban_colorpicker"
+                                                data-field="color"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                            <div t-attf-class="oe_kanban_content">
+                                Travel:
+                                <field name="name"/>
+                                <br/>
+                                Unit:
+                                <field name="unit_id"/>
+                                <br/>
+                                Driver:
+                                <field name="employee_id"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="tms_travel_view_graph" model="ir.ui.view">
+        <field name="name">tms.travel.graph</field>
+        <field name="model">tms.travel</field>
+        <field name="arch" type="xml">
+            <graph string="Travels" type="bar">
+                <field name="unit_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="tms_travel_report_view_tree" model="ir.ui.view">
+        <field name="name">tms.travel.tree</field>
+        <field name="model">tms.travel</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <tree string="Travels" decoration-info="state=='done'" decoration-success="state=='progress'" decoration-danger="state=='draft'"
+                decoration-muted="state=='cancel'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="unit_id" string="Unit"/>
+                <field name="trailer1_id"/>
+                <field name="dolly_id"/>
+                <field name="trailer2_id"/>
+                <field name="employee_id"/>
+                <field name="partner_ids" widget="many2many_tags"/>
+                <field name="waybill_ids" widget="many2many_tags"/>
+                <field name="departure_id"/>
+                <field name="arrival_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tms_travel_customer_view_tree" model="ir.ui.view">
+        <field name="name">tms.travel.tree</field>
+        <field name="model">tms.travel</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <tree string="Travels" decoration-info="state == 'done'" decoration-success="state == 'progress'" decoration-danger="state == 'draft'"
+                decoration-muted="state == 'cancel'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="unit_id" string="Unit"/>
+                <field name="trailer1_id"/>
+                <field name="dolly_id"/>
+                <field name="trailer2_id"/>
+                <field name="employee_id"/>
+                <field name="partner_ids" widget="many2many_tags"/>
+                <field name="waybill_ids" widget="many2many_tags"/>
+                <field name="route_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tms_travel_expense_view_form" model="ir.ui.view">
+        <field name="name">tms.travel.expense.form</field>
+        <field name="model">tms.travel</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <form string="Travels">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="operating_unit_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"/>
+                            <field name="kit_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"/>
+                            <field name="unit_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}" domain="[('fleet_type', '=', 'tractor')]"/>
+                            <field name="trailer1_id" attrs="{'required': ['|', ('dolly_id', '!=', False), ('trailer2_id', '!=', False)],
+                                'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                context="{'default_fleet_type': 'trailer'}" domain="[('fleet_type', '=', 'trailer'), ('id', '!=', trailer2_id)]"/>
+                            <field name="dolly_id" attrs="{'required': [('trailer2_id', '!=', False)],'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                context="{'default_fleet_type': 'dolly'}" domain="[('fleet_type', '=', 'dolly')]"/>
+                            <field name="trailer2_id" attrs="{'required': [('dolly_id', '!=', False)], 'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"
+                                context="{'default_fleet_type': 'trailer'}" domain="[('fleet_type', '=', 'trailer'), ('id', '!=', trailer1_id)]"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"/>
+                            <field name="user_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"/>
+                            <field name="employee_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"/>
+                            <field name="framework"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="route_id" attrs="{'readonly': [('state', 'in', ('progress', 'done', 'closed'))]}"/>
+                        </group>
+                        <group>
+                            <field name="departure_id"/>
+                        </group>
+                        <group>
+                            <field name="arrival_id"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Expense driver factor">
+                            <field name="driver_factor_ids" context="{'default_category': 'driver'}"/>
+                        </page>
+                        <page string="Waybills">
+                            <group>
+                                <field name="waybill_ids" nolabel="1" context="{'form_view_ref': 'tms.tms_waybill_expense_view_form'}">
+                                    <tree create="false">
+                                        <field name="name"/>
+                                        <field name="date_order"/>
+                                        <field name="partner_id"/>
+                                        <field name="amount_untaxed"/>
+                                        <field name="amount_tax"/>
+                                        <field name="amount_total"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tms_travel_action" model="ir.actions.act_window">
+        <field name="name">Travels</field>
+        <field name="res_model">tms.travel</field>
+        <field name="view_mode">tree,form,kanban,calendar,graph,gantt</field>
+    </record>
+
+    <record id="tms_travel_report_action" model="ir.actions.act_window">
+        <field name="name">Travels</field>
+        <field name="res_model">tms.travel</field>
+        <field name="view_mode">tree,form,gantt</field>
+        <field name="view_id" ref="tms_travel_report_view_tree"/>
+        <field name="context">{&quot;search_default_filter_state_progress&quot;:1, 'search_default_group_by_date_start_real': 1}</field>
+    </record>
+
+    <record id="tms_travel_instructions_letter_action" model="ir.actions.report">
+        <field name="name">Letter of Instructions</field>
+        <field name="model">tms.travel</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tms.travel_instructions_letter_template</field>
+        <field name="report_file">Letter of Instructions</field>
+        <field name="binding_model_id" ref="tms.model_tms_travel"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
+    </record>
+</odoo>

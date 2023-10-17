@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="waybill_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="lang" t-value="doc.operating_unit_id.partner_id.lang"/>
+                <t t-call="tms.waybill_report_body_template" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="waybill_report_body_template">
+        <t t-call="tms.report_pdf_external_layout">
+            <style type="text/css">.width {
+                    width: 13.8%;
+                    text-align: center;
+
+                }
+                .font {
+                    font-size: 8pt;
+                    color: #FFFFFF !important;
+                    background-color:#000000 !important;
+                    text-align: center;
+                    padding-bottom: 3px;
+                    padding-top: 1.5px;
+                }
+                .tel {
+                    font-size: 7pt;
+                    text-align: center;
+                    color: black;
+                    margin-top: 2.5px;
+                }
+                .letter {
+                    font-size: 9pt;
+                }
+                .line {
+                    font-size: 7pt;
+                }
+            </style>
+
+            <div class="page">
+                <div style="margin-bottom: 20px">
+                    <div class="row">
+                        <p class="text-center" style="color: black; font-size: 15px">
+                            <span>FEDERAL PUBLIC GENERAL AND SPECIALIZED CARGO SERVICE</span>
+                        </p>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-4">
+                            <img t-if="doc.company_id.logo" border="0" t-att-src="image_data_uri(doc.company_id.logo)" style="height:auto;max-width:100%;"/>
+                        </div>
+                        <div class="col-4" style="margin-right: 15px">
+                            <address style="text-align: center; font-weight: bold; color: black; font-size: 15px" t-field="doc.company_id.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: true}"/>
+                        </div>
+                        <div class="col-4">
+                            <div class="card" style="border-color: #333 !important;">
+                                <div class="card-header" style="color: #E0FFFF !important; text-align: center; font-size: 12px; font-weight: bold; color: #333 !important; background-color: #BDBDBD !important">
+                                    <p>CARTA PORTE -TRASLADO/BILL OF LADING: </p>
+                                </div>
+                                <div class="card-body" t-att-style="Panel">
+                                    <div style="font-size: 10px ">
+                                        <span t-field="doc.name"/>
+                                        <span style="font-weight: bold">DATE:</span>
+                                        <span t-field="doc.date_order"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-1 width" style="margin-right: 1%">
+                                <div class="font">COMANDOS MEXICALI, BC.</div>
+                                <div class="tel">TELS. (686) 568-0160 (686) 568-0163, 64 y 65</div>
+                            </div>
+                            <div class="col-1 width" style="margin-right: 1%">
+                                <div class="font">COMANDOS MEXICO, D.F.</div>
+                                <div class="tel">TELS. (55) 5870-1695</div>
+                            </div>
+                            <div class="col-1 width" style="margin-right: 1%">
+                                <div class="font">COMANDOS MONTERREY. N.L.</div>
+                                <div class="tel">TELS. (81) 8452-7339 (81) 8452-7343</div>
+                            </div>
+                            <div class="col-1 width" style="margin-right: 1%">
+                                <div class="font">COMANDOS TIJUANA, B.C.</div>
+                                <div class="tel">TELS. (664) 623-8043
+                                    <br/>
+                                    fax.(664) 623-8042
+                                </div>
+                            </div>
+                            <div class="col-1 width" style="margin-right: 1%">
+                                <div class="font">COMANDOS SHUTTLE</div>
+                                <div class="tel">TELS. (686) 580-1456</div>
+                            </div>
+                            <div class="col-1 width" style="margin-right: 1%">
+                                <div class="font">COMANDOS CULIACAN, SIN.</div>
+                                <div class="tel">TELS. (667) 225-4601</div>
+                            </div>
+                            <div class="col-1 width">
+                                <div class="font">COMANDOS GUADALAJARA, JAL</div>
+                                <div class="tel">TELS. (33) 3689-9662</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/>
+
+                    <table class="table table-condensed table-bordered line">
+                        <tr style="background-color: white">
+                            <td colspan="2">
+                                <address t-field="doc.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;vat&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: false}" style="color: black"/>
+                                <br/>
+                                <span t-field="doc.operating_unit_id.name" style="color: black"/>
+                                <span t-field="doc.partner_id.vat" style="color: black"/>
+                            </td>
+                        </tr>
+                        <tr style="background-color: white">
+                            <td>
+                                <span style="color: black; font-weight: bold">REMITENTE / FROM:</span>
+                                <address t-field="doc.departure_address_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;vat&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: false}" style="color: black"/><br/>
+                                <span style="color: black; font-weight: bold">ORIGEN / ORIGIN:</span>
+                                <span t-field="doc.upload_point" style="color: black"/>
+                                <br/><span style="color: black; font-weight: bold">DATE OF TIME OF DELIVERY</span>
+                                <span t-field="doc.date_end" style="color: black"/>
+                            </td>
+                            <td>
+                                <span style="color: black; font-weight: bold">DESTINATARIO / DESCONSIGNED TO:</span>
+                                <address t-field="doc.arrival_address_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: true}" style="color: black"/>
+                                <br/>
+                                <span style="color: black; font-weight: bold">DESTINO / DESTINATION: </span>
+                                <span t-field="doc.download_point" style="color: black"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-condensed table-borderless">
+                        <thead>
+                            <tr style="text-align:left; background-color: white; border-bottom: 1px solid">
+                                <th style="color: black; font-size: 11px">Transportable</th>
+                                <th style="color: black; font-size: 11px">Description</th>
+                                <th style="color: black; font-size: 11px">Weight</th>
+                                <th style="color: black; font-size: 11px">Unit Price</th>
+                                <th style="color: black; font-size: 11px">Concept</th>
+                                <th style="color: black; font-size: 11px">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-as="concept" t-foreach="doc.waybill_line_ids">
+                                <t t-set="name" t-value="concept.product_id.tms_product_category"/>
+                                <t t-if="name == 'freight'">
+                                    <tr t-as="line" t-foreach="doc.transportable_line_ids" style="background-color: white">
+                                        <td>
+                                            <span t-field="line.transportable_id.name" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td>
+                                            <t t-set="extradata" t-value="doc.waybill_extradata_ids"/>
+                                            <t t-if="extradata">
+                                                <t t-as="extra" t-foreach="extradata">
+                                                    <span t-field="extra.type_id.name" style="color: black; font-size: 10.5px"/>
+:
+                                                    <span t-field="extra.value_extra" style="color: black; font-size: 10.5px"/>
+                                                    <br/>
+                                                </t>
+                                            </t>
+                                            <t t-if="not extradata">
+                                                <span t-esc="line.name" style="color: black; font-size: 10.5px"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line.quantity" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="doc.customer_factor_ids.fixed_amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <span t-esc="concept.product_id.name" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="concept.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="name != 'freight'">
+                                    <tr>
+                                        <td>
+                                            <span t-field="concept.product_id.name" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="concept.name" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="concept.product_qty" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="concept.unit_price" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <span t-esc="concept.product_id.name" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="concept.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}" style="color: black; font-size: 10.5px"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="row line">
+                        <div class="col-9">
+                            <span style="color: black">OBSERVATIONS:</span>
+                            <span style="color: black" t-field="doc.notes"/>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <span style="color: black; font-weight: bold; text-align: left">SUBTOTAL: </span>
+                                </div>
+                                <div class="col-6" style="text-align: right">
+                                    <span style="color: black" t-esc="doc.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}"/>
+                                </div>
+                            </div>
+
+                            <t t-foreach="doc.tax_line_ids" t-as="tax">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span style="color: black; font-weight: bold; text-align: left" t-esc="tax.tax_id.name"/>
+                                        <span style="color: black; font-weight: bold; text-align: left">: </span>
+                                    </div>
+                                    <div class="col-6" style="text-align: right">
+                                        <span style="color: black" t-esc="tax.tax_amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}"/>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <div class="row" style="border-top: 1px solid; margin-top: 10px">
+                                <div class="col-6">
+                                    <span style="color: black; font-weight: bold; text-align: left">TOTAL: </span>
+                                </div>
+                                <div class="col-6" style="text-align: right">
+                                    <span style="color: black" t-esc="doc.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.currency_id}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row line">
+                        <div class="col-8" style="color: black">THIS DOCUMENT DOES NOT BE ONCE OF BILL, IT IS FOR TRANSPORTATION EFFECTS ONLY. THE CONDITIONS OF THE TRANSPORT CONTRACT OF THIS LETTER PORTE ARE PRINTED ON THE REVERSE OF THE ORIGINAL AND ITS COPIES.
+                            THE UNAUTHORIZED REPRODUCTION OF THIS PROOF CONSTITUTES A CRIME IN THE TERMS OF THE TAX PROVISIONS.
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row line">
+                        <div class="col-8">
+                            <span style="color: black; font-weight: bold">AMOUNT: </span>
+                            <span style="color: black" t-esc="'*( %s )*' % ( doc._amount_to_text(doc.amount_total, doc.currency_id.name, doc.partner_id.lang))"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row line">
+                        <div class="col-5">
+                            <span style="color: black; font-weight: bold">CUSTOMS CLEARANCES</span><br/>
+                            <t t-as="customs" t-foreach="doc.custom_ids">
+                                <span style="color: black" t-field="customs.customs"/>
+                            </t>
+                            <br/>
+                            <div>
+                                <t t-set="count" t-value="0"/>
+                                <t t-as="unit" t-foreach="doc.travel_ids">
+                                    <p t-if="count == 0">
+                                        <span style="color: black">CARRO / TRUCKS: </span>
+                                        <span style="color: black" t-field="unit.unit_id.name"/>
+/
+                                        <span style="color: black" t-field="unit.unit_id.license_plate"/>
+                                        <br/>
+                                        <span style="color: black">REMOLQUE / TRAILER: </span>
+                                        <span style="color: black" t-field="unit.trailer1_id.name"/>
+/
+                                        <span style="color: black" t-field="unit.trailer1_id.license_plate"/>
+                                        <br/>
+                                        <t t-if="unit.dolly_id">
+                                            <span style="color: black">DOLLY:</span>
+                                            <span style="color: black" t-field="unit.dolly_id.name"/>
+/
+                                            <span style="color: black" t-field="unit.dolly_id.license_plate"/>
+                                            <br/>
+                                        </t>
+                                        <t t-if="unit.dolly_id">
+                                            <span style="color: black">REMOLQUE 2/ TRAILER 2: </span>
+                                            <span style="color: black" t-field="unit.trailer2_id.name"/>
+/
+                                            <span style="color: black" t-field="unit.trailer2_id.license_plate"/>
+                                            <br/>
+                                        </t>
+                                        <span style="color: black">CONDUCTOR / DRIVER: </span>
+                                        <span style="color: black" t-field="unit.employee_id.name"/>
+                                    </p>
+                                    <t t-esc="count+1"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <span style="color: black; font-weight: bold">DOCUMENT: </span>
+                            <span style="color: black" t-esc="doc.user_id.name"/>
+                        </div>
+                        <div class="col-3 text-center">
+                            <span style="color: black; font-weight: bold">I GO CONFIRMED</span><br/><br/><br/><br/>
+                            <hr/>
+                            <span style="color: black; font-weight: bold">SIGNATURE OF CONSIGNER</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="text-center" style="border-top: -1px solid black; font-size: 9px">
+                    <p style="color: black" class="navbar-text">"Taxpayer of the Tax Regime: COORDINATES REGIME"</p>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

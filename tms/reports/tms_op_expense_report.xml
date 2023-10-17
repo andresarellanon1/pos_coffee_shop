@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="op_expense_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="lang" t-value="doc.operating_unit_id.partner_id.lang"/>
+                <t t-call="tms.op_expense_report_body_template" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="op_expense_report_body_template">
+        <t t-call="tms.report_pdf_external_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=lang)"/>
+            <div class="page">
+                <div class="row">
+                    <div class="text-center">
+                        <span style="font-size: 15.5px; color: black; font-weight: bold">Expense: </span>
+                        <span style="font-size: 15px; color: black" t-field="doc.name"/>
+                    </div>
+                </div>
+
+                <div style="border: 1px solid black; margin-bottom: 20px">
+                    <div class="row" style="margin-left: 10px">
+                        <div class="col-6">
+                            <span style="color: black; font-size: 15px; font-weight: bold">Driver: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-field="doc.employee_id.employee_number"/>
+                            <span style="color: black; font-size: 13px" t-field="doc.employee_id"/>
+                        </div>
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold">Vat: </span>
+                        </div>
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold">SSN: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-field="doc.employee_id.ssnid"/>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 10px">
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold">Date: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-field="doc.date"/>
+                        </div>
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold; padding: -5px">Departure: </span><br/>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-field="doc.start_date"/>
+                        </div>
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold; padding: -5px">Arrival: </span><br/>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-field="doc.end_date"/>
+                        </div>
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold">Days: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-esc="doc._add_day()"/>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 10px">
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold">Unit: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-field="doc.unit_id"/>
+                        </div>
+                        <div class="col-6"/>
+                        <div class="col-3">
+                            <span style="color: black; font-size: 15px; font-weight: bold">Loaded Kms: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-esc="sum(x.distance_route for x in doc.travel_ids)"/>
+                            <br/><span style="color: black; font-size: 15px; font-weight: bold">Empty Kms: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-esc="sum(x.distance_empty for x in doc.travel_ids)"/>
+                            <br/><span style="color: black; font-size: 15px; font-weight: bold">Traveled Kms: </span>
+                            <span style="color: black; font-size: 13px; margin-left: 5px" t-esc="int(doc.distance_real)"/>
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-set="other_income" t-value="doc.get_other_income()"/>
+                <t t-set="tax_n_untax_amount" t-value="doc.get_untax_n_tax_amount()"/>
+
+                <div class="row">
+                    <div class="col-5">
+                        <span style="font-size: 15px; color: black; font-weight: bold">ITINERARY</span>
+
+                        <div>
+                            <ol>
+                                <t t-as="travel" t-foreach="doc.travel_ids">
+                                    <li style="color: black; font-size: 14px">
+                                        <span t-field="travel.route_id"/>
+                                    </li>
+                                </t>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="col-7" style="text-transform: uppercase;">
+                        <span style="font-size: 15px; color: black; font-weight: bold">EXPENSES</span>
+
+                        <div class="row">
+                            <div class="col-10">
+                                <span style="font-size: 12px; color: black; font-weight: bold">Driver salary:</span>
+                            </div>
+                            <div class="col-2" style="text-align: right">
+                                <span style="color: black; font-size: 13px; text-align: right" t-esc="'%.2f' % doc.amount_salary"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-10">
+                                <span style="font-size: 12px; color: black; font-weight: bold; text-align: right">Other income:</span>
+                            </div>
+                            <div class="col-2" style="text-align: right">
+                                <t t-if="other_income == 0.0">
+                                    <span style="text-align: right; color: black; font-size: 13px">0.00</span>
+                                </t>
+                                <t t-if="other_income != 0.0">
+                                    <span/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <t t-foreach="doc.get_other_income(with_name=True)" t-as="income">
+                            <div class="row">
+                                <div class="col-10">
+                                    <span style="color: black; font-size: 11px" t-esc="income_value['name']"/>
+                                </div>
+                                <div class="col-2" style="text-align: right">
+                                    <span style="color: black; font-size: 11px" t-esc="'%.2f' % income_value['price']"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <br/>
+
+                <table class="table table-borderless" style="margin-bottom: 20px">
+                    <tr style="background-color: white; border-bottom: 1px solid; border-top: 1px solid">
+                        <th style="color: black; font-size: 11.5px">No.</th>
+                        <th style="color: black; font-size: 11.5px">Name</th>
+                        <th style="text-align: center; color: black; font-size: 11.5px">Date</th>
+                        <th style="color: black; font-size: 11.5px">No. Guide</th>
+                        <th style="color: black; font-size: 11.5px">Trailer</th>
+                    </tr>
+
+                    <t t-set="lines_and_totals" t-value="doc.get_travel_lines()"/>
+                    <t t-set="ltotals" t-value="lines_and_totals['totals']"/>
+
+                    <tr t-as="line" t-foreach="lines_and_totals['lines']">
+                        <td>
+                            <span style="color: black; font-size: 11px" t-esc="line_value['name']"/>
+                        </td>
+                        <td>
+                            <span style="color: black; font-size: 11px" t-esc="line_value['partner_id']"/>
+                        </td>
+                        <td>
+                            <span style="color: black; font-size: 11px" t-esc="line_value['date']"/>
+                        </td>
+                        <td>
+                            <span style="color: black; font-size: 11px" t-esc="line_value['name']"/>
+                        </td>
+                        <td>
+                            <span style="color: black; font-size: 11px" t-esc="line_value['trailer_id']"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="container row">
+                    <div class="col-6" style="margin-right: 30px">
+                        <div class="text-center" style="font-size: 15px; color: black; margin-bottom: 5px">EXPENSE SUMMARY</div>
+                        <div class="row" style="margin-bottom: 15px">
+                            <div class="col-6">
+                                <span style="font-size: 16px; color: black; font-weight: bold">Salary</span>
+                            </div>
+                            <div class="col-6" style="text-align: right">
+                                <span style="color: black; font-size: 15px" t-options="{&quot;widget&quot;: &quot;monetary&quot;}" t-field="doc.amount_salary"/>
+                            </div>
+                        </div>
+
+                        <div class="list-group" style="margin-bottom: 15px">
+                            <h5 class="list-group-item-heading">
+                                <span style="font-size: 16px; color: black; font-weight: bold">Salary Discounts</span>
+                            </h5>
+                            <div class="list-group-item-text" style="font-size: 12px;">
+                                <t t-as="discount" t-foreach="doc.expense_line_ids">
+                                    <t t-set="line" t-value="discount.line_type"/>
+                                    <t t-if="(line == 'salary_discount') and (discount.product_id.default_code not in ['38', '71', '73'])">
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <span style="font-size: 13px; color: black" t-esc="discount.name"/>
+                                            </div>
+                                            <div class="col-3" style="text-align: right">
+                                                <span style="font-size: 13px; color: black" t-esc="discount.price_total"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="list-group" style="margin-bottom: 15px">
+                            <h5 class="list-group-item-heading">
+                                <span style="font-size: 16px; color: black; font-weight: bold">Salary Retentions</span>
+                            </h5>
+                            <div class="list-group-item-text" style="font-size: 11px; margin-left: 15px">
+                                <t t-as="discount" t-foreach="doc.expense_line_ids">
+                                    <t t-set="line" t-value="discount.line_type"/>
+                                    <t t-if="line == 'salary_retention'">
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <span style="font-size: 13px; color: black" t-esc="discount.name"/>
+                                            </div>
+                                            <div class="col-3" style="text-align: right">
+                                                <span style="font-size: 13px; color: black" t-esc="discount.price_total"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 15px">
+                            <div class="col-6">
+                                <span style="font-size: 16px; color: black; font-weight: bold">ISPT</span>
+                            </div>
+                            <div class="col-6" style="text-align: right">
+                                <span style="color: black; font-size: 15px" t-esc="doc.get_amount_ispt()"/>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 15px">
+                            <div class="col-6">
+                                <span style="font-size: 16px; color: black; font-weight: bold">Per Diem</span>
+                            </div>
+                            <div class="col-6" style="text-align: right">
+                                <span style="color: black; font-size: 15px" t-esc="doc.get_expense()"/>
+                            </div>
+                        </div>
+
+                        <div class="list-group" style="margin-bottom: 15px">
+                            <h5 class="list-group-item-heading">
+                                <span style="font-size: 16px; color: black; font-weight: bold">Advances</span>
+                            </h5>
+                            <div class="list-group-item-text" style="font-size: 11px">
+                                <t t-as="advance" t-foreach="doc.advance_ids">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <span style="font-size: 13px; color: black" t-field="advance.name"/>
+                                        </div>
+                                        <div class="col-3" style="text-align: right">
+                                            <span style="font-size: 13px; color: black" t-esc="advance.amount"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6"/>
+                            <div class="col-6 text-center">
+                                <hr/>
+                                <span style="font-size: 13px; color: black">SALARY</span><br/>
+                                <span style="font-size: 13px; color: black; text-align: right; margin-left: 80px;" t-field="doc.amount_balance"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="list-group" style="margin-bottom: 60px">
+                            <h5 class="list-group-item-heading">
+                            </h5>
+                            <div class="list-group-item-text">
+                            </div>
+                        </div>
+
+                        <div class="list-group">
+                            <div class="list-group-item-text">
+                                <div class="row">
+                                    <div class="col-6 text-center">
+                                        <hr style="width: 85%"/>
+                                        <span style="color: black; font-size: 14px">Driver</span>
+                                    </div>
+                                    <div class="col-6 text-center">
+                                        <hr style="width: 85%"/>
+                                        <span style="color: black; font-size: 14px">Reviewed by</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+
+        <t t-set="Panel_Header" t-value="'color:#000000; text-align:left;font-size:10px;background-color:f0f0f0;border-color: #333; padding-left:5; padding-right:0; padding-top:5; padding-bottom:0;'"/>
+    </template>
+</odoo>

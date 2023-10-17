@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="tms_waybill_rule" model="ir.rule">
+        <field name="name">Waybill Rule</field>
+        <field name="model_id" ref="model_tms_waybill"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', [user.company_id.id])]</field>
+    </record>
+
+    <record id="tms_travel_rule" model="ir.rule">
+        <field name="name">Travel Rule</field>
+        <field name="model_id" ref="model_tms_travel"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', [user.company_id.id])]</field>
+    </record>
+
+    <record id="tms_advance_rule" model="ir.rule">
+        <field name="name">Advance Rule</field>
+        <field name="model_id" ref="model_tms_advance"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', [user.company_id.id])]</field>
+    </record>
+
+    <record id="fleet_vehicle_log_fuel_rule" model="ir.rule">
+        <field name="name">Fuel Log Rule</field>
+        <field name="model_id" ref="model_fleet_vehicle_log_fuel"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', [user.company_id.id])]</field>
+    </record>
+
+    <record id="tms_expense_loan_rule" model="ir.rule">
+        <field name="name">Loan Rule</field>
+        <field name="model_id" ref="model_tms_expense_loan"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', [user.company_id.id])]</field>
+    </record>
+
+    <record id="tms_expense_rule" model="ir.rule">
+        <field name="name">Expense Rule</field>
+        <field name="model_id" ref="model_tms_expense"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', [user.company_id.id])]</field>
+    </record>
+</odoo>

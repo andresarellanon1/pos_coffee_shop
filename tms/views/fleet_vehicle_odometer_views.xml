@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherited_fleet_vehicle_odometer_tms_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.odometer.tree.tms</field>
+        <field name="model">fleet.vehicle.odometer</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="vehicle_id" position="after">
+                <field invisible="1" name="last_odometer"/>
+                <field name="current_odometer"/>
+                <field name="distance"/>
+                <field name="travel_id"/>
+            </field>
+
+            <xpath expr="//field[@name='vehicle_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit':True, 'no_quick_create':True}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='driver_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit':True, 'no_quick_create':True}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

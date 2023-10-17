@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tms_waybill_line_view_form" model="ir.ui.view">
+        <field name="name">tms.waybill.line.form</field>
+        <field name="model">tms.waybill.line</field>
+        <field name="arch" type="xml">
+            <form string="Waybill Line">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="price_subtotal"/>
+                            <field name="waybill_id"/>
+                            <field name="discount"/>
+                            <field name="product_qty"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="tax_amount"/>
+                            <field name="unit_price"/>
+                            <field name="product_id"/>
+                        </group>
+
+                        <group colspan="2">
+                            <field name="tax_ids" colspan="2">
+                                <tree string="Taxes">
+                                    <field name="name" string="Tax Name"/>
+                                    <field name="type_tax_use" string="Type Tax"/>
+                                    <field name="description" string="Tax Tag"/>
+                                </tree>
+                            </field>
+                            <field name="name" colspan="2"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
