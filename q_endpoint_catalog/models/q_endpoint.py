@@ -18,9 +18,9 @@ class QEndpoint(models.Model):
         ('PUT', 'PUT'),
         ('DELETE', 'DELETE')
     ], 'HTTP Method', required=True, help='Select the HTTP method for the REST request.')
-    body = fields.Many2many('q_endpoint_catalog.request_body', string='Request Body', help='Optional. Define the actual attributes and values of the request body.')
-    response = fields.Many2many('q_endpoint_catalog.response_attributes', string='Response Attributes', help='Optional. Define the expected attributes of the response.')
-    headers = fields.Many2many('q_endpoint_catalog.headers', string='Headers', help='Optional. Manage a list of headers to include in the request.')
+    body = fields.Many2many('q_endpoint_catalog.request_body', relation='endpoint_body', column1='endpoint_id', column2='body_id', string='Request Body', help='Optional. Define the actual attributes and values of the request body.')
+    response = fields.Many2many('q_endpoint_catalog.response_attributes', relation='endpoint_response', column1='endpoint_id', column2='response_id', string='Response Attributes', help='Optional. Define the expected attributes of the response.')
+    headers = fields.Many2many('q_endpoint_catalog.headers', relation='header_body', column1='endpoint_id', column2='header_id', string='Headers', help='Optional. Manage a list of headers to include in the request.')
 
     @api.model
     def send_request(self, record_id, custom_headers=None, custom_attributes=None):
