@@ -25,7 +25,7 @@
                         <field name="method" />
                         <field name="body" />
                         <field name="response" />
-                        <field name="headers" />
+                        <field name="headers" nolabel="1" />
                     </group>
                 </sheet>
             </form>
