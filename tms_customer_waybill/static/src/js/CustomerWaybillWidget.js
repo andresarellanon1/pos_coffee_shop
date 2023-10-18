@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { Component, useState } from "@web/core";
+import { Component, useState } from '@odoo/owl';
 
-class RayderCustomerWaybillWidget extends Component {
+class CustomerWaybillWidget extends Component {
     setup() {
         this.state = useState({
             // Define your component's state here
@@ -12,5 +12,5 @@ class RayderCustomerWaybillWidget extends Component {
     // Add your component logic here
 }
 
-RayderCustomerWaybillWidget.template = "tms_customer_waybill.customer_waybill_widget";
-export default RayderCustomerWaybillWidget;
+CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
+export default CustomerWaybillWidget;
