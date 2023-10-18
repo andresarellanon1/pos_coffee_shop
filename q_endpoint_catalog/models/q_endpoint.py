@@ -21,7 +21,7 @@ class QEndpoint(models.Model):
     body = fields.Many2many('q_endpoint_catalog.request_body', relation='endpoint_body', column1='endpoint_id', column2='body_id', string='Request Body', help='Optional. Define the actual attributes and values of the request body.')
     response = fields.Many2many('q_endpoint_catalog.response_attributes', relation='endpoint_response', column1='endpoint_id', column2='response_id', string='Response Attributes', help='Optional. Define the expected attributes of the response.')
     headers = fields.Many2many('q_endpoint_catalog.headers', relation='endpoint_header', column1='endpoint_id', column2='header_id', string='Headers', help='Optional. Manage a list of headers to include in the request.')
-    string_tags = fields.Many2many('q_endpoint_catalog.string_tag', relation='endpoint_string_tags', column1='endpoint_id', column2='string_tag_id', string='String Tags', help='String tags associated with this endpoint.')
+    tags = fields.Many2many('q_endpoint_catalog.tag', relation='endpoint_tags', column1='endpoint_id', column2='tag_id', string='Tags', help='Tags associated with this endpoint.')
 
     @api.model
     def send_request(self, record_id, custom_headers=None, custom_attributes=None):
@@ -131,8 +131,8 @@ class QEndpointRequestBody(models.Model):
     value = fields.Text('Value', help='Enter the value of the body attribute.')
 
 
-class StringTag(models.Model):
-    _name = 'q_endpoint_catalog.string_tag'
-    _description = 'String Tags'
+class Tag(models.Model):
+    _name = 'q_endpoint_catalog.tag'
+    _description = 'Tags'
 
     name = fields.Char('Tag Name', required=True)
