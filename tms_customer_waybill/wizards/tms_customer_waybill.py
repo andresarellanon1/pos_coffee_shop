@@ -16,7 +16,7 @@ class CustomerWaybillWizard(models.TransientModel):
         if self.contact and self.endpoint:
             custom_headers = []
             custom_attributes = []
-            response = self.endpoint.send_request(custom_headers=custom_headers, custom_attributes=custom_attributes)
+            response = self.env['q_endpoint_catalog.q_endpoint'].send_request(self.endpoint.id, custom_headers=custom_headers, custom_attributes=custom_attributes)
             if not isinstance(response, list):
                 raise ValueError("The JSON response is not a list.")
             self.remote_waybills = response if response else []
