@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="template" name="Custom Wizard Template">
-        <t t-name="tms_customer_waybill.rayder_customer_waybill_widget">
+        <t t-name="tms_customer_waybill.customer_waybill_widget">
             <div>
-                tms_customer_waybill.rayder_customer_waybill_widget
+                texto de prueba
             </div>
         </t>
     </template>
