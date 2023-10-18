@@ -15,7 +15,7 @@
         'views/menus.xml',
     ],
     'assets': {
-        'tms_customer_waybill.assets': [
+        'web.assets_common': [
             'tms_customer_waybill/static/src/xml/*.xml',
             'tms_customer_waybill/static/src/js/*.js',
             'tms_customer_waybill/static/src/css/dist/*.css',  # tailwind generated
