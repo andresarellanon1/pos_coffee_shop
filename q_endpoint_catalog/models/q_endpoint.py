@@ -35,8 +35,8 @@ class QEndpoint(models.Model):
         :param custom_attributes: An array of custom body attributes as key-value pairs.
         :type custom_attributes: list of dict
 
-        :return: A status message indicating success or an error message.
-        :rtype: str
+        :return: The response data as a JSON object, or an error message.
+        :rtype: dict or str
         """
         record = self.browse(record_id)
         headers = {}
@@ -59,6 +59,9 @@ class QEndpoint(models.Model):
                 for attribute in custom_attributes:
                     request_data[attribute['key']] = attribute['value']
             response = methods[record.method](record.url, headers=headers, data=json.dumps(request_data))
+            if response.status_code != 200:
+                return f"HTTP Error: {response.status_code} - {response.reason}"
+
             response_data = response.json()
             for attr in record.response:
                 if attr.name in response_data:
@@ -73,15 +76,13 @@ class QEndpoint(models.Model):
                     }.get(attr_type, None)
                     if data_type is not None and not isinstance(response_data[attr.name], data_type):
                         return f"Attribute '{attr.name}' is not of type '{attr_type}'."
-            return response_data
+            return response_data or {}
         except requests.exceptions.RequestException as e:
             logger.error(e)
             return f"Request Error: {str(e)}"
         except (json.JSONDecodeError, ValueError) as e:
             logger.error(e)
             return f"Type Safety Error: {str(e)}"
-        # Example usage from another module:
-        # q_endpoint_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(record_id, headers=[{'Authorization': 'Bearer Token'}], body_attributes=[{'name': 'new_attr', 'value': 'new_value'}])
 
     @api.model
     def get_endpoint_ids_by_contact_name(self, contact_name):

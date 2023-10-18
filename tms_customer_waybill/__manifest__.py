@@ -5,7 +5,7 @@
     'description': 'Consumes q_endpoints to perform REST actions on TMS Waybills for customer apis.',
     'author': 'Quadro Soluciones',
     'images': [],
-    'depends': ['q_endpoint_catalog', 'tms'],
+    'depends': ['base', 'contacts', 'q_endpoint_catalog', 'tms'],
     'installable': True,
     'application': True,
     'data': [
