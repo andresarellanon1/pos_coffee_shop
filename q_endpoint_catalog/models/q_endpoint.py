@@ -20,7 +20,8 @@ class QEndpoint(models.Model):
     ], 'HTTP Method', required=True, help='Select the HTTP method for the REST request.')
     body = fields.Many2many('q_endpoint_catalog.request_body', relation='endpoint_body', column1='endpoint_id', column2='body_id', string='Request Body', help='Optional. Define the actual attributes and values of the request body.')
     response = fields.Many2many('q_endpoint_catalog.response_attributes', relation='endpoint_response', column1='endpoint_id', column2='response_id', string='Response Attributes', help='Optional. Define the expected attributes of the response.')
-    headers = fields.Many2many('q_endpoint_catalog.headers', relation='header_body', column1='endpoint_id', column2='header_id', string='Headers', help='Optional. Manage a list of headers to include in the request.')
+    headers = fields.Many2many('q_endpoint_catalog.headers', relation='endpoint_header', column1='endpoint_id', column2='header_id', string='Headers', help='Optional. Manage a list of headers to include in the request.')
+    string_tags = fields.Many2many('q_endpoint_catalog.string_tag', relation='endpoint_string_tags', column1='endpoint_id', column2='string_tag_id', string='String Tags', help='String tags associated with this endpoint.')
 
     @api.model
     def send_request(self, record_id, custom_headers=None, custom_attributes=None):
@@ -128,3 +129,10 @@ class QEndpointRequestBody(models.Model):
 
     name = fields.Char('Attribute Name', required=True)
     value = fields.Text('Value', help='Enter the value of the body attribute.')
+
+
+class StringTag(models.Model):
+    _name = 'q_endpoint_catalog.string_tag'
+    _description = 'String Tags'
+
+    name = fields.Char('Tag Name', required=True)

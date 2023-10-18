@@ -13,5 +13,4 @@ class RayderCustomerWaybillWidget extends Component {
 }
 
 RayderCustomerWaybillWidget.template = "tms_customer_waybill.rayder_customer_waybill_widget";
-
 export default RayderCustomerWaybillWidget;

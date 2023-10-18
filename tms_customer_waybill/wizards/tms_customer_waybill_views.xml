@@ -4,19 +4,22 @@
         <field name="name">custom.wizard.form</field>
         <field name="model">tms_customer_waybill.customer_waybill_wizard</field>
         <field name="arch" type="xml">
-            <form string="Customer Waybill">
+            <form string="Customer">
                 <group>
-                    <field name="customer" />
+                    <field name="contact" required="1" />
+                    <field name="endpoint" required="1" />
                 </group>
-                <t t-if="widget.customer === 'customer_1'">
-                    <t t-raw="widget.RayderCustomerWaybillWidget.render()" />
-                </t>
-                <t t-elif="widget.customer === 'customer_2'">
-                    <t t-raw="widget.your_module_custom_widget_2.render()" />
-                </t>
-                <t t-elif="widget.customer === 'customer_3'">
-                    <t t-raw="widget.your_module_custom_widget_3.render()" />
-                </t>
+                <group string="Customer">
+                    <t t-if="widget.customer === 'customer_1'">
+                        <t t-component="customer_tms_waybill.RayderCustomerWaybillWidget" />
+                    </t>
+                    <t t-elif="widget.customer === 'customer_2'">
+                        <t t-component="customer_tms_waybill.RayderCustomerWaybillWidget" />
+                    </t>
+                    <t t-elif="widget.customer === 'customer_3'">
+                        <t t-component="customer_tms_waybill.RayderCustomerWaybillWidget" />
+                    </t>
+                </group>
                 <footer>
                     <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
@@ -24,5 +27,3 @@
         </field>
     </record>
 </odoo>
-
-
