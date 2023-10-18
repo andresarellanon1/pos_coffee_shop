@@ -10,15 +10,7 @@
                     <field name="endpoint" required="1" />
                 </group>
                 <group string="Customer">
-                    <t t-if="widget.customer === 'customer_1'">
-                        <t t-component="customer_tms_waybill.RayderCustomerWaybillWidget" />
-                    </t>
-                    <t t-elif="widget.customer === 'customer_2'">
-                        <t t-component="customer_tms_waybill.RayderCustomerWaybillWidget" />
-                    </t>
-                    <t t-elif="widget.customer === 'customer_3'">
-                        <t t-component="customer_tms_waybill.RayderCustomerWaybillWidget" />
-                    </t>
+                    <t t-component="customer_tms_waybill.CustomerWaybillWidget" />
                 </group>
                 <footer>
                     <button string="Cancel" class="btn-secondary" special="cancel" />
