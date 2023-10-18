@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+import json
 
 
 class CustomerWaybillWizard(models.TransientModel):
@@ -13,11 +14,16 @@ class CustomerWaybillWizard(models.TransientModel):
 
     @api.depends('contact', 'endpoint')
     def _compute_remote_waybills(self):
-        self.remote_waybills = []
+        self.remote_waybills = json.dumps([])
         if self.contact and self.endpoint:
             custom_headers = []
             custom_attributes = []
             response = self.env['q_endpoint_catalog.q_endpoint'].send_request(self.endpoint.id, custom_headers=custom_headers, custom_attributes=custom_attributes)
-            if not isinstance(response, list):
-                raise ValueError("The JSON response is not a list.")
-            self.remote_waybills = response
+            try:
+                response_data = json.loads(response)
+                if isinstance(response_data, list):
+                    self.remote_waybills = response
+                else:
+                    raise ValueError("The JSON response is not a list.")
+            except (json.JSONDecodeError, ValueError):
+                raise ValueError("Invalid JSON response or not a list.")

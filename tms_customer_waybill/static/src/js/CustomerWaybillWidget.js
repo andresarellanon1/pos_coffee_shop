@@ -15,4 +15,5 @@ export class CustomerWaybillWidget extends AbstractField {
 }
 
 CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
+CustomerWaybillWidget.supportedFieldTypes = ['json']
 fieldRegistry.add("customer_waybill_widget", CustomerWaybillWidget);
