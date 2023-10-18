@@ -76,7 +76,7 @@ class QEndpoint(models.Model):
                     }.get(attr_type, None)
                     if data_type is not None and not isinstance(response_data[attr.name], data_type):
                         return f"Attribute '{attr.name}' is not of type '{attr_type}'."
-            return response_data or {}
+            return response_data or [{}]
         except requests.exceptions.RequestException as e:
             logger.error(e)
             return f"Request Error: {str(e)}"
