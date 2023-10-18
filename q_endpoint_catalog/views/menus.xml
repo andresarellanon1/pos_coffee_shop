@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_q_endpoint" name="QEndpoint"
+        action="q_endpoint_catalog_menu_action" sequence="10"
+        web_icon="q_endpoint_catalog,static/description/icon.png" />
+    <menuitem id="menu_q_endpoint_response_list" name="Response Attributes"
+        parent="menu_q_endpoint" action="action_q_endpoint_response_list" sequence="10" />
+    <menuitem id="menu_q_endpoint_request_body_list" name="Request Body"
+        parent="menu_q_endpoint" action="action_q_endpoint_request_body_list" sequence="20" />
+    <menuitem id="menu_q_endpoint_headers_list" name="Headers" parent="menu_q_endpoint"
+        action="action_q_endpoint_headers_list" sequence="30" />
+</odoo>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="q_endpoint_headers_list_view" model="ir.ui.view">
         <field name="name">q_endpoint_headers.list</field>
@@ -23,9 +24,4 @@
         </field>
     </record>
 
-    <record id="action_q_endpoint_headers_list" model="ir.actions.act_window">
-        <field name="name">Headers</field>
-        <field name="res_model">q_endpoint_catalog.headers</field>
-        <field name="view_mode">tree,kanban,form</field>
-    </record>
 </odoo>

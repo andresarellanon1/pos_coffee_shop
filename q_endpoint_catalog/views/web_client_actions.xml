@@ -1,9 +1,0 @@
-<odoo>
-    <data>
-        <record id="action_q_endpoint_catalog" model="ir.actions.client">
-            <field name="name">Q Endpoint Catalog</field>
-            <field name="tag">q_endpoint_catalog_menu</field>
-            <field name="context">{'menu_id': 'menu_q_endpoint_catalog'}</field>
-        </record>
-    </data>
-</odoo>

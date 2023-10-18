@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_open_customer_waybill_wizard" model="ir.actions.act_window">
+        <field name="name">Open Customer Waybill Wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">tms_customer_waybill.customer_waybill_wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="tms_customer_waybill_wizard_view" />
+    </record>
+</odoo>

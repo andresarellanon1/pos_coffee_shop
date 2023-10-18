@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="q_endpoint_request_body_list_view" model="ir.ui.view">
         <field name="name">q_endpoint_request_body.list</field>
@@ -9,7 +10,6 @@
             </tree>
         </field>
     </record>
-
     <record id="q_endpoint_request_body_form_view" model="ir.ui.view">
         <field name="name">q_endpoint_request_body.form</field>
         <field name="model">q_endpoint_catalog.request_body</field>
@@ -21,11 +21,5 @@
                 </group>
             </form>
         </field>
-    </record>
-
-    <record id="action_q_endpoint_request_body_list" model="ir.actions.act_window">
-        <field name="name">Request Body</field>
-        <field name="res_model">q_endpoint_catalog.request_body</field>
-        <field name="view_mode">tree,kanban,form</field>
     </record>
 </odoo>

@@ -14,13 +14,7 @@
         'views/response_views.xml',
         'views/header_views.xml',
         'views/endpoint_views.xml',
+        'views/actions.xml',
+        'views/menus.xml',
     ],
-    'assets': {
-        'point_of_sale.assets': [
-            # 'q_endpoint_catalog/static/src/xml/*.xml',
-            # 'q_endpoint_catalog/static/src/js/*.js',
-            # 'q_endpoint_catalog/static/src/css/dist/*.css',  # tailwind generated
-            # 'q_endpoint_catalog/static/src/css/*.css',
-        ]
-    }
 }

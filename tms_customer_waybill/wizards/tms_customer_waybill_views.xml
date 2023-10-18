@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="tms_customer_waybill_wizard_view" model="ir.ui.view">
+        <field name="name">custom.wizard.form</field>
+        <field name="model">tms_customer_waybill.customer_waybill_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Customer Waybill">
+                <group>
+                    <field name="customer" />
+                </group>
+                <t t-if="widget.customer === 'customer_1'">
+                    <t t-raw="widget.RayderCustomerWaybillWidget.render()" />
+                </t>
+                <t t-elif="widget.customer === 'customer_2'">
+                    <t t-raw="widget.your_module_custom_widget_2.render()" />
+                </t>
+                <t t-elif="widget.customer === 'customer_3'">
+                    <t t-raw="widget.your_module_custom_widget_3.render()" />
+                </t>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+
+
