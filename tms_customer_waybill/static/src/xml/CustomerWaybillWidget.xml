@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
-    <div>
+    <div stlye="border: 1px solid red;">
         texto de prueba
     </div>
 </t>

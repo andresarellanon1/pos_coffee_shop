@@ -4,7 +4,7 @@ import { useState } from '@odoo/owl';
 import fieldRegistry from 'web.field_registry';
 import AbstractField from 'web.AbstractField';
 
-export class CustomerWaybillWidget extends AbstractField {
+class CustomerWaybillWidget extends AbstractField {
     setup() {
         this.state = useState({
             // Define your component's state here
@@ -14,6 +14,9 @@ export class CustomerWaybillWidget extends AbstractField {
     // Add your component logic here
 }
 
-CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
 CustomerWaybillWidget.supportedFieldTypes = ['json']
+CustomWidget.components = { ...AbstractField.components };
+CustomWidget.props = { ...AbstractField.props };
+CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
 fieldRegistry.add("customer_waybill_widget", CustomerWaybillWidget);
+export { CustomerWaybillWidget } 
