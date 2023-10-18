@@ -10,9 +10,9 @@
     'application': True,
     'data': [
         'security/ir.model.access.csv',
+        'views/tms_customer_waybill_views.xml',
         'views/actions.xml',
         'views/menus.xml',
-        'views/tms_customer_waybill_views.xml',
     ],
     'assets': {
         'customer_tms_waybill.assets': [
