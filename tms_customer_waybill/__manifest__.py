@@ -10,7 +10,7 @@
     'application': True,
     'data': [
         'security/ir.model.access.csv',
-        'views/tms_customer_waybill_views.xml',
+        'wizards/tms_customer_waybill_views.xml',
         'views/actions.xml',
         'views/menus.xml',
     ],
