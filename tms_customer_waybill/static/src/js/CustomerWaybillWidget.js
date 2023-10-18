@@ -2,7 +2,7 @@
 
 import { Component, useState } from '@odoo/owl';
 
-class CustomerWaybillWidget extends Component {
+export class CustomerWaybillWidget extends Component {
     setup() {
         this.state = useState({
             // Define your component's state here
@@ -13,4 +13,3 @@ class CustomerWaybillWidget extends Component {
 }
 
 CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
-export default CustomerWaybillWidget;
