@@ -15,6 +15,6 @@ export class CustomerWaybillWidget extends Component {
 }
 
 CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
-registry.category("main_components").add("CustomerWaybillWidget", {
+registry.category("fields").add("CustomerWaybillWidget", {
     Component: CustomerWaybillWidget,
 });
