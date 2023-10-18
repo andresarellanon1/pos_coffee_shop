@@ -10,7 +10,7 @@
                     <field name="endpoint" required="1" />
                 </group>
                 <group string="Customer">
-                    <t t-component="customer_tms_waybill.CustomerWaybillWidget" />
+                    <t t-component="tms_customer_waybill.CustomerWaybillWidget" />
                 </group>
                 <footer>
                     <button string="Cancel" class="btn-secondary" special="cancel" />

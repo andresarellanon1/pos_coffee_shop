@@ -15,11 +15,11 @@
         'views/menus.xml',
     ],
     'assets': {
-        'customer_tms_waybill.assets': [
-            'customer_tms_waybill/static/src/xml/*.xml',
-            'customer_tms_waybill/static/src/js/*.js',
-            'customer_tms_waybill/static/src/css/dist/*.css',  # tailwind generated
-            'customer_tms_waybill/static/src/css/*.css',
+        'tms_customer_waybill.assets': [
+            'tms_customer_waybill/static/src/xml/*.xml',
+            'tms_customer_waybill/static/src/js/*.js',
+            'tms_customer_waybill/static/src/css/dist/*.css',  # tailwind generated
+            'tms_customer_waybill/static/src/css/*.css',
         ]
     }
 }

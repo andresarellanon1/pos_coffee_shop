@@ -1,5 +1,5 @@
 {
-    'name': 'REST Endpoint Catalog',
+    'name': 'Endpoint Catalog',
     'version': '16.0.0.3',
     'category': 'Extra Tools',
     'description': 'Manages a catalog of REST endpoints. Define URL, Method, Body, Response, Headers and hardcode Authorization (or not). Call from python functions or modules on demand. ',
