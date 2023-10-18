@@ -13,6 +13,7 @@ class CustomerWaybillWizard(models.TransientModel):
 
     @api.depends('contact', 'endpoint')
     def _compute_remote_waybills(self):
+        self.remote_waybills = []
         if self.contact and self.endpoint:
             custom_headers = []
             custom_attributes = []
