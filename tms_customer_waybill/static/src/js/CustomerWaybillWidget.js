@@ -15,8 +15,8 @@ class CustomerWaybillWidget extends AbstractField {
 }
 
 CustomerWaybillWidget.supportedFieldTypes = ['json']
-CustomWidget.components = { ...AbstractField.components };
-CustomWidget.props = { ...AbstractField.props };
+CustomerWaybillWidget.components = { ...AbstractField.components };
+CustomerWaybillWidget.props = { ...AbstractField.props };
 CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
 fieldRegistry.add("customer_waybill_widget", CustomerWaybillWidget);
 export { CustomerWaybillWidget } 
