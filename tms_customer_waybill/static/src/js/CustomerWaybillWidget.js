@@ -16,5 +16,5 @@ export class CustomerWaybillWidget extends Component {
 
 CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
 registry.category("main_components").add("CustomerWaybillWidget", {
-    Component: LoadingIndicator,
+    Component: CustomerWaybillWidget,
 });
