@@ -5,7 +5,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
-class CustomerWaybillWidget extends Component {
+export class CustomerWaybillWidget extends Component {
     setup() {
         this.state = useState({
             // Define your component's state here
