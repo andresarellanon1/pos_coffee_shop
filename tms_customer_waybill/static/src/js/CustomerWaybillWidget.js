@@ -1,14 +1,21 @@
 /** @odoo-module **/
 
 import { useState } from '@odoo/owl';
-import fieldRegistry from 'web.field_registry';
-import AbstractField from 'web.AbstractField';
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
-class CustomerWaybillWidget extends AbstractField {
+class CustomerWaybillWidget extends Component {
     setup() {
         this.state = useState({
             // Define your component's state here
         });
+    }
+    /**
+     * @param {boolean} newValue
+     */
+    onChange(newValue) {
+        this.props.update(newValue);
     }
 
     // Add your component logic here
@@ -16,7 +23,6 @@ class CustomerWaybillWidget extends AbstractField {
 
 CustomerWaybillWidget.supportedFieldTypes = ['json']
 CustomerWaybillWidget.components = { ...AbstractField.components };
-CustomerWaybillWidget.props = { ...AbstractField.props };
-CustomerWaybillWidget.template = "tms_customer_waybill.CustomerWaybillWidget";
-fieldRegistry.add("customer_waybill_widget", CustomerWaybillWidget);
-export { CustomerWaybillWidget } 
+CustomerWaybillWidget.props = { ...standardFieldProps.props };
+CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
+registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
