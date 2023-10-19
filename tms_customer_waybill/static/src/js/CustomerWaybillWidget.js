@@ -21,8 +21,7 @@ class CustomerWaybillWidget extends Component {
     // Add your component logic here
 }
 
-CustomerWaybillWidget.supportedFieldTypes = ['json']
-CustomerWaybillWidget.components = { ...AbstractField.components };
-CustomerWaybillWidget.props = { ...standardFieldProps.props };
 CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
+CustomerWaybillWidget.props = { ...standardFieldProps.props };
+CustomerWaybillWidget.supportedFieldTypes = ['json']
 registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
