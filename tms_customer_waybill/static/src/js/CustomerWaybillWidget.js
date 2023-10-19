@@ -22,7 +22,7 @@ export class CustomerWaybillWidget extends AbstractField {
     // Add your component logic here
 }
 
-CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
-// CustomerWaybillWidget.props = { ...standardFieldProps.props };
+CustomerWaybillWidget.props = { ...standardFieldProps.props };
 CustomerWaybillWidget.supportedFieldTypes = ['json']
+CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
 registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
