@@ -18,5 +18,5 @@ export class CustomerWaybillWidget extends Component {
 
 CustomerWaybillWidget.supportedFieldTypes = ['json']
 CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
-CustomerWaybillWidget.components = { RayderWidget };
+// CustomerWaybillWidget.components = { RayderWidget };
 registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
