@@ -11,16 +11,16 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><t t-esc="props.item.NoOperacion"/></td>
-                <td><t t-esc="props.item.NoViaje"/></td>
-                <td><t t-esc="props.item.NoViajeCliente"/></td>
-                <td>
-                    <button type="button" t-on-click="() => this.actionCall()">
-                        Load
-                    </button>
-                </td>
-            </tr>
+            <!-- <tr> -->
+            <!--     <td><t t-esc="props.item.NoOperacion"/></td> -->
+            <!--     <td><t t-esc="props.item.NoViaje"/></td> -->
+            <!--     <td><t t-esc="props.item.NoViajeCliente"/></td> -->
+            <!--     <td> -->
+            <!--         <button type="button" t-on-click="() => this.actionCall()"> -->
+            <!--             Load -->
+            <!--         </button> -->
+            <!--     </td> -->
+            <!-- </tr> -->
         </tbody>
     </table>
 </t>

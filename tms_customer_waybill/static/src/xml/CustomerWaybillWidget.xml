@@ -2,12 +2,13 @@
 <templates id="template" xml:space="preserve">
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
     <div class="border p-2 flex flex-col">
-        <button  type="button" t-on-click="() => this.actionCall()">
+        <button type="button" t-on-click="() => this.actionCall()">
             Load 
         </button>
-        <div t-if="props.value.data.length === 0 || !props.value.data">
-            Not data yet
-        </div>
+            <div t-if="props.value.length === 0 || !props.value">
+                Not data yet
+            </div>
+            <RyderWidget />
             <!-- <div t-if="props.record.data.contact[1] === 'Ryder'" > -->
             <!-- once confirmed the contact we  domain specific object keys  -->
             <!-- eg. NoViaje is exclusive to the customer 'Ryder' -->
