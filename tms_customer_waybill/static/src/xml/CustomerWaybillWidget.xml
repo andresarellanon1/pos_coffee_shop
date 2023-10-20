@@ -4,6 +4,9 @@
     <div style="border: 1px solid red;">
         <t t-esc="props.value"/>
         <t t-esc="state.reactive"/>
+        <button type="button" t-on-click="() => this.checkState()">
+            check state
+        </button>
     </div>
 </t>
 </templates>
