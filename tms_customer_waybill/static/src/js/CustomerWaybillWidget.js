@@ -3,6 +3,7 @@
 // import { useState } from '@odoo/owl';
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { RayderWidget } from "@tms_customer_waybill/js/RyderWidget"
 
 export class CustomerWaybillWidget extends Component {
     setup() {
