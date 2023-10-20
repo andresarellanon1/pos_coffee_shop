@@ -28,4 +28,27 @@ export class RayderWidget extends Component {
 }
 
 RayderWidget.template = 'tms_customer_waybill.RayderWidget';
-// registry.category("main_components").add("RayderWidget", RayderWidget);
+
+export class TranslationButton extends Component {
+    setup() {
+        this.user = useService("user");
+        this.translationDialog = useTranslationDialog();
+    }
+
+    get isMultiLang() {
+        return localization.multiLang;
+    }
+    get lang() {
+        return this.user.lang.split("_")[0].toUpperCase();
+    }
+
+    onClick() {
+        const { fieldName, record } = this.props;
+        this.translationDialog({ fieldName, record });
+    }
+}
+CustomTranslationButton.template = "tms_customer_waybill.RayderWidget";
+CustomTranslationButton.props = {
+    fieldName: { type: String },
+    record: { type: Object },
+};
