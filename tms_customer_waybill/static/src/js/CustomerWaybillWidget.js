@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useState } from '@odoo/owl';
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+// import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
@@ -22,7 +22,7 @@ export class CustomerWaybillWidget extends Component {
     // Add your component logic here
 }
 
-CustomerWaybillWidget.props = { ...standardFieldProps.props };
+// CustomerWaybillWidget.props = { ...standardFieldProps.props };
 CustomerWaybillWidget.supportedFieldTypes = ['json']
 CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
 registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
