@@ -3,7 +3,7 @@
 // import { Component } from "@odoo/owl";
 // import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useState } from '@odoo/owl';
-import { AbstractField } from 'web.AbstractField'
+import AbstractField from 'web.AbstractField'
 import { registry } from "@web/core/registry";
 
 
