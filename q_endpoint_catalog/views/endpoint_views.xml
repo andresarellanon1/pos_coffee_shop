@@ -25,22 +25,21 @@
                         <field name="name" nolabel="1" colspan="2" />
                         <separator coslpan="2" string="Labels" />
                         <field name="tags" nolabel="1" colspan="2" widget="many2many_tags" />
+                        <separator coslpan="2" string="URL" />
+                        <field name="url" nolabel="1" colspan="2" />
+                        <separator coslpan="2" string="Method" />
+                        <field name="method" nolabel="1" colspan="2" />
                     </group>
                     <notebook>
-                        <page name="http_basic" string="HTTP Basics">
-                            <separator coslpan="2" string="URL" />
-                            <field name="url" nolabel="1" colspan="2" />
-                            <separator coslpan="2" string="Method" />
-                            <field name="method" nolabel="1" colspan="2" />
-                            <separator coslpan="2" string="Headers" />
-                            <field name="headers" nolabel="1" colspan="2" />
+                        <page string=" Headers">
+                            <field name=" headers" nolabel=" 1" colspan=" 2" />
                         </page>
-                        <page name="http_advanced" string="HTTP Advanced">
-                            <separator coslpan="2" string="Body" />
-                            <field name="body" nolabel="1" colspan="2" />
-                            <separator coslpan="2" string="Response" />
-                            <field name="is_validate_response" />
-                            <field name="response" nolabel="1" colspan="2" />
+                        <page string="Body">
+                            <field name=" body" nolabel=" 1" colspan=" 2" />
+                        </page>
+                        <page string=" Response">
+                            <field name=" is_validate_response" />
+                            <field name=" response" nolabel=" 1" colspan=" 2" />
                         </page>
                     </notebook>
                 </sheet>
@@ -48,32 +47,32 @@
         </field>
     </record>
 
-    <record id="q_endpoint_kanban_view" model="ir.ui.view">
-        <field name="name">q_endpoint.kanban.view</field>
-        <field name="model">q_endpoint_catalog.q_endpoint</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+    <record id=" q_endpoint_kanban_view" model=" ir.ui.view">
+        <field name=" name">q_endpoint.kanban.view</field>
+        <field name=" model">q_endpoint_catalog.q_endpoint</field>
+        <field name=" arch" type=" xml">
+            <kanban class=" o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_content">
-                            <div class="oe_kanban_header">
+                    <t t-name=" kanban-box">
+                        <div class=" oe_kanban_content">
+                            <div class=" oe_kanban_header">
                                 <strong>
-                                    <field name="name" />
+                                    <field name=" name" />
                                 </strong>
                                 <br />
                                 <span>
-                                    <field name="method" />
+                                    <field name=" method" />
                                 </span>
                             </div>
-                            <div class="oe_kanban_details">
+                            <div class=" oe_kanban_details">
                                 <p>
-                                    <field name="url" />
+                                    <field name=" url" />
                                 </p>
-                                <div class="oe_kanban_bottom_left">
-                                    <field name="headers" widget="statinfo"
-                                        options="{'mode': 'count'}" />
-                                    <field name="response" widget="statinfo"
-                                        options="{'mode': 'count'}" />
+                                <div class=" oe_kanban_bottom_left">
+                                    <field name=" headers" widget=" statinfo"
+                                        options=" {'mode' : 'count' }" />
+                                    <field name=" response" widget=" statinfo"
+                                        options=" {'mode' : 'count' }" />
                                 </div>
                             </div>
                         </div>
