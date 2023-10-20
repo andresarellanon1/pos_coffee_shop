@@ -13,7 +13,8 @@
                     <group string="Customer Remote Waybills">
                         <button name="re_compute_remote_waybills" class="oe_highlight"
                             string="Confirm" type="object" />
-                        <field name="remote_waybills" widget="customer_waybill_widget" nolabel="1"
+                        <field name="re_compute_remote_waybills" widget="customer_waybill_widget"
+                            nolabel="1"
                             colspan="2" />
                     </group>
                     <footer>
