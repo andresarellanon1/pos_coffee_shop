@@ -12,7 +12,7 @@ class QEndpoint(models.Model):
     name = fields.Char('Endpoint Name', required=True, help='Enter a descriptive name for the REST endpoint.')
     contact_id = fields.Many2one('res.partner', 'Contact', help='Select a contact from the Contacts module.', required=True)
     url = fields.Char('URL', required=True, help='Enter the URL of the REST endpoint.')
-    is_validate_response = fields.Boolean('Is Validate Response', default=False, required=True, help='Experimental. Check this if the response match the attributes provided.')
+    is_validate_response = fields.Boolean('Is Validate Response', default=False, required=True, help='Experimental. Mark this to validate if the response matches the attributes provided.')
     method = fields.Selection([
         ('GET', 'GET'),
         ('POST', 'POST'),

@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <form string="REST Endpoint">
                 <sheet>
-                    <group string="Identification">
+                    <group>
                         <separator coslpan="2" string="Contact" />
                         <field name="contact_id" nolabel="1" colspan="2" />
                         <separator coslpan="2" string="Name" />
@@ -26,21 +26,23 @@
                         <separator coslpan="2" string="Labels" />
                         <field name="tags" nolabel="1" colspan="2" widget="many2many_tags" />
                     </group>
-                    <group string="HTTP Basics">
-                        <separator coslpan="2" string="URL" />
-                        <field name="url" nolabel="1" colspan="2" />
-                        <separator coslpan="2" string="Method" />
-                        <field name="method" nolabel="1" colspan="2" />
-                    </group>
-                    <group string="HTTP Advanced">
-                        <separator coslpan="2" string="Headers" />
-                        <field name="headers" nolabel="1" colspan="2" />
-                        <separator coslpan="2" string="Body" />
-                        <field name="body" nolabel="1" colspan="2" />
-                        <separator coslpan="2" string="Response" />
-                        <field name="is_validate_response" />
-                        <field name="response" nolabel="1" colspan="2" />
-                    </group>
+                    <notebook>
+                        <page name="http_basic" string="HTTP Basics">
+                            <separator coslpan="2" string="URL" />
+                            <field name="url" nolabel="1" colspan="2" />
+                            <separator coslpan="2" string="Method" />
+                            <field name="method" nolabel="1" colspan="2" />
+                            <separator coslpan="2" string="Headers" />
+                            <field name="headers" nolabel="1" colspan="2" />
+                        </page>
+                        <page name="http_advanced" string="HTTP Advanced">
+                            <separator coslpan="2" string="Body" />
+                            <field name="body" nolabel="1" colspan="2" />
+                            <separator coslpan="2" string="Response" />
+                            <field name="is_validate_response" />
+                            <field name="response" nolabel="1" colspan="2" />
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
