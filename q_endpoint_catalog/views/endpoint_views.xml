@@ -32,14 +32,14 @@
                     </group>
                     <notebook>
                         <page string="Headers">
-                            <field name="headers" nolabel=" 1" colspan=" 2" />
+                            <field name="headers" nolabel="1" colspan="2" />
                         </page>
                         <page string="Body">
-                            <field name="body" nolabel=" 1" colspan=" 2" />
+                            <field name="body" nolabel="1" colspan="2" />
                         </page>
                         <page string="Response">
                             <field name="is_validate_response" />
-                            <field name="response" nolabel=" 1" colspan=" 2" />
+                            <field name="response" nolabel="1" colspan="2" />
                         </page>
                     </notebook>
                 </sheet>
