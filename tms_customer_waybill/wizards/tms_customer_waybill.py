@@ -14,6 +14,9 @@ class CustomerWaybillWizard(models.TransientModel):
 
     @api.depends('contact', 'endpoint')
     def _compute_remote_waybills(self):
+        self.load_waybills()
+
+    def load_waybills(self):
         self.remote_waybills = json.dumps([])
         if self.contact and self.endpoint:
             custom_headers = []
