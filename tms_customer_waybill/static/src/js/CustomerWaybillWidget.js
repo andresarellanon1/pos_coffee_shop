@@ -3,7 +3,6 @@
 import { useState } from '@odoo/owl';
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { bus } from 'web.core';
 
 export class CustomerWaybillWidget extends Component {
     setup() {
@@ -12,15 +11,8 @@ export class CustomerWaybillWidget extends Component {
             remoteWaybills: [],
             reactive: this.props.value
         });
-        bus.on("field_changed:tms_customer_waybill.customer_waybill_wizard:remote_waybills", this, this.upateState);
     }
-    // /**
-    //  * @param {boolean} newValue
-    //  */
-    // onChange(newValue) {
-    //     this.props.update(newValue);
-    // }
-    upateState() {
+    checkState() {
         console.warn(this.props.record)
         console.log(this.props.value)
         // this.state.remoteWaybills = this.props.record.value

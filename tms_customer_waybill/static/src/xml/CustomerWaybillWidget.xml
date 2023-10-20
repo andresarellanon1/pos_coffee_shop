@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
-    <div stlye="border: 1px solid red;">
-        <t t-esc="props.value[0]"/>
+    <div style="border: 1px solid red;">
+        <t t-esc="props.value"/>
+        <t t-esc="state.reactive"/>
     </div>
 </t>
 </templates>
