@@ -28,4 +28,4 @@ export class RayderWidget extends Component {
 }
 
 RayderWidget.template = 'tms_customer_waybill.RayderWidget';
-registry.category('main_components').add('rayder_widget', RayderWidget);
+// registry.category('main_components').add('rayder_widget', RayderWidget);
