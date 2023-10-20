@@ -1,4 +1,10 @@
 {
+	"name": "tailwind development environment",
+	"private": true,
+	"scripts": {
+		"tms_customer_waybill": "pnpx tailwindcss -i ./tms_customer_waybill/static/src/css/custom.css -o ./tms_customer_waybill/static/src/css/dist/output.css",
+		"custom_product_screen": "pnpx tailwindcss -i ./custom_product_screen/static/src/css/custom.css -o ./custom_product_screen/static/src/css/dist/output.css"
+	},
 	"devDependencies": {
 		"tailwindcss": "^3.3.3"
 	}

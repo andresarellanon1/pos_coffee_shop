@@ -12,7 +12,6 @@
                 <group string="Customer Waybills">
                     <field name="remote_waybills" widget="customer_waybill_widget" nolabel="1"
                         colspan="2" />
-                    <button string="refresh" class="btn-primary" special="refresh" />
                 </group>
                 <footer>
                     <button string="Cancel" class="btn-secondary" special="cancel" />

@@ -15,11 +15,7 @@ export class CustomerWaybillWidget extends Component {
     checkState() {
         console.warn(this.props.record)
         console.log(this.props.value)
-        // this.state.remoteWaybills = this.props.record.value
     }
-
-
-    // Add your component logic here
 }
 
 CustomerWaybillWidget.supportedFieldTypes = ['json', 'char', 'text']

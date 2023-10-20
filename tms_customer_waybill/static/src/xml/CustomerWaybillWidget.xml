@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
-    <div style="border: 1px solid red;">
-        <t t-esc="props.value"/>
-        <t t-esc="state.reactive"/>
-        <button type="button" t-on-click="() => this.checkState()">
-            check state
+    <div class="border p-2 flex flex-col">
+        <button  type="button" t-on-click="() => this.checkState()">
+            Load 
         </button>
+        <div t-if="props.value.data.length === 0 || !props.value.data">
+            Not data yet
+        </div>
+        <div t-if="props.record.data.contact[1] === 'Ryder'" >
+            <RyderWidget t-foreach="props.value.data" t-as="item" t-key="item.NoViaje" item="item" />
+        </div> 
     </div>
 </t>
 </templates>
