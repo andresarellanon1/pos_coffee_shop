@@ -94,7 +94,7 @@ class QEndpoint(models.Model):
             response_data = response.json()
             if (record.is_validate_response):
                 self._validate_response_structure(response_data, record.response)
-            return response_data or json.dumps([])
+            return json.dumps(response_data) or json.dumps([])
         except requests.exceptions.RequestException as e:
             logger.error(e)
             raise ValueError(f"Request Error: {str(e)}")
