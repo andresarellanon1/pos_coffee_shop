@@ -11,7 +11,7 @@ export class CustomerWaybillWidget extends Component {
         this.state = useState({
             remoteWaybills: []
         });
-        bus.on("field_changed:ir.ui.view:remote_waybills", this, this.upateState);
+        bus.on("field_changed:tms_customer_waybill.customer_waybill_wizard:remote_waybills", this, this.upateState);
     }
     // /**
     //  * @param {boolean} newValue
