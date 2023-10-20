@@ -28,6 +28,6 @@ export class CustomerWaybillWidget extends Component {
     }
 }
 
-CustomerWaybillWidget.supportedFieldTypes = ['json', 'char', 'text']
+CustomerWaybillWidget.supportedFieldTypes = ['json']
 CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
 registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
