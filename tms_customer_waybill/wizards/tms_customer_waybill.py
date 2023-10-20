@@ -1,5 +1,7 @@
 from odoo import models, fields, api
 import json
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CustomerWaybillWizard(models.TransientModel):
@@ -24,7 +26,9 @@ class CustomerWaybillWizard(models.TransientModel):
             json_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(self.endpoint.id, custom_headers=custom_headers, custom_attributes=custom_attributes)
             try:
                 response = json.loads(json_response)
+                logger.info(response)
                 if isinstance(response, list):
                     self.remote_waybills = json_response
+                logger.info(self.remote_waybills)
             except json.JSONDecodeError:
                 raise ValueError("Failed to decode JSON response")
