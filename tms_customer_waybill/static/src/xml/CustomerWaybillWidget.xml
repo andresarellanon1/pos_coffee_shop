@@ -5,16 +5,7 @@
         <button type="button" t-on-click="() => this.actionCall()">
             Load 
         </button>
-        <RyderWidget />
-            <!-- <div t-if="props.value.length === 0 || !props.value"> -->
-            <!--     Not data yet -->
-            <!-- </div> -->
-            <!-- <div t-if="props.record.data.contact[1] === 'Ryder'" > -->
-            <!-- once confirmed the contact we  domain specific object keys  -->
-            <!-- eg. NoViaje is exclusive to the customer 'Ryder' -->
-            <!--     <RyderWidget t-foreach="props.value.data" t-as="item" t-key="item.NoViaje"
-            item="item" /> -->
-            <!-- </div>  -->
+        <RyderWidget /> 
     </div>
 </t>
 </templates>
