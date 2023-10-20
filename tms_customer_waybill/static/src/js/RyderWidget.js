@@ -1,11 +1,10 @@
 /** @odoo-module **/
-
 import { useState } from '@odoo/owl';
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 /**
- * @typedef {Object} props 
+ * @typedef {Object} RyderViaje
  * @property {number} NoOperacion - E.g., 108
  * @property {number} NoViaje - E.g., 63622
  * @property {string} Origen - E.g., "108"
@@ -22,8 +21,10 @@ export class RayderWidget extends Component {
     setup() {
     }
 
-
-    // Add your component logic here
+    actionCall() {
+        console.warn('Ryder action call')
+        console.log(this.props.item)
+    }
 }
 
 RayderWidget.template = 'tms_customer_waybill.RayderWidget';
