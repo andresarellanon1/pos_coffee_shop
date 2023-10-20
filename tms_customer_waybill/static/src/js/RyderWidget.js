@@ -29,7 +29,7 @@ export class RayderWidget extends Component {
 
 RayderWidget.template = 'tms_customer_waybill.RayderWidget';
 
-export class TranslationButton extends Component {
+export class CustomTranslationButton extends Component {
     setup() {
         this.user = useService("user");
         this.translationDialog = useTranslationDialog();
