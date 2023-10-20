@@ -8,7 +8,7 @@
             <div t-if="props.value.length === 0 || !props.value">
                 Not data yet
             </div>
-            <RyderWidget />
+            <!-- <RyderWidget /> -->
             <!-- <div t-if="props.record.data.contact[1] === 'Ryder'" > -->
             <!-- once confirmed the contact we  domain specific object keys  -->
             <!-- eg. NoViaje is exclusive to the customer 'Ryder' -->
