@@ -3,20 +3,28 @@
 import { useState } from '@odoo/owl';
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { bus } from 'web.core';
 
 export class CustomerWaybillWidget extends Component {
     setup() {
         console.warn(this.props);
         this.state = useState({
-            // Define your component's state here
+            remoteWaybills: []
         });
+        bus.on("field_changed:ir.ui.view:remote_waybills", this, this.upateState);
     }
-    /**
-     * @param {boolean} newValue
-     */
-    onChange(newValue) {
-        this.props.update(newValue);
+    // /**
+    //  * @param {boolean} newValue
+    //  */
+    // onChange(newValue) {
+    //     this.props.update(newValue);
+    // }
+    upateState() {
+        console.warn(this.props.record)
+        console.log(this.props.value)
+        // this.state.remoteWaybills = this.props.record.value
     }
+
 
     // Add your component logic here
 }
