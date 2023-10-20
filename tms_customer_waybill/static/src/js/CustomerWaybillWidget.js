@@ -8,6 +8,7 @@ import RayderWidget from "@tms_customer_waybill/js/RyderWidget"
 export class CustomerWaybillWidget extends Component {
     setup() {
         console.warn(this.props.record);
+        console.log(RayderWidget)
     }
     actionCall() {
         console.warn(this.props.record)
