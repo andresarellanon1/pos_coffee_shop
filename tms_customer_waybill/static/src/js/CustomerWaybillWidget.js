@@ -9,7 +9,8 @@ export class CustomerWaybillWidget extends Component {
     setup() {
         console.warn(this.props);
         this.state = useState({
-            remoteWaybills: []
+            remoteWaybills: [],
+            reactive: this.props.value
         });
         bus.on("field_changed:tms_customer_waybill.customer_waybill_wizard:remote_waybills", this, this.upateState);
     }
@@ -29,6 +30,6 @@ export class CustomerWaybillWidget extends Component {
     // Add your component logic here
 }
 
-CustomerWaybillWidget.supportedFieldTypes = ['json']
+CustomerWaybillWidget.supportedFieldTypes = ['json', 'char', 'text']
 CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
 registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
