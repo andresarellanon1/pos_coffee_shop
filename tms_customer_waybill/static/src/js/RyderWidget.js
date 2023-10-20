@@ -18,9 +18,6 @@ import { registry } from "@web/core/registry";
  * @property {string} Existe_XML_C - E.g., "No"
  */
 export class RayderWidget extends Component {
-    setup() {
-    }
-
     actionCall() {
         console.warn('Ryder action call')
         console.log(this.props.item)
