@@ -5,10 +5,7 @@
         <button type="button" t-on-click="() => this.actionCall()">
             Load 
         </button>
-        <CustomTranslationButton
-            fieldName="props.name"
-            record="props.record"
-            />
+        <RyderWidget />
             <!-- <div t-if="props.value.length === 0 || !props.value"> -->
             <!--     Not data yet -->
             <!-- </div> -->

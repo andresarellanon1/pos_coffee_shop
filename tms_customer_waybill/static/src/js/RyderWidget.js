@@ -1,7 +1,5 @@
 /** @odoo-module **/
-// import { useState } from '@odoo/owl';
 import { Component } from "@odoo/owl";
-import { registry } from "@web/core/registry";
 
 /**
  * @typedef {Object} RyderViaje
@@ -28,27 +26,3 @@ export class RayderWidget extends Component {
 }
 
 RayderWidget.template = 'tms_customer_waybill.RayderWidget';
-
-export class CustomTranslationButton extends Component {
-    setup() {
-        this.user = useService("user");
-        this.translationDialog = useTranslationDialog();
-    }
-
-    get isMultiLang() {
-        return localization.multiLang;
-    }
-    get lang() {
-        return this.user.lang.split("_")[0].toUpperCase();
-    }
-
-    onClick() {
-        const { fieldName, record } = this.props;
-        this.translationDialog({ fieldName, record });
-    }
-}
-CustomTranslationButton.template = "tms_customer_waybill.RayderWidget";
-CustomTranslationButton.props = {
-    fieldName: { type: String },
-    record: { type: Object },
-};
