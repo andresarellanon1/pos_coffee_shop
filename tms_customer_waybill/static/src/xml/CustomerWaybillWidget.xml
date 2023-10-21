@@ -5,7 +5,8 @@
         <button type="button" t-on-click="() => this.actionCall()">
             Load 
         </button>
-        <!-- <RayderWidget />  -->
+        <RayderWidget t-if="props.record.contact[1].includes('Ryder')" items="props.value" /> 
+        <DefaultWidget t-else="" /> 
     </div>
 </t>
 </templates>

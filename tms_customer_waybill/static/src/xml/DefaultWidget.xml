@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="tms_customer_waybill.RayderWidget" owl="1">
+    <table>
+        <thead>
+            <tr>
+                    <!-- TODO: read for each key of item -->
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+                <!-- TODO: read for each key of item -->
+                <tr>
+                    <!--     <td><t t-esc="props.item.NoViajeCliente"/></td> -->
+                <td>
+                    <button type="button" t-on-click="() => this.actionCall()">
+                        Download
+                    </button>
+                </td>
+                </tr>
+        </tbody>
+    </table>
+</t>
+</templates>
+
