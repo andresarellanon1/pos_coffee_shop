@@ -1,5 +1,4 @@
 from odoo import models, fields, api
-import json
 import logging
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,7 @@ class CustomerWaybillWizard(models.TransientModel):
         self.load_waybills()
 
     def load_waybills(self):
-        self.remote_waybills = json.dumps([])
+        self.remote_waybills = False
         if self.contact and self.endpoint:
             custom_headers = []
             custom_attributes = []
@@ -32,7 +31,7 @@ class CustomerWaybillWizard(models.TransientModel):
         # set defaults
         # create instance
         # self.env['tms.waybill'].create({
-        #         
+        #
         #     })
         # leave at pending state
         pass

@@ -42,6 +42,7 @@ export class CustomerWaybillWidget extends Component {
     // CREATE ODOO MODULE TO STORE PROCESSES, USE ENDPOINT, CONTACT, AND A PROCESS NAME (REPLACE CONTACT WITH THIS NAME). 
     // ADD HEADERS,ACTIONS AND ITEMS KEYS and read them from here, acomplishing making this Owl component completly generic
     // NOTE: for now, we will work using switch cases.
+    // NOTE: main issue to develop this process model approach is to figure how a way to unwrap the data from the remote APIs eg: this.props.record.data.remote_waybills.>>>Data<<<
     setup() {
         // @type {CustomerWaybillState}
         this.state = useState({
@@ -70,7 +71,7 @@ export class CustomerWaybillWidget extends Component {
                 this.state.actions = [{ name: 'Load', id: 'loadRemoteWaybills' }]
                 // @type {RyderViaje[]}
                 this.state.items = []
-                let tmp_items = this.props.record.data.remote_waybills
+                let tmp_items = this.props.record.data.remote_waybills.Data
                 if (tmp_items && tmp_items.length >= 0) {
                     this.state.items = tmp_items.map(tmp => {
                         return {
