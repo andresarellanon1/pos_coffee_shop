@@ -28,6 +28,7 @@ export class CustomerWaybillWidget extends Component {
         })
     }
     updateState() {
+        console.warn(this.state)
         if (!this.props.value) return
         if (this.props.record.data.contact) {
             this.state.customer === this.props.record.data.contact[1]

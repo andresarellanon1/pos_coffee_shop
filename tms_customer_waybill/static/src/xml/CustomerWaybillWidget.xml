@@ -4,27 +4,26 @@
     <table t-on-change="updateState" class="border p-2 flex flex-col">
         <thead>
             <tr>
-                <th t-foreach="state.headers" t-as="header" t-key="header">
-                    <t t-esc="header"/>
-                </th>
-                <th t-foreach="state.actions" t-as="action" t-key="action">
-                    <t t-esc="action"/>
-                </th>
+                    <t t-esc="state"/>
+                    <!-- <th t-foreach="state.headers" t-as="header" t-key="header"> -->
+                    <!--     <t t-esc="header"/> -->
+                    <!-- </th> -->
+                    <!-- <th t-foreach="state.actions" t-as="action" t-key="action"> -->
+                    <!--     <t t-esc="action"/> -->
+                    <!-- </th> -->
             </tr>
         </thead>
         <tbody>
-                <tr t-foreach="state.items" t-as="item" t-key="item.id">
-                    <td t-foreach="Object.keys(item)" t-as="key" t-key="key">
-                        <t t-esc="item[key]"/>
-                    </td> 
-                </tr>
-                <tr>
-                    <td>
-                        <button t-foreach="actions" t-as="action" t-key="action" type="button" t-on-click="() => this.actionCall(action)">
-                            <t t-esc="action"/>
-                        </button>
-                    </td>
-                </tr>
+                <!-- <tr t-foreach="state.items" t-as="item" t-key="item.id"> -->
+                <!--     <td t-foreach="Object.keys(item)" t-as="key" t-key="key"> -->
+                <!--         <t t-esc="item[key]"/> -->
+                <!--     </td>  -->
+                <!--     <td t-foreach="actions" t-as="action" t-key="action"> -->
+                <!--         <button type="button" t-on-click="() => this.actionCall(action)"> -->
+                <!--             <t t-esc="action"/> -->
+                <!--         </button> -->
+                <!--     </td> -->
+                <!-- </tr> -->
         </tbody>
     </table>
 </t>
