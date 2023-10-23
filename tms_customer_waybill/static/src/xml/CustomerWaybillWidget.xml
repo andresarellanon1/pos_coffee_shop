@@ -8,7 +8,7 @@
                     <t t-esc="header"/>
                 </th>
                 <th t-foreach="state.actions" t-as="action" t-key="action">
-                    <t t-esc="action"/>
+                    <t t-esc="action.name"/>
                 </th>
             </tr>
         </thead>
@@ -18,8 +18,8 @@
                     <t t-esc="item[key]"/>
                 </td> 
                 <td t-foreach="state.actions" t-as="action" t-key="action">
-                    <button type="button" t-on-click="() => this.actionCall(action)">
-                        <t t-esc="action"/>
+                    <button type="button" t-on-click="() => this.actionCall(action.id)">
+                        <t t-esc="action.name"/>
                     </button>
                 </td>
             </tr>

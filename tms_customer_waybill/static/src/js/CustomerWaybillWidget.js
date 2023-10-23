@@ -25,13 +25,23 @@ import { registry } from "@web/core/registry";
  */
 
 /**
+ * @typedef {Object} ActionObject
+ * @property {string} id - E.g.,  "doTask"
+ * @property {string} name - E.g., "Accept"
+ */
+
+/**
  * @typedef {Object} CustomerWaybillState
  * @property {string} customer - E.g., [] 
  * @property {string[]} headers - E.g., [] 
- * @property {string[]} actions - E.g., [] 
+ * @property {ActionObject[]} actions - E.g., [] 
  * @property {RemoteWaybillItem[]} items - E.g., [] 
  */
 export class CustomerWaybillWidget extends Component {
+    // TODO: REPLACE SWITCH CASES WITH READING FROM AN ODOO MODEL CALLED PROCESSES OR SMTH LIKE THAT
+    // CREATE ODOO MODULE TO STORE PROCESSES, USE ENDPOINT, CONTACT, AND A PROCESS NAME (REPLACE CONTACT WITH THIS NAME). 
+    // ADD HEADERS,ACTIONS AND ITEMS KEYS and read them from here, acomplishing making this Owl component completly generic
+    // NOTE: for now, we will work using switch cases.
     setup() {
         // @type {CustomerWaybillState}
         this.state = useState({
@@ -40,78 +50,58 @@ export class CustomerWaybillWidget extends Component {
             actions: [],
             items: []
         })
-        onWillUpdateProps(async () => {
-            await this.updateState()
+        onWillUpdateProps(() => {
+            console.log('will patch record:', this.props.record.data)
+            this._patchStateSwitch()
         })
         onPatched(() => {
+            console.log('record on patched:', this.props.record.data)
             console.log('state on patched', this.state)
         })
     }
-    async updateState() {
-        try {
-            if (this.props.record.data.contact && this.props.record.data.endpoint) {
-                console.log('record:', this.props.record)
-                console.log('value:', this.props.value)
-                this.state.customer = this.props.record.data.contact[1]
-                switch (this.state.customer) {
-                    // Bussiness (customer) specific logic inside named cases
-                    case 'Ryder':
-                        if (!this.props.value.Data) break;
-                        this.state.headers = ['No. Viaje', 'No. Operacion']
-                        this.state.actions = ['loadRemoteWaybills']
-                        // @type {RyderViaje[]}
-                        let tmp_items = this.props.value.Data
-                        this.state.items = []
-                        if (tmp_items && tmp_items.length >= 0) {
-                            this.state.items = tmp_items.map(tmp => {
-                                return {
-                                    id: tmp.NoViaje,
-                                    name: tmp.NoOperacion
-                                }
-                            })
+    _patchStateSwitch() {
+        if (!this.props.record.data.contact && !this.props.record.data.endpoint) return
+        if (!this.props.recod.data.remote_waybills) return
+        this.state.customer = this.props.record.data.contact[1]
+        switch (this.state.customer) {
+            // A case for each customer use case
+            case 'Ryder':
+                this.state.headers = ['No. Viaje', 'No. Operacion']
+                this.state.actions = [{ name: 'Load', id: 'loadRemoteWaybills' }]
+                // @type {RyderViaje[]}
+                this.state.items = []
+                let tmp_items = this.props.recod.data.remote_waybills
+                if (tmp_items && tmp_items.length >= 0) {
+                    this.state.items = tmp_items.map(tmp => {
+                        return {
+                            id: tmp.NoViaje,
+                            name: tmp.NoOperacion
                         }
-                        break;
-                    default:
-                        break;
+                    })
                 }
-
-            }
-        } catch (e) {
-            console.error(e)
+                break;
+            default:
+                break;
         }
     }
-    async loadRemoteWaybills(id) {
+    async rpcActionCall(id, item) {
         try {
-            switch (this.state.customer) {
-                case 'Ryder':
-                    let item = this.state.items.find(element => element.id === id)
-                    let endpoints = await rpc.query({
-                        model: 'q_endpoint_catalog.q_endpoint',
-                        method: 'get_endpoint_ids_by_contact_name',
-                        args: ['Quadro Soluciones'],
-                    })
-                    let endpoint = endpoints.find(value => value.name === '');
-                    let response = await rpc.query({
-                        model: 'q_endpoint_catalog.q_endpoint',
-                        method: 'send_request',
-                        args: [
-                            endpoint.id,
-                            [],
-                            []
-                        ],
-                    });
-                    let params = {}
-                    params[''] =
-                        await rpc.query({
-                            model: 'tms_customer_waybill.customer_waybill_wizard',
-                            method: `load_remote_waybill_as_pending`,
-                            args: [{ params: params }],
-                        })
+            args = {}
+            // A case for each customer use case rpc method
+            // Only prepare parameters, do customer specific logic on rpc method (python)
+            switch (id) {
+                case '_load_remote_waybills_as_pending':
+                    args['NoViaje'] = item.NoViaje
+                    args['NoOperacion'] = item.NoOperacion
                     break;
                 default:
                     break;
             }
-
+            await rpc.query({
+                model: 'tms_customer_waybill.customer_waybill_wizard',
+                method: `${id}`,
+                args: [args],
+            })
         } catch (e) {
             console.error(e)
             throw e
