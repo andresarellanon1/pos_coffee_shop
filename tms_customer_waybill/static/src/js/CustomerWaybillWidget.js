@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onPatched } from "@odoo/owl";
+import { Component, useState, onPatched, onWillUpdateProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 /**
@@ -40,28 +40,16 @@ export class CustomerWaybillWidget extends Component {
             actions: [],
             items: []
         })
-        onPatched(() => {
-            console.warn('patched props', this.props)
+        onWillUpdateProps(() => {
+            console.warn('on will update props')
+            console.log('record:', this.props.record)
+            console.log('value:', this.props.value)
             this.updateState()
-            console.warn('state on patched', this.state)
+        })
+        onPatched(() => {
+            console.log('state on patched', this.state)
         })
     }
-    // get _customer() {
-    //     console.warn('_customer')
-    //     return this.state.items
-    // }
-    // get _headers() {
-    //     console.warn('_headers')
-    //     return this.state.items
-    // }
-    // get _actions() {
-    //     console.warn('_actions')
-    //     return this.state.items
-    // }
-    // get _items() {
-    //     console.warn('_items')
-    //     return this.state.items
-    // }
     updateState() {
         try {
             if (this.props.record.data.contact && this.props.record.data.endpoint) {

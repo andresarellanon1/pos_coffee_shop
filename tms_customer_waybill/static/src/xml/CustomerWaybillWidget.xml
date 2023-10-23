@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
-    <t t-esc="state"/>
-    <table class="border p-2">
+    <table class="w-full h-auto border p-2">
         <thead>
             <tr>
                 <th t-foreach="state.headers" t-as="header" t-key="header">
