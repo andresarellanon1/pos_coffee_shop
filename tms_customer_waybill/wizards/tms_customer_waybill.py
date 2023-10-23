@@ -27,7 +27,7 @@ class CustomerWaybillWizard(models.TransientModel):
             self.remote_waybills = json_response
 
     @api.model
-    def _load_remote_waybills(self, params):
+    def _load_remote_waybills_rayder(self, params):
         # prepare values
         # set defaults
         # create instance
