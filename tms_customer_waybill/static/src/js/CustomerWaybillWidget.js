@@ -60,7 +60,7 @@ export class CustomerWaybillWidget extends Component {
         })
     }
     _patchStateSwitch() {
-        if (!this.props.record.data.contact && !this.props.record.data.endpoint) return
+        if (!this.props.record.data.contact || !this.props.record.data.endpoint) return
         if (!this.props.record.data.remote_waybills) return
         this.state.customer = this.props.record.data.contact[1]
         switch (this.state.customer) {
@@ -70,7 +70,7 @@ export class CustomerWaybillWidget extends Component {
                 this.state.actions = [{ name: 'Load', id: 'loadRemoteWaybills' }]
                 // @type {RyderViaje[]}
                 this.state.items = []
-                let tmp_items = this.props.recod.data.remote_waybills
+                let tmp_items = this.props.record.data.remote_waybills
                 if (tmp_items && tmp_items.length >= 0) {
                     this.state.items = tmp_items.map(tmp => {
                         return {
