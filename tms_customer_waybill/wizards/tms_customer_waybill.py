@@ -10,7 +10,7 @@ class CustomerWaybillWizard(models.TransientModel):
 
     contact = fields.Many2one('res.partner', string='Contact', required=True, help='Select a contact from the Contacts module.')
     endpoint = fields.Many2one('q_endpoint_catalog.q_endpoint', string='Endpoint',
-                               domain="[('contact_id', '=', contact), ('tags', 'ilike', 'waybill')]",
+                               domain="[('contact_id', '=', contact), ('tags', 'ilike', 'get_remote_waybill')]",
                                required=True, help='Select an endpoint to find the Waybill.')
     remote_waybills = fields.Json(string='Remote Waybills', compute='_compute_remote_waybills', readonly=True, widget='customer_waybill_widget')
 
