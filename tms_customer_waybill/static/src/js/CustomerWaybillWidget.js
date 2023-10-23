@@ -62,7 +62,8 @@ export class CustomerWaybillWidget extends Component {
                         this.state.actions = ['loadRemoteWaybills']
                         // @type {RyderViaje[]}
                         let tmp_items = this.props.value.Data
-                        if (tmp_items && tmp_items.lenght >= 0) {
+                        console.warn(tmp_items)
+                        if (tmp_items && tmp_items.length >= 0) {
                             this.state.items = tmp_items.map(tmp => {
                                 return {
                                     id: tmp.NoViaje,
