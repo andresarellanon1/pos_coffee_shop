@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_configuration_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.configuration.tree</field>
+        <field name="model">fleet.vehicle.configuration</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicle Configurations">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="axes"/>
+                <field name="tires"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_configuration_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.configuration.form</field>
+        <field name="model">fleet.vehicle.configuration</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Vehicle Configuration">
+                    <group>
+                        <group string="Vehicle Configuration">
+                            <field required="1" name="code"/>
+                            <field required="1" name="name"/>
+                            <field name="axes"/>
+                            <field name="tires"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_configuration_action" model="ir.actions.act_window">
+        <field name="name">Vehicle Configurations</field>
+        <field name="res_model">fleet.vehicle.configuration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Crear the first vehicle configuration.</p>
+        </field>
+    </record>
+</odoo>

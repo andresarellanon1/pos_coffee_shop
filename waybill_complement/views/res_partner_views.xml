@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherited_res_partner_wc_view_form" model="ir.ui.view">
+        <field name="name"></field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_mx_edi_extended.mx_partner_address_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='zip']" position="before">
+                <field name="state_code" invisible="1"/>
+                <field name="postal_code" placeholder="Postal Code" class="o_address_zip" style="flex: 2 1 auto"
+                    domain="[('state_code', '=', state_code)]"/>
+            </xpath>
+            <xpath expr="//field[@name='l10n_mx_edi_colony']" position="before">
+                <field name="colony" placeholder="Colony" style="flex: 2 1 auto"/>
+            </xpath>
+            <xpath expr="//field[@name='zip']" position="attributes">
+                <attribute name="attrs">{'invisible': [('country_enforce_cities', '=', True), ('postal_code', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_mx_edi_colony']" position="attributes">
+                <attribute name="attrs">{'invisible': [('country_enforce_cities', '=', True), ('colony', '!=', False)]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="inherited_res_partner_wc2_view_form" model="ir.ui.view">
+        <field name="name"></field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_mx_edi_40.l10n_mx_edi_inh_40_res_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_mx_edi_no_tax_breakdown']" position="after">
+                <field name="tax_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cfdi40_waybill_complement20" inherit_id="l10n_mx_edi_40.cfdiv40">
+        <!-- Waybill Complement 2.0 Starts -->
+        <xpath expr="*" position="inside">
+            <t t-if="record.waybill_ids">
+                <cfdi:Complemento
+                    xmlns:cfdi="http://www.sat.gob.mx/cfd/4">
+                    <cartaporte20:CartaPorte
+                        xmlns:cartaporte20="http://www.sat.gob.mx/CartaPorte20"
+                        t-att-TranspInternac="'Sí' if datos_cp['EsTranspInternac'] else 'No'"
+                        t-att-TotalDistRec="datos_cp['TotalDistRec']"
+                        t-att-EntradaSalidaMerc="'Salida' if datos_cp['EsTranspInternac'] else None"
+                        t-att-ViaEntradaSalida="datos_cp['ViaEntradaSalida'] if datos_cp['EsTranspInternac'] else None"
+                        t-att-PaisOrigenDestino="datos_cp['PaisOrigenDestino'] if datos_cp['EsTranspInternac'] else None"
+                        Version="2.0">
+                        <cartaporte20:Ubicaciones>
+                            <t t-foreach="datos_cp['Ubicaciones']" t-as="ubicacion">
+                                <cartaporte20:Ubicacion
+                                    t-att-TipoUbicacion="ubicacion['TipoUbicacion']"
+                                    t-att-IDUbicacion="ubicacion['IDUbicacion']"
+                                    t-att-DistanciaRecorrida="ubicacion['DistanciaRecorrida']"
+                                    t-att-FechaHoraSalidaLlegada="ubicacion['FechaHoraSalidaLlegada']"
+                                    t-att-RFCRemitenteDestinatario="ubicacion['RFCRemitenteDestinatario']"
+                                    t-att-NumRegIdTrib="ubicacion['NumRegIdTrib'] if ubicacion['RFCRemitenteDestinatario'] == 'XEXX010101000' else None"
+                                    t-att-ResidenciaFiscal="ubicacion['ResidenciaFiscal'] if ubicacion['RFCRemitenteDestinatario'] == 'XEXX010101000' else None">
+                                    <cartaporte20:Domicilio
+                                        t-att-Calle="ubicacion['Domicilio']['Calle']"
+                                        t-att-Colonia="ubicacion['Domicilio']['Colonia']"
+                                        t-att-Municipio="ubicacion['Domicilio']['Municipio']"
+                                        t-att-CodigoPostal="ubicacion['Domicilio']['CodigoPostal']"
+                                        t-att-Estado="ubicacion['Domicilio']['Estado']"
+                                        t-att-Pais="ubicacion['Domicilio']['Pais']"/>
+                                </cartaporte20:Ubicacion>
+                            </t>
+                        </cartaporte20:Ubicaciones>
+
+                        <cartaporte20:Mercancias
+                            t-att-NumTotalMercancias="datos_cp['Mercancias']['NumTotalMercancias']"
+                            t-att-PesoBrutoTotal="datos_cp['Mercancias']['PesoBrutoTotal']"
+                            t-att-UnidadPeso="datos_cp['Mercancias']['UnidadPeso']">
+                            <t t-foreach="datos_cp['Mercancias']['ListaMercancia']" t-as="mercancia">
+                                <cartaporte20:Mercancia
+                                    t-att-BienesTransp="mercancia['BienesTransp']"
+                                    t-att-Cantidad="mercancia['Cantidad']"
+                                    t-att-ClaveUnidad="mercancia['ClaveUnidad']"
+                                    t-att-Descripcion="mercancia['Descripcion']"
+                                    t-att-PesoEnKg="mercancia['PesoEnKg']"
+                                    t-att-FraccionArancelaria="mercancia['FraccionArancelaria'] if EsTranspInternac else None"
+                                    t-att-MaterialPeligroso="mercancia['MaterialPeligroso']"
+                                    t-att-CveMaterialPeligroso="mercancia['CveMaterialPeligroso']"
+                                    t-att-Embalaje="mercancia['Embalaje']"
+                                    t-att-DescripEmbalaje="mercancia['DescripEmbalaje']">
+                                    <cartaporte20:CantidadTransporta
+                                        t-att-Cantidad="mercancia['CantidadTransporta']['Cantidad']"
+                                        t-att-IDOrigen="mercancia['CantidadTransporta']['IDOrigen']"
+                                        t-att-IDDestino="mercancia['CantidadTransporta']['IDDestino']"/>
+                                </cartaporte20:Mercancia>
+                            </t>
+                            <cartaporte20:Autotransporte
+                                t-att-NumPermisoSCT="datos_cp['Autotransporte']['NumPermisoSCT']"
+                                t-att-PermSCT="datos_cp['Autotransporte']['PermSCT']">
+                                <cartaporte20:IdentificacionVehicular
+                                    t-att-AnioModeloVM="datos_cp['Autotransporte']['IdentificacionVehicular']['AnioModeloVM']"
+                                    t-att-ConfigVehicular="datos_cp['Autotransporte']['IdentificacionVehicular']['ConfigVehicular']"
+                                    t-att-PlacaVM="datos_cp['Autotransporte']['IdentificacionVehicular']['PlacaVM']"/>
+                                <cartaporte20:Seguros t-att-AseguraRespCivil="datos_cp['Autotransporte']['Seguros']['AseguraRespCivil']"
+                                t-att-PolizaRespCivil="datos_cp['Autotransporte']['Seguros']['PolizaRespCivil']"
+                                t-att-AseguraMedAmbiente="datos_cp['Autotransporte']['Seguros']['AseguraMedAmbiente'] if datos_cp['TieneMaterialPeligroso'] else None"
+                                t-att-PolizaMedAmbiente="datos_cp['Autotransporte']['Seguros']['PolizaMedAmbiente'] if datos_cp['TieneMaterialPeligroso'] else None"/>
+                                <cartaporte20:Remolques t-if="datos_cp['Autotransporte']['TieneRemolque1']">
+                                    <cartaporte20:Remolque
+                                        t-if="datos_cp['Autotransporte']['TieneRemolque1']"
+                                        t-att-SubTipoRem="datos_cp['Autotransporte']['Remolques'][0]['SubTipoRem']"
+                                        t-att-Placa="datos_cp['Autotransporte']['Remolques'][0]['Placa']"/>
+                                    <cartaporte20:Remolque t-if="datos_cp['Autotransporte']['TieneRemolque2']"
+                                        t-att-SubTipoRem="datos_cp['Autotransporte']['Remolques'][1]['SubTipoRem']"
+                                        t-att-Placa="datos_cp['Autotransporte']['Remolques'][1]['Placa']"/>
+                                </cartaporte20:Remolques>
+                            </cartaporte20:Autotransporte>
+                        </cartaporte20:Mercancias>
+
+                        <cartaporte20:FiguraTransporte>
+                            <t t-foreach="datos_cp['FiguraTransporte']" t-as="figure">
+                                <cartaporte20:TiposFigura
+                                    t-att-TipoFigura="figure['TipoFigura']"
+                                    t-att-RFCFigura="figure['RFCFigura']"
+                                    t-att-NumLicencia="figure['NumLicencia']">
+                                    <t t-foreach="figure['PartesTransporte']" t-as="part">
+                                        <cartaporte20:PartesTransporte t-if="figure.type in ('02', '03')" t-att-ParteTransporte="part.code"/>
+                                    </t>
+                                </cartaporte20:TiposFigura>
+                            </t>
+                        </cartaporte20:FiguraTransporte>
+                    </cartaporte20:CartaPorte>
+                </cfdi:Complemento>
+            </t>
+        </xpath>
+    </template>
+</odoo>

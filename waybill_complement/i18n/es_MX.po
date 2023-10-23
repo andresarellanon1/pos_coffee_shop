@@ -1,0 +1,261 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* waybill_complement
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-08-23 00:00+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: none\n"
+"Language: es_MX\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+"X-Generator: Weblate 3.10\n"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_hazardous_material__active
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_packaging__active
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_sat_merchandise_code__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle_configuration__axes
+msgid "Axes"
+msgstr "Ejes"
+
+#. module: waybill_complement
+#: model:ir.ui.menu,name:waybill_complement.colony_menu_item
+#: model:ir.actions.act_window,name:waybill_complement.colony_action
+msgid "Colonies"
+msgstr "Colonias"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.colony_view_form
+msgid "Colony"
+msgstr "Colonia"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_colony__name
+msgid "Colony Name"
+msgstr "Nombre de Colonia"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_colony__colony_code
+msgid "Colony Code"
+msgstr "Código de Colonia"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_colony__colony_postal_code
+msgid "Colony Postal Code"
+msgstr "Código Postal de Colonia"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle_configuration__code
+msgid "Configuration Code"
+msgstr "Código de Configuración"
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,help:waybill_complement.colony_action
+msgid "Create the first colony."
+msgstr "Crea la primera colonia."
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,help:waybill_complement.hazardous_material_action
+msgid "Create the first hazardous material."
+msgstr "Crea el primer material peligroso."
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,help:waybill_complement.packaging_action
+msgid "Create the first packaging."
+msgstr "Crea el primer embalaje."
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,help:waybill_complement.postal_code_action
+msgid "Create the first postal code."
+msgstr "Crea el primer código postal."
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,help:waybill_complement.sat_merchandise_code_action
+msgid "Create the first SAT merchandise code."
+msgstr "Crea el primer código de SAT de mercancia."
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,help:waybill_complement.fleet_vehicle_configuration_action
+msgid "Crear the first vehicle configuration."
+msgstr "Crea la primer configuración del vehiculo."
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,help:waybill_complement.fleet_vehicle_trailer_subtype_action
+msgid "Crear the first vehicle configuration."
+msgstr "Crear el primer Subtipo Remolque."
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_hazardous_material__name
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_packaging__name
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_sat_merchandise_code__name
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle_configuration__name
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle_trailer_subtype__name
+msgid "Description"
+msgstr "Descripción"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.inherited_tms_waybill_wc_view_form
+msgid "Destinations"
+msgstr "Destinos"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_tms_waybill_transportable_line__destination_id
+msgid "Destination"
+msgstr "Destino"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.hazardous_material_view_form
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_sat_merchandise_code__hazardous_material
+msgid "Hazardous Material"
+msgstr "Material Peligroso"
+
+#. module: waybill_complement
+#: model:ir.ui.menu,name:waybill_complement.hazardous_material_menu_item
+#: model:ir.actions.act_window,name:waybill_complement.hazardous_material_action
+msgid "Hazardous Materials"
+msgstr "Materiales Peligrosos"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_hazardous_material__code
+#: model:ir.model.fields,field_description:waybill_complement.field_tms_waybill_transportable_line__hazardous_material_id
+msgid "Hazardous Material Code"
+msgstr "Código de Material Peligroso"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_tms_waybill_transportable_line__is_hazardous_material
+msgid "Is Hazardous Material?"
+msgstr "¿Es Material Peligroso?"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle__rented
+msgid "Is Rented?"
+msgstr "¿Es Rentado?"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_tms_waybill__is_transfer
+msgid "Is Transfer?"
+msgstr "¿Es Traslado?"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.packaging_view_form
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_hazardous_material__packaging
+#: model:ir.model.fields,field_description:waybill_complement.field_tms_waybill_transportable_line__packaging_code_id
+msgid "Packaging"
+msgstr "Embalaje"
+
+#. module: waybill_complement
+#: model:ir.ui.menu,name:waybill_complement.packaging_menu_item
+#: model:ir.actions.act_window,name:waybill_complement.packaging_action
+msgid "Packaging"
+msgstr "Embalajes"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_packaging__code
+msgid "Packaging Code"
+msgstr "Código de Embalaje"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_tms_waybill_transportable_line__merchandise_weight
+msgid "Weight in KG"
+msgstr "Peso en KG"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_postal_code__name
+#: model:ir.model.fields,field_description:waybill_complement.field_res_partner__postal_code
+#: model_terms:ir.ui.view,arch_db:waybill_complement.postal_code_view_form
+#: model_terms:ir.ui.view,arch_db:waybill_complement.inherited_res_partner_wc_view_form
+msgid "Postal Code"
+msgstr "Código Postal"
+
+#. module: waybill_complement
+#: model:ir.ui.menu,name:waybill_complement.postal_code_menu_item
+#: model:ir.actions.act_window,name:waybill_complement.postal_code_action
+msgid "Postal Codes"
+msgstr "Códigos Postales"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.sat_merchandise_code_view_form
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_sat_merchandise_code__code
+#: model:ir.model.fields,field_description:waybill_complement.field_tms_waybill_transportable_line__sat_merchandise_code_id
+msgid "SAT Merchandise Code"
+msgstr "Código de SAT de Mercancia"
+
+#. module: waybill_complement
+#: model:ir.ui.menu,name:waybill_complement.sat_merchandise_menu_item
+#: model:ir.actions.act_window,name:waybill_complement.sat_merchandise_code_action
+msgid "SAT Merchandise Codes"
+msgstr "Códigos de SAT de Mercancias"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_l10n_mx_edi_postal_code__state_code
+msgid "State Code"
+msgstr "Código de Estado"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle__sct_permit_number
+msgid "SCT Permit Number"
+msgstr "Número Permiso SCT"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle__sct_permit
+msgid "SCT Permit"
+msgstr "Permiso SCT"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle_configuration__tires
+msgid "Tires"
+msgstr "Llantas"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle_trailer_subtype__code
+msgid "Trailer Subtype Code"
+msgstr "Código de Subtipo de Remolque"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.fleet_vehicle_trailer_subtype_view_form
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle__trailer_subtype
+msgid "Trailer Subtype"
+msgstr "Subtipo de Remolque"
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,name:waybill_complement.fleet_vehicle_trailer_subtype_action
+#: model:ir.ui.menu,name:waybill_complement.fleet_vehicle_trailer_subtype_menu_item
+msgid "Trailer Subtypes"
+msgstr "Subtipos de Remolque"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle__tenant
+msgid "Tenant"
+msgstr "Arrendatario"
+
+#. module: waybill_complement
+#: model:ir.model.fields,field_description:waybill_complement.field_res_partner__tax_id
+msgid "Tax Identity Registration Number"
+msgstr "Número de Registro de Identidad Tributaria"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.fleet_vehicle_configuration_view_form
+#: model:ir.model.fields,field_description:waybill_complement.field_fleet_vehicle__vehicle_configuration
+msgid "Vehicle Configuration"
+msgstr "Configuración de Vehiculo"
+
+#. module: waybill_complement
+#: model:ir.actions.act_window,name:waybill_complement.fleet_vehicle_configuration_action
+#: model:ir.ui.menu,name:waybill_complement.fleet_vehicle_configuration_menu_item
+msgid "Vehicle Configurations"
+msgstr "Configuraciones de Vehiculo"
+
+#. module: waybill_complement
+#: model_terms:ir.ui.view,arch_db:waybill_complement.inherited_fleet_vehicle_wc_view_form
+msgid "Waybill Complement"
+msgstr "Complemento Carta Porte"
