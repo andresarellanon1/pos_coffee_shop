@@ -61,7 +61,7 @@ export class CustomerWaybillWidget extends Component {
     }
     _patchStateSwitch() {
         if (!this.props.record.data.contact && !this.props.record.data.endpoint) return
-        if (!this.props.recod.data.remote_waybills) return
+        if (!this.props.record.data.remote_waybills) return
         this.state.customer = this.props.record.data.contact[1]
         switch (this.state.customer) {
             // A case for each customer use case
