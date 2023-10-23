@@ -26,15 +26,16 @@ export class CustomerWaybillWidget extends Component {
             items: []
         })
         onWillUpdateProps(() => {
-            console.warn('will update props', this.props)
+            // console.warn('will update props', this.props)
         })
         onPatched(() => {
             console.warn('patched props', this.props)
+            this.updateState()
+            console.warn('state on patched', this.state)
         })
 
     }
     updateState() {
-        console.warn(this.state)
         if (!this.props.value) return
         if (this.props.record.data.contact) {
             this.state.customer === this.props.record.data.contact[1]
@@ -44,7 +45,7 @@ export class CustomerWaybillWidget extends Component {
                     this.headers = ['No. viaje', 'No. Operacion']
                     this.actions = ['loadRemoteWaybills']
                     // @type {RyderViaje[]}
-                    let tmp_items = this.props.value.data
+                    let tmp_items = this.props.value.Data
                     if (tmp_items.lenght >= 0) {
                         this.state.items = tmp_items.map(tmp => {
                             return {
