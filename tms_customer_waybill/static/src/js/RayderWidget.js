@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import { Component } from "@odoo/owl";
+import rpc from 'web.rpc';
 
 /**
  * @typedef {Object} RyderViaje
@@ -17,11 +18,15 @@ import { Component } from "@odoo/owl";
  */
 export class RayderWidget extends Component {
     setup() {
-        // console.warn(this.props);
+        console.warn(this.props);
     }
-    actionCall() {
-        console.warn('Ryder action call')
-        console.log(this.props.item)
+    async loadRemoteWaybills() {
+        console.log('loadRemoteWaybills', this.props.item)
+        await rpc.query({
+            model: 'tms_customer_waybill.customer_waybill_wizard',
+            method: '_load_remote_waybills',
+            args: [ids],
+        })
     }
 }
 

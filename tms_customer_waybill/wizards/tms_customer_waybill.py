@@ -25,3 +25,11 @@ class CustomerWaybillWizard(models.TransientModel):
             custom_attributes = []
             json_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(self.endpoint.id, custom_headers=custom_headers, custom_attributes=custom_attributes)
             self.remote_waybills = json_response
+
+    @api.model
+    def _load_remote_waybills(self, params):
+        # prepare values
+        # set defaults
+        # create instance
+        # leave at pending state
+        pass
