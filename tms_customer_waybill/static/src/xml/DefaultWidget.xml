@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="tms_customer_waybill.RayderWidget" owl="1">
+<t t-name="tms_customer_waybill.DefaultWidget" owl="1">
     <table>
         <thead>
             <tr>
