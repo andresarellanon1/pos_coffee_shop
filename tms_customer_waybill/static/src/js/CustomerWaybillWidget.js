@@ -10,9 +10,14 @@ export class CustomerWaybillWidget extends Component {
     setup() {
         console.warn('Remote Waybill props', this.props);
     }
-    actionCall() {
-        console.warn(this.props.record)
-        console.log(this.props.value)
+    get isRyder() {
+        try {
+            if (this.props.record.data.contact && this.record.data.contact[1] === 'Ryder')
+                return true
+            return false
+        } catch (e) {
+            return false
+        }
     }
 }
 

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
     <div class="border p-2 flex flex-col">
-        <RayderWidget t-if="props.record.data.contact[1].includes('Ryder')" items="props.value" /> 
+        <RayderWidget t-if="isRyder" items="props.value" /> 
         <DefaultWidget t-else="" /> 
     </div>
 </t>
