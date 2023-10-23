@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
-        <table t-on-change="updateState" class="border p-2 flex flex-col">
+    <table t-on-change="updateState" class="border p-2 flex flex-col">
         <thead>
             <tr>
                 <th t-foreach="state.headers" t-as="header" t-key="header">
