@@ -38,7 +38,7 @@ export class CustomerWaybillWidget extends Component {
     updateState() {
         if (!this.props.value) return
         if (this.props.record.data.contact) {
-            this.state.customer === this.props.record.data.contact[1]
+            this.state.customer = this.props.record.data.contact[1]
             console.log('im if contact true', this.state.customer)
             switch (this.state.customer) {
                 // Bussiness (customer) specific logic inside named cases
