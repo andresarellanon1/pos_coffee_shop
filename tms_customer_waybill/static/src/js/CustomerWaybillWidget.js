@@ -40,18 +40,17 @@ export class CustomerWaybillWidget extends Component {
             actions: [],
             items: []
         })
-        onWillUpdateProps(() => {
-            console.warn('on will update props')
-            console.log('record:', this.props.record)
-            console.log('value:', this.props.value)
-            this.updateState()
+        onWillUpdateProps(async () => {
+            await this.updateState()
         })
         onPatched(() => {
             console.log('state on patched', this.state)
         })
     }
-    updateState() {
+    async updateState() {
         try {
+            console.log('record:', this.props.record)
+            console.log('value:', this.props.value)
             if (this.props.record.data.contact && this.props.record.data.endpoint) {
                 this.state.customer = this.props.record.data.contact[1]
                 switch (this.state.customer) {
