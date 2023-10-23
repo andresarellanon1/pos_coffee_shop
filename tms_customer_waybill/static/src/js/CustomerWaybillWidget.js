@@ -2,8 +2,7 @@
 
 import { Component, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { RayderWidget } from "@tms_customer_waybill/js/RayderWidget"
-import { DefaultWidget } from "@tms_customer_waybill/js/RayderWidget"
+
 /**
  * @typedef {Object} RyderViaje
  * @property {number} NoOperacion - E.g., 108
