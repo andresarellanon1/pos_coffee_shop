@@ -46,6 +46,18 @@ export class CustomerWaybillWidget extends Component {
             console.warn('state on patched', this.state)
         })
     }
+    get _customer() {
+        return this.state.items
+    }
+    get _headers() {
+        return this.state.items
+    }
+    get _actions() {
+        return this.state.items
+    }
+    get _items() {
+        return this.state.items
+    }
     updateState() {
         try {
             if (this.props.record.data.contact && this.props.record.data.endpoint) {
@@ -81,11 +93,28 @@ export class CustomerWaybillWidget extends Component {
             switch (this.state.customer) {
                 case 'Ryder':
                     let item = this.state.items.find(element => element.id === id)
-                    await rpc.query({
-                        model: 'tms_customer_waybill.customer_waybill_wizard',
-                        method: `load_remote_waybill_${this.state.customer}`,
-                        args: [{ item: item }],
+                    let endpoints = await rpc.query({
+                        model: 'q_endpoint_catalog.q_endpoint',
+                        method: 'get_endpoint_ids_by_contact_name',
+                        args: ['Quadro Soluciones'],
                     })
+                    let endpoint = endpoints.find(value => value.name === '');
+                    let response = await rpc.query({
+                        model: 'q_endpoint_catalog.q_endpoint',
+                        method: 'send_request',
+                        args: [
+                            endpoint.id,
+                            [],
+                            []
+                        ],
+                    });
+                    let params = {}
+                    params[''] =
+                        await rpc.query({
+                            model: 'tms_customer_waybill.customer_waybill_wizard',
+                            method: `load_remote_waybill_as_pending`,
+                            args: [{ params: params }],
+                        })
                     break;
                 default:
                     break;
@@ -100,5 +129,5 @@ export class CustomerWaybillWidget extends Component {
 
 CustomerWaybillWidget.supportedFieldTypes = ['json']
 CustomerWaybillWidget.template = 'tms_customer_waybill.CustomerWaybillWidget';
-// CustomerWaybillWidget.components = {};
+// CustomerWaybillWidget.components = {}; // keep commented unless you are adding children components
 registry.category('fields').add('customer_waybill_widget', CustomerWaybillWidget);
