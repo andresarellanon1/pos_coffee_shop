@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onWillUpdateProps, onPatched } from "@odoo/owl";
+import { Component, useState, onPatched } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 /**
@@ -17,50 +17,63 @@ import { registry } from "@web/core/registry";
  * @property {string} Existe_XML_I - E.g., "Si"
  * @property {string} Existe_XML_C - E.g., "No"
  */
+
+/**
+ * @typedef {Object} RemoteWaybillItem
+ * @property {number} id - E.g., 108 
+ * @property {number} name - E.g., 6322 
+ */
+
+/**
+ * @typedef {Object} CustomerWaybillState
+ * @property {string} customer - E.g., [] 
+ * @property {string[]} headers - E.g., [] 
+ * @property {string[]} actions - E.g., [] 
+ * @property {RemoteWaybillItem[]} items - E.g., [] 
+ */
 export class CustomerWaybillWidget extends Component {
     setup() {
+        // @type {CustomerWaybillState}
         this.state = useState({
             customer: '',
             headers: [],
             actions: [],
             items: []
         })
-        onWillUpdateProps(() => {
-            // console.warn('will update props', this.props)
-        })
         onPatched(() => {
             console.warn('patched props', this.props)
             this.updateState()
             console.warn('state on patched', this.state)
         })
-
     }
     updateState() {
-        if (!this.props.value) return
-        if (this.props.record.data.contact) {
-            this.state.customer = this.props.record.data.contact[1]
-            console.log('im if contact true', this.state.customer)
-            switch (this.state.customer) {
-                // Bussiness (customer) specific logic inside named cases
-                case 'Ryder':
-                    console.log('im customer ryder')
-                    this.headers = ['No. viaje', 'No. Operacion']
-                    this.actions = ['loadRemoteWaybills']
-                    // @type {RyderViaje[]}
-                    let tmp_items = this.props.value.Data
-                    if (tmp_items.lenght >= 0) {
-                        this.state.items = tmp_items.map(tmp => {
-                            return {
-                                id: tmp.NoViaje,
-                                name: tmp.NoOperacion
-                            }
-                        })
-                    }
-                    break;
-                default:
-                    break;
-            }
+        try {
+            if (this.props.record.data.contact && this.props.record.data.endpoint) {
+                this.state.customer = this.props.record.data.contact[1]
+                switch (this.state.customer) {
+                    // Bussiness (customer) specific logic inside named cases
+                    case 'Ryder':
+                        if (!this.props.value.Data) break;
+                        this.state.headers = ['No. Viaje', 'No. Operacion']
+                        this.state.actions = ['loadRemoteWaybills']
+                        // @type {RyderViaje[]}
+                        let tmp_items = this.props.value.Data
+                        if (tmp_items && tmp_items.lenght >= 0) {
+                            this.state.items = tmp_items.map(tmp => {
+                                return {
+                                    id: tmp.NoViaje,
+                                    name: tmp.NoOperacion
+                                }
+                            })
+                        }
+                        break;
+                    default:
+                        break;
+                }
 
+            }
+        } catch (e) {
+            console.error(e)
         }
     }
     async loadRemoteWaybills(id) {
@@ -70,7 +83,7 @@ export class CustomerWaybillWidget extends Component {
                     let item = this.state.items.find(element => element.id === id)
                     await rpc.query({
                         model: 'tms_customer_waybill.customer_waybill_wizard',
-                        method: `load_remote_waybills_${this.state.customer}`,
+                        method: `load_remote_waybill_${this.state.customer}`,
                         args: [{ item: item }],
                     })
                     break;
@@ -80,6 +93,7 @@ export class CustomerWaybillWidget extends Component {
 
         } catch (e) {
             console.error(e)
+            throw e
         }
     }
 }
