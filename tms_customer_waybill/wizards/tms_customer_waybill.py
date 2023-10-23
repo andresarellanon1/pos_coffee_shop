@@ -31,5 +31,8 @@ class CustomerWaybillWizard(models.TransientModel):
         # prepare values
         # set defaults
         # create instance
+        # self.env['tms.waybill'].create({
+        #         
+        #     })
         # leave at pending state
         pass

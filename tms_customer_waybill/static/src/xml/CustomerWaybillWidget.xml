@@ -4,7 +4,6 @@
     <table t-on-change="updateState" class="border p-2 flex flex-col">
         <thead>
             <tr>
-                    <t t-esc="state"/>
                     <!-- <th t-foreach="state.headers" t-as="header" t-key="header"> -->
                     <!--     <t t-esc="header"/> -->
                     <!-- </th> -->

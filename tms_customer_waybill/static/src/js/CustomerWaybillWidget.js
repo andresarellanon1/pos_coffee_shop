@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillUpdateProps, onPatched } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 /**
@@ -19,13 +19,19 @@ import { registry } from "@web/core/registry";
  */
 export class CustomerWaybillWidget extends Component {
     setup() {
-        console.warn('Remote Waybill props', this.props);
         this.state = useState({
             customer: '',
             headers: [],
             actions: [],
             items: []
         })
+        onWillUpdateProps(() => {
+            console.warn('will update props', this.props)
+        })
+        onPatched(() => {
+            console.warn('patched props', this.props)
+        })
+
     }
     updateState() {
         console.warn(this.state)
