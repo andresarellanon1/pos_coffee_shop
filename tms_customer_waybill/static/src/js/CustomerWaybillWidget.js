@@ -42,7 +42,9 @@ export class CustomerWaybillWidget extends Component {
     // CREATE ODOO MODULE TO STORE PROCESSES, USE ENDPOINT, CONTACT, AND A PROCESS NAME (REPLACE CONTACT WITH THIS NAME). 
     // ADD HEADERS,ACTIONS AND ITEMS KEYS and read them from here, acomplishing making this Owl component completly generic
     // NOTE: for now, we will work using switch cases.
-    // NOTE: main issue to develop this process model approach is to figure how a way to unwrap the data from the remote APIs eg: this.props.record.data.remote_waybills.>>>Data<<<
+    // NOTE: main issue to develop this process model approach is to figure how a way to unwrap the data from the remote APIs 
+    // E.g, 
+    // this.props.record.data.remote_waybills.>>>Data<<<
     setup() {
         // @type {CustomerWaybillState}
         this.state = useState({
@@ -66,9 +68,10 @@ export class CustomerWaybillWidget extends Component {
         this.state.customer = this.props.record.data.contact[1]
         switch (this.state.customer) {
             // A case for each customer use case
+            // must be exact same name as in contact form, with spaces and caps 
             case 'Ryder':
                 this.state.headers = ['No. Viaje', 'No. Operacion']
-                this.state.actions = [{ name: 'Load', id: 'loadRemoteWaybills' }]
+                this.state.actions = [{ name: 'Load', id: '_load_remote_waybills_as_pending_ryder' }]
                 // @type {RyderViaje[]}
                 this.state.items = []
                 let tmp_items = this.props.record.data.remote_waybills.Data
@@ -91,9 +94,10 @@ export class CustomerWaybillWidget extends Component {
             // A case for each customer use case rpc method
             // Only prepare parameters, do customer specific logic on rpc method (python)
             switch (id) {
-                case '_load_remote_waybills_as_pending':
+                case '_load_remote_waybills_as_pending_ryder':
                     args['NoViaje'] = item.NoViaje
                     args['NoOperacion'] = item.NoOperacion
+                    args['ContactName'] = this.state.customer
                     break;
                 default:
                     break;

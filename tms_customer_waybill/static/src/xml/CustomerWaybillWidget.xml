@@ -18,7 +18,7 @@
                     <t t-esc="item[key]"/>
                 </td> 
                 <td t-foreach="state.actions" t-as="action" t-key="action">
-                    <button type="button" class="p-2 flex items-center justify-center text-center border rounded" t-on-click="() => this.actionCall(action.id)">
+                    <button type="button" class="p-2 flex items-center justify-center text-center border rounded" t-on-click="() => this.rpcActionCall(action.id)">
                         <t t-esc="action.name"/>
                     </button>
                 </td>

@@ -26,12 +26,34 @@ class CustomerWaybillWizard(models.TransientModel):
             self.remote_waybills = json_response
 
     @api.model
-    def _load_remote_waybills_as_pending(self, params):
-        # prepare values
-        # set defaults
-        # create instance
+    def _load_remote_waybills_as_pending_ryder(self, args):
+        no_operacion = args['NoOperacion']
+        no_viaje = args['NoViaje']
+        contact_name = args['ContactName']
+        custom_headers = []
+        custom_attributes = [{
+            "OperacionID": no_operacion,
+            "ViajeID": no_viaje
+        }]
+        endpoints = self.env['q_endpoint_catalog.q_endpoint'].get_endpoint_ids_by_contact_name(contact_name)
+        endpoint = next((ep for ep in endpoints if ep.name == 'GetDatosCartaPorte'), None)
+        json_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(endpoint.id, custom_headers=custom_headers, custom_attributes=custom_attributes)
+        # 
         # self.env['tms.waybill'].create({
-        #
-        #     })
+        #     'operating_unit_id': operating_unit_id,
+        #     'name': waybill_name,
+        #     'partner_id': customer_partner_id,
+        #     'departure_address_id': departure_address_id,
+        #     'arrival_address_id': arrival_address_id,
+        #     'state': 'draft',
+        #     'date_order': date_order,
+        #     'user_id': salesman_user_id,
+        #     'currency_id': currency_id,
+        #     'company_id': company_id,
+        #     'partner_invoice_id': invoice_address_id,
+        #     'partner_order_id': ordering_contact_id,
+        #     'date_start': load_date_sched,
+        #     'date_end': travel_end_sched,
+        # })
         # leave at pending state
         pass
