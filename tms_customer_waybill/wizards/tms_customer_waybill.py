@@ -24,5 +24,4 @@ class CustomerWaybillWizard(models.TransientModel):
             custom_headers = []
             custom_attributes = []
             json_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(self.endpoint.id, custom_headers=custom_headers, custom_attributes=custom_attributes)
-            logger.info(json_response)
             self.remote_waybills = json_response

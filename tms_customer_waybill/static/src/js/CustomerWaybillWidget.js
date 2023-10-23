@@ -8,8 +8,7 @@ import { DefaultWidget } from "@tms_customer_waybill/js/RayderWidget"
 
 export class CustomerWaybillWidget extends Component {
     setup() {
-        console.warn(this.props.record);
-        console.log(RayderWidget)
+        console.warn('Remote Waybill props', this.props);
     }
     actionCall() {
         console.warn(this.props.record)
