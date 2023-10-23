@@ -3,8 +3,9 @@
 <t t-name="tms_customer_waybill.CustomerWaybillWidget" owl="1">
     <div class="border p-2 flex flex-col">
         <t t-if="props.value !== undefined">
-            <RayderWidget t-if="props.record.contact[1].includes('Ryder')" items="props.value" /> 
-            <DefaultWidget t-else="" /> 
+                7u7
+            <!-- <RayderWidget t-if="props.record.contact[1].includes('Ryder')" items="props.value" />  -->
+            <!-- <DefaultWidget t-else="" />  -->
         </t>
     </div>
 </t>
