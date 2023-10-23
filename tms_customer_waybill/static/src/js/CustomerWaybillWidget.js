@@ -49,9 +49,9 @@ export class CustomerWaybillWidget extends Component {
     }
     async updateState() {
         try {
-            console.log('record:', this.props.record)
-            console.log('value:', this.props.value)
             if (this.props.record.data.contact && this.props.record.data.endpoint) {
+                console.log('record:', this.props.record)
+                console.log('value:', this.props.value)
                 this.state.customer = this.props.record.data.contact[1]
                 switch (this.state.customer) {
                     // Bussiness (customer) specific logic inside named cases
@@ -61,7 +61,7 @@ export class CustomerWaybillWidget extends Component {
                         this.state.actions = ['loadRemoteWaybills']
                         // @type {RyderViaje[]}
                         let tmp_items = this.props.value.Data
-                        console.warn(tmp_items)
+                        this.state.items = []
                         if (tmp_items && tmp_items.length >= 0) {
                             this.state.items = tmp_items.map(tmp => {
                                 return {
