@@ -46,18 +46,22 @@ export class CustomerWaybillWidget extends Component {
             console.warn('state on patched', this.state)
         })
     }
-    get _customer() {
-        return this.state.items
-    }
-    get _headers() {
-        return this.state.items
-    }
-    get _actions() {
-        return this.state.items
-    }
-    get _items() {
-        return this.state.items
-    }
+    // get _customer() {
+    //     console.warn('_customer')
+    //     return this.state.items
+    // }
+    // get _headers() {
+    //     console.warn('_headers')
+    //     return this.state.items
+    // }
+    // get _actions() {
+    //     console.warn('_actions')
+    //     return this.state.items
+    // }
+    // get _items() {
+    //     console.warn('_items')
+    //     return this.state.items
+    // }
     updateState() {
         try {
             if (this.props.record.data.contact && this.props.record.data.endpoint) {
