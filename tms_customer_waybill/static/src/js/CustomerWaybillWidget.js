@@ -41,7 +41,8 @@ export class CustomerWaybillWidget extends Component {
             this.state.customer === this.props.record.data.contact[1]
             switch (this.state.customer) {
                 // Bussiness (customer) specific logic inside named cases
-                case 'Ryder':
+                case 'Rayder':
+                    console.log('im customer ryder')
                     this.headers = ['No. viaje', 'No. Operacion']
                     this.actions = ['loadRemoteWaybills']
                     // @type {RyderViaje[]}
