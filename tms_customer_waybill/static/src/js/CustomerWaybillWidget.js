@@ -33,12 +33,13 @@ import rpc from 'web.rpc'
  * @typedef {Object} RemoteWaybillItem
  * @property {number} id - E.g., 108 
  * @property {number} name - E.g., 6322 
+ * @property {ActionObject} name - E.g., 6322 
  */
 
 /**
  * @typedef {Object} ActionObject
- * @property {string} id - E.g.,  "doTask"
- * @property {string} name - E.g., "Accept"
+ * @property {string} name - E.g.,  "doTask"
+ * @property {object} callbck- E.g., "()=>{}"
  */
 
 /**
@@ -54,14 +55,11 @@ export class CustomerWaybillWidget extends Component {
         this.state = useState({
             customer: '',
             headers: [],
-            actions: [],
             items: []
         })
         onWillUpdateProps(() => {
             this._patchStateSwitch()
         })
-        // onPatched(() => {
-        // })
     }
     _patchStateSwitch() {
         if (!this.props.record.data.contact || !this.props.record.data.endpoint) return
@@ -69,8 +67,7 @@ export class CustomerWaybillWidget extends Component {
         this.state.customer = this.props.record.data.contact[1]
         switch (this.state.customer) {
             case 'Ryder':
-                this.state.headers = ['No. Viaje', 'No. Operacion']
-                this.state.actions = [{ name: 'Load', id: 'load_remote_waybills_as_pending_ryder' }]
+                this.state.headers = ['No. Viaje', 'No. Operacion', 'Actions']
                 // @type {RyderViaje[]}
                 this.state.items = []
                 let tmp_items = this.props.record.data.remote_waybills.Data
@@ -78,49 +75,27 @@ export class CustomerWaybillWidget extends Component {
                     this.state.items = tmp_items.map(tmp => {
                         return {
                             id: tmp.NoViaje,
-                            name: tmp.NoOperacion
+                            name: tmp.NoOperacion,
+                            actions: [{
+                                name: 'Load',
+                                callback: () => {
+                                    rpc.query({
+                                        model: 'tms_customer_waybill.customer_waybill_wizard',
+                                        method: 'load_remote_waybills_as_pending_ryder',
+                                        args: [{
+                                            NoViaje: tmp.NoViaje,
+                                            NoOperacion: tmp.NoOperacion,
+                                            ContactName: this.state.customer
+                                        }],
+                                    })
+                                }
+                            }]
                         }
                     })
                 }
                 break;
             default:
-                // this.state.headers = this.record.process.header
-                // this.state.keys = this.record.process.keys
-                // this.state.actions = this.record.process.actions               
-                // this.state.items = []
-                // if (isWrapped)
-                //     let tmp_items = this.props.record[Wrapper]
-                // if (tmp_items && tmp_items.length >= 0) {
-                //     this.state.items = tmp_items.map(tmp => {
-                //         return {
-                //             id: tmp[key[0]],
-                //             name: tmp[key[1]]
-                //         }
-                //     })
-                // }
                 break;
-        }
-    }
-    async rpcActionCall(id, item) {
-        try {
-            let args = {}
-            switch (id) {
-                case 'load_remote_waybills_as_pending_ryder':
-                    args['NoViaje'] = item.NoViaje
-                    args['NoOperacion'] = item.NoOperacion
-                    args['ContactName'] = this.state.customer
-                    break;
-                default:
-                    break;
-            }
-            await rpc.query({
-                model: 'tms_customer_waybill.customer_waybill_wizard',
-                method: `${id}`,
-                args: [args],
-            })
-        } catch (e) {
-            console.error(e)
-            throw e
         }
     }
 }
