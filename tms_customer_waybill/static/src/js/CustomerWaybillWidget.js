@@ -54,13 +54,10 @@ export class CustomerWaybillWidget extends Component {
             items: []
         })
         onWillUpdateProps(() => {
-            console.log('will patch record:', this.props.record.data)
             this._patchStateSwitch()
         })
-        onPatched(() => {
-            console.log('record on patched:', this.props.record.data)
-            console.log('state on patched', this.state)
-        })
+        // onPatched(() => {
+        // })
     }
     _patchStateSwitch() {
         if (!this.props.record.data.contact || !this.props.record.data.endpoint) return
@@ -104,7 +101,7 @@ export class CustomerWaybillWidget extends Component {
     }
     async rpcActionCall(id, item) {
         try {
-            args = {}
+            let args = {}
             // A case for each customer use case rpc method
             // Only prepare parameters, do customer specific logic on rpc method (python)
             switch (id) {
