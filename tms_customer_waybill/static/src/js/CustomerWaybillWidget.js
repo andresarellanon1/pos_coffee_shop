@@ -87,7 +87,7 @@ export class CustomerWaybillWidget extends Component {
             default:
                 // this.state.headers = this.record.process.header
                 // this.state.keys = this.record.process.keys
-                // this.state.actions = this.record.process.actions                // @type {RyderViaje[]}
+                // this.state.actions = this.record.process.actions               
                 // this.state.items = []
                 // if (isWrapped)
                 //     let tmp_items = this.props.record[Wrapper]
