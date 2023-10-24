@@ -43,9 +43,15 @@ import rpc from 'web.rpc'
  */
 
 /**
+ * @typedef {Object} RemoteWaybillHeader
+ * @property {string} displayName - E.g.,  "No. Viaje"
+ * @property {string} key - E.g., "NoViaje"
+ */
+
+/**
  * @typedef {Object} CustomerWaybillState
  * @property {string} customer - E.g., [] 
- * @property {string[]} headers - E.g., [] 
+ * @property {RemoteWaybillHeader[]} headers - E.g., [] 
  * @property {ActionObject[]} actions - E.g., [] 
  * @property {RemoteWaybillItem[]} items - E.g., [] 
  */
@@ -67,7 +73,10 @@ export class CustomerWaybillWidget extends Component {
         this.state.customer = this.props.record.data.contact[1]
         switch (this.state.customer) {
             case 'Ryder':
-                this.state.headers = ['No. Viaje', 'No. Operacion', 'Actions']
+                this.state.headers = [
+                    { displayName: 'No. Viaje', key: 'NoViaje' },
+                    { displayName: 'No. Operacion', key: 'NoOperacion' },
+                    { displayName: 'Actions', key: '' }]
                 // @type {RyderViaje[]}
                 this.state.items = []
                 let tmp_items = this.props.record.data.remote_waybills.Data

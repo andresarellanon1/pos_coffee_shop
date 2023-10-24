@@ -4,18 +4,18 @@
     <table class="w-full h-auto border p-2">
         <thead>
             <tr>
-                <th t-foreach="state.headers" t-as="header" t-key="header">
-                    <t t-esc="header"/>
+                <th t-foreach="state.headers" t-as="header" t-key="header.key">
+                    <t t-esc="header.displayName"/>
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr t-foreach="state.items" t-as="item" t-key="item.id">
-                <td t-foreach="Object.keys(item)" t-as="key" t-key="key">
-                    <t t-esc="item[key]"/>
+                <td t-foreach="state.headers" t-as="header" t-key="header.key">
+                    <t t-esc="item[header.key]"/>
                 </td> 
                 <td t-foreach="item.actions" t-as="action" t-key="action.name">
-                    <button type="button" class="p-2 flex items-center justify-center text-center border rounded" t-on-click="() => action.callback()">
+                    <button type="button" class="btn-primary" t-on-click="() => action.callback()">
                         <t t-esc="action.name"/>
                     </button>
                 </td>
