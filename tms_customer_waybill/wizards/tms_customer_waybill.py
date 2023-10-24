@@ -31,6 +31,7 @@ class CustomerWaybillWizard(models.TransientModel):
 
     @api.model
     def _load_remote_waybills_as_pending_ryder(self, args):
+        pass
         # no_operacion = args['NoOperacion']
         # no_viaje = args['NoViaje']
         # contact_name = args['ContactName']
