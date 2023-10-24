@@ -1,7 +1,18 @@
 /** @odoo-module **/
 
-import { Component, useState, onPatched, onWillUpdateProps } from "@odoo/owl";
+import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import rpc from 'web.rpc'
+
+/**
+* TODO: REPLACE SWITCH CASES WITH READING FROM AN ODOO MODEL CALLED PROCESSES OR SMTH LIKE THAT
+* CREATE ODOO MODULE TO STORE PROCESSES, USE ENDPOINT, CONTACT, AND A PROCESS NAME (REPLACE CONTACT WITH THIS NAME). 
+* ADD HEADERS,ACTIONS AND ITEMS KEYS and read them from here, acomplishing making this Owl component completly generic
+* NOTE: for now, we will work using switch cases.
+* NOTE: main issue to develop this process model approach is to figure how a way to unwrap the data from the remote APIs 
+* E.g, 
+* this.props.record.data.remote_waybills.>>>Data<<<
+*/
 
 /**
  * @typedef {Object} RyderViaje
@@ -38,13 +49,6 @@ import { registry } from "@web/core/registry";
  * @property {RemoteWaybillItem[]} items - E.g., [] 
  */
 export class CustomerWaybillWidget extends Component {
-    // TODO: REPLACE SWITCH CASES WITH READING FROM AN ODOO MODEL CALLED PROCESSES OR SMTH LIKE THAT
-    // CREATE ODOO MODULE TO STORE PROCESSES, USE ENDPOINT, CONTACT, AND A PROCESS NAME (REPLACE CONTACT WITH THIS NAME). 
-    // ADD HEADERS,ACTIONS AND ITEMS KEYS and read them from here, acomplishing making this Owl component completly generic
-    // NOTE: for now, we will work using switch cases.
-    // NOTE: main issue to develop this process model approach is to figure how a way to unwrap the data from the remote APIs 
-    // E.g, 
-    // this.props.record.data.remote_waybills.>>>Data<<<
     setup() {
         // @type {CustomerWaybillState}
         this.state = useState({
@@ -64,8 +68,6 @@ export class CustomerWaybillWidget extends Component {
         if (!this.props.record.data.remote_waybills) return
         this.state.customer = this.props.record.data.contact[1]
         switch (this.state.customer) {
-            // A case for each customer use case
-            // must be exact same name as in contact form, with spaces and caps 
             case 'Ryder':
                 this.state.headers = ['No. Viaje', 'No. Operacion']
                 this.state.actions = [{ name: 'Load', id: '_load_remote_waybills_as_pending_ryder' }]
@@ -102,8 +104,6 @@ export class CustomerWaybillWidget extends Component {
     async rpcActionCall(id, item) {
         try {
             let args = {}
-            // A case for each customer use case rpc method
-            // Only prepare parameters, do customer specific logic on rpc method (python)
             switch (id) {
                 case '_load_remote_waybills_as_pending_ryder':
                     args['NoViaje'] = item.NoViaje
