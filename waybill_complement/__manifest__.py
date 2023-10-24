@@ -11,7 +11,8 @@
         'account_accountant',
         'tms',
         'fleet',
-        'l10n_mx_edi_40'
+        'l10n_mx_edi_40',
+        'l10n_mx_edi_extended'
     ],
     'data': [
         'security/ir.model.access.csv',
