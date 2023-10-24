@@ -71,14 +71,14 @@ export class CustomerWaybillWidget extends Component {
         if (!this.props.record.data.contact || !this.props.record.data.endpoint) return
         if (!this.props.record.data.remote_waybills) return
         this.state.customer = this.props.record.data.contact[1]
+        this.state.items = []
         switch (this.state.customer) {
             case 'Ryder':
                 this.state.headers = [
                     { displayName: 'No. Viaje', key: 'NoViaje' },
                     { displayName: 'No. Operacion', key: 'NoOperacion' },
-                    { displayName: 'Actions', key: '' }]
+                ]
                 // @type {RyderViaje[]}
-                this.state.items = []
                 let tmp_items = this.props.record.data.remote_waybills.Data
                 if (tmp_items && tmp_items.length >= 0) {
                     this.state.items = tmp_items.map(tmp => {
