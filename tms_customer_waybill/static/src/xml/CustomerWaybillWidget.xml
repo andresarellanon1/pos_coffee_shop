@@ -14,7 +14,7 @@
                 <td t-foreach="Object.keys(item)" t-as="key" t-key="key">
                     <t t-esc="item[key]"/>
                 </td> 
-                <td t-foreach="state.items.actions" t-as="action" t-key="action.name">
+                <td t-foreach="item.actions" t-as="action" t-key="action.name">
                     <button type="button" class="p-2 flex items-center justify-center text-center border rounded" t-on-click="() => action.callback()">
                         <t t-esc="action.name"/>
                     </button>
