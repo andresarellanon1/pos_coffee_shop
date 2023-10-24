@@ -85,6 +85,20 @@ export class CustomerWaybillWidget extends Component {
                 }
                 break;
             default:
+                // this.state.headers = this.record.process.header
+                // this.state.keys = this.record.process.keys
+                // this.state.actions = this.record.process.actions                // @type {RyderViaje[]}
+                // this.state.items = []
+                // if (isWrapped)
+                //     let tmp_items = this.props.record[Wrapper]
+                // if (tmp_items && tmp_items.length >= 0) {
+                //     this.state.items = tmp_items.map(tmp => {
+                //         return {
+                //             id: tmp[key[0]],
+                //             name: tmp[key[1]]
+                //         }
+                //     })
+                // }
                 break;
         }
     }
