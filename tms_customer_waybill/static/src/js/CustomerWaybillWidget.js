@@ -70,7 +70,7 @@ export class CustomerWaybillWidget extends Component {
         switch (this.state.customer) {
             case 'Ryder':
                 this.state.headers = ['No. Viaje', 'No. Operacion']
-                this.state.actions = [{ name: 'Load', id: '_load_remote_waybills_as_pending_ryder' }]
+                this.state.actions = [{ name: 'Load', id: 'load_remote_waybills_as_pending_ryder' }]
                 // @type {RyderViaje[]}
                 this.state.items = []
                 let tmp_items = this.props.record.data.remote_waybills.Data
@@ -105,7 +105,7 @@ export class CustomerWaybillWidget extends Component {
         try {
             let args = {}
             switch (id) {
-                case '_load_remote_waybills_as_pending_ryder':
+                case 'load_remote_waybills_as_pending_ryder':
                     args['NoViaje'] = item.NoViaje
                     args['NoOperacion'] = item.NoOperacion
                     args['ContactName'] = this.state.customer

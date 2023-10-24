@@ -27,7 +27,7 @@ class CustomerWaybillWizard(models.TransientModel):
             self.remote_waybills = json_response
 
     @api.model
-    def _load_remote_waybills_as_pending_ryder(self, args):
+    def load_remote_waybills_as_pending_ryder(self, args):
         try:
             custom_headers = []
             custom_attributes = [{
