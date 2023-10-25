@@ -56,7 +56,7 @@ class CustomerWaybillWizard(models.TransientModel):
                     'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', response['Datos']['OrigenEstado'])], limit=1)),
                     'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', response['Datos']['OrigenPais'])], limit=1)),
                     'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', response['Datos']['OrigenCP'])], limit=1)),
-                    'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('code', '=', response['Datos']['OrigenColonia'])], limit=1)),
+                    'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('colony_code', '=', response['Datos']['OrigenColonia'])], limit=1)),
                     'locality': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', response['Datos']['OrigenLocalidad'])], limit=1)),
                 })
             # search or create destination partners
@@ -73,15 +73,15 @@ class CustomerWaybillWizard(models.TransientModel):
                         "customer": True,
                         "supplier": False,
                         'street': response['Datos']['DestinoCalle'],
-                        'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('code', '=', destine['DestinoMunicipio'])], limit=1)),
+                        'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('l10n_mx_edi_code', '=', destine['DestinoMunicipio'])], limit=1)),
                         'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', destine['DestinoEstado'])], limit=1)),
                         'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', destine['DestinoPais'])], limit=1)),
                         'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', destine['DestinoCP'])], limit=1)),
-                        'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('code', '=', destine['DestinoColonia'])], limit=1)),
+                        'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('colony_code', '=', destine['DestinoColonia'])], limit=1)),
                         'locality': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', destine['DestinoLocalidad'])], limit=1)),
                     }))
             # select index 0 destination partner, at least one is required
-            arrival_address_id = destine_res_partners[0]
+            arrival_address_id = destine_res_partners[0].id
             # select customer (ryder) contact by name
             partner_id = self.env['res.partner'].search([('name', '=', args['ContactName'])], limit=1)
             # create waybill
@@ -93,7 +93,7 @@ class CustomerWaybillWizard(models.TransientModel):
                 'departure_address_id': origin_res_partner,
                 'partner_invoice_id': origin_res_partner,
                 'arrival_address_id': arrival_address_id,
-                'destination_ids': destine_res_partners[1:],
+                'destination_ids': [(6, 0, destine_res_partners[1:].mapped('id'))],
                 'user_id': self.env.user.id,
                 'company_id': self.env.user.company_id.id,
                 # 'date_order': date_order,
