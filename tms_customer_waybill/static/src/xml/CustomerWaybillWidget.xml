@@ -10,12 +10,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr t-foreach="state.items" t-as="item" t-key="item.id">
+            <tr t-foreach="state.items" t-as="item" t-key="item.id" class="border-b">
                 <td t-foreach="state.headers" t-as="header" t-key="header.key">
                     <t t-esc="item[header.key]"/>
                 </td> 
                 <td t-foreach="item.actions" t-as="action" t-key="action.name">
-                    <button type="button" class="btn-primary p-2 flex items-center justify-center text-center border rounded" t-on-click="() => action.callback()">
+                    <button type="button" class="btn-primary p-2 flex items-center justify-center text-center" t-on-click="() => action.callback()">
                         <t t-esc="action.name"/>
                     </button>
                 </td>
