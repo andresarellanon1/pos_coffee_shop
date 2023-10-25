@@ -5,16 +5,16 @@
         <field name="tag">q_endpoint_catalog_menu</field>
         <field name="context">{'menu_id': 'menu_q_endpoint_catalog'}</field>
     </record>
-    <record id="action_q_endpoint_request_body_list" model="ir.actions.act_window">
-        <field name="name">Request Body</field>
-        <field name="res_model">q_endpoint_catalog.request_body</field>
-        <field name="view_mode">tree,kanban,form</field>
-    </record>
     <record id="q_endpoint_catalog_menu_action" model="ir.actions.act_window">
         <field name="name">REST Endpoint Catalog</field>
         <field name="res_model">q_endpoint_catalog.q_endpoint</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="q_endpoint_list_view" />
+    </record>
+    <record id="action_q_endpoint_request_body_list" model="ir.actions.act_window">
+        <field name="name">Request Body</field>
+        <field name="res_model">q_endpoint_catalog.request_body</field>
+        <field name="view_mode">tree,kanban,form</field>
     </record>
     <record id="action_q_endpoint_headers_list" model="ir.actions.act_window">
         <field name="name">Headers</field>

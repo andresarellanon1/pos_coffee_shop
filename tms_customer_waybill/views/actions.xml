@@ -7,12 +7,6 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="tms_customer_waybill_wizard_view" />
     </record>
-    <record id="action_tms_api_waybill_form" model="ir.actions.act_window">
-        <field name="name">API Waybill</field>
-        <field name="res_model">tms_customer_waybill.tms_api_waybill</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_tms_api_waybill_form" />
-    </record>
     <record id="action_tms_api_waybill_tree" model="ir.actions.act_window">
         <field name="name">API Waybills</field>
         <field name="res_model">tms_customer_waybill.tms_api_waybill</field>

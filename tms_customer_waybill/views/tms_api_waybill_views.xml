@@ -16,7 +16,6 @@
             </form>
         </field>
     </record>
-
     <record id="view_tms_api_waybill_tree" model="ir.ui.view">
         <field name="name">tms_api_waybill.tree</field>
         <field name="model">tms_customer_waybill.tms_api_waybill</field>
@@ -29,5 +28,4 @@
             </tree>
         </field>
     </record>
-
 </odoo>
