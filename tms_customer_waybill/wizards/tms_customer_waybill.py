@@ -36,7 +36,7 @@ class CustomerWaybillWizard(models.TransientModel):
             }]
             endpoints = self.env['q_endpoint_catalog.q_endpoint'].get_endpoint_ids_by_contact_name(args['ContactName'])
             endpoint = next((ep for ep in endpoints if ep['name'] == 'GetDatosCartaPorte'), None)
-            json_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(endpoint.id, custom_headers=custom_headers, custom_attributes=custom_attributes)
+            json_response = self.env['q_endpoint_catalog.q_endpoint'].send_request(endpoint['id'], custom_headers=custom_headers, custom_attributes=custom_attributes)
             response = json.loads(json_response)
             # init vars
             origin_res_partner = False
