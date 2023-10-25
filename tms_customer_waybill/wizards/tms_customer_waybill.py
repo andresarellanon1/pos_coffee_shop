@@ -55,7 +55,7 @@ class CustomerWaybillWizard(models.TransientModel):
                     'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', response['Datos']['OrigenPais'])], limit=1)),
                     'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', response['Datos']['OrigenCP'])], limit=1)),
                     'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('colony_code', '=', response['Datos']['OrigenColonia'])], limit=1)),
-                    'locality': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', response['Datos']['OrigenLocalidad'])], limit=1)),
+                    'l10n_mx_edi_locality_id': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', response['Datos']['OrigenLocalidad'])], limit=1)),
                 })
             # search or create destination partners
             for destine in response['Datos']['Destinatarios']:
@@ -74,7 +74,7 @@ class CustomerWaybillWizard(models.TransientModel):
                         'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', destine['DestinoPais'])], limit=1)),
                         'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', destine['DestinoCP'])], limit=1)),
                         'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('colony_code', '=', destine['DestinoColonia'])], limit=1)),
-                        'locality': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', destine['DestinoLocalidad'])], limit=1)),
+                        'l10n_mx_edi_locality_id': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', destine['DestinoLocalidad'])], limit=1)),
                     }))
             # select index 0 destination partner, at least one is required
             arrival_address_id = destine_res_partners[0].id
