@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Define the action for the Remote Waybill Wizzard Form View -->
     <record id="action_open_customer_waybill_wizard" model="ir.actions.act_window">
         <field name="name">Open Customer Waybill Wizard</field>
         <field name="type">ir.actions.act_window</field>
@@ -8,21 +7,16 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="tms_customer_waybill_wizard_view" />
     </record>
-    <!-- Define the action for the Api waybill Form View -->
     <record id="action_tms_api_waybill_form" model="ir.actions.act_window">
         <field name="name">API Waybill</field>
         <field name="res_model">tms_customer_waybill.tms_api_waybill</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_tms_api_waybill_form" />
-        <field name="target">current</field>
     </record>
-    <!-- Define the action for the Api waybill Tree View -->
     <record id="action_tms_api_waybill_tree" model="ir.actions.act_window">
         <field name="name">API Waybills</field>
         <field name="res_model">tms_customer_waybill.tms_api_waybill</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_tms_api_waybill_tree" />
-        <field name="target">current</field>
     </record>
-
 </odoo>
