@@ -9,10 +9,10 @@
     'installable': True,
     'data': [
         'security/ir.model.access.csv',
+        'views/res_partner_views.xml',
         'wizards/tms_customer_waybill_views.xml',
         'views/actions.xml',
         'views/menus.xml',
-        'views/res_partner_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
