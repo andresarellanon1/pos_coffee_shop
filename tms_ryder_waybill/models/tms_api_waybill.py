@@ -1,14 +1,17 @@
 from odoo import models, api
+import logging
+logger = logging.getLogger(__name__)
 
 
-class tms_api_model(models.Model):
-    _inherit = 'tms_customer_waybill.tms_api_model'
+class tms_api_waybill(models.Model):
+    _inherit = 'tms_customer_waybill.tms_api_waybill'
 
     @api.model
     def ryder_get_headers(self):
         return [
             {'displayName': 'No. Viaje', 'key': 'NoViaje'},
             {'displayName': 'No. Operacion', 'key': 'NoOperacion'},
+            {'displayName': 'Status', 'key': 'status'},
         ]
 
     @api.model
@@ -18,6 +21,7 @@ class tms_api_model(models.Model):
                 {'key': 'id', 'value': 'NoViaje'},
                 {'key': 'NoViaje', 'value': 'NoViaje'},
                 {'key': 'NoOperacion', 'value': 'NoOperacion'},
+                {'key': 'status', 'value': 'status'},
             ],
             'actions': [
                 {
@@ -30,11 +34,20 @@ class tms_api_model(models.Model):
             ]
         }
 
-    @ api.model
-    def ryder_get_items(self, raw_remote_waybills):
-        return raw_remote_waybills['Data']
+    @api.model
+    def ryder_get_items(self, raw_remote_waybills, partner_id):
+        # NOTE: could manually construct the identifier here "{NoOperacion}-{partner_prefix}-{NoViaje}"
+        # but rather use the function in case the formating of the identifier ever changes
+        items = raw_remote_waybills['Data']
+        status_retrieved = map(lambda item: {
+            **item,
+            'status': self.get_status_by_transaction_identifier(
+                self.get_transaction_identifier(partner_id, item['NoOperacion'], item['NoViaje'])
+            )
+        }, items)
+        return list(status_retrieved)
 
-    @ api.model
+    @api.model
     def load_remote_waybills_as_pending_ryder(self, args):
         try:
             custom_headers = []
@@ -88,16 +101,16 @@ class tms_api_model(models.Model):
             # select index 0 destination partner, at least one is required
             arrival_address_id = destine_res_partners[0].id
             # select customer (ryder) contact by name
-            partner_id = self.env['res.partner'].search([('name', '=', args['ContactName'])], limit=1)
+            partner_id = self.env['res.partner'].search([('id', '=', args['ContactId'])], limit=1)
             # create waybill
             waybill = self.env['tms.waybill'].create({
                 'state': 'draft',
                 'operating_unit_id': self.env.user.default_operating_unit_id,
                 'partner_id': partner_id,
-                'partner_order_id': origin_res_partner,
-                'departure_address_id': origin_res_partner,
-                'partner_invoice_id': origin_res_partner,
-                'arrival_address_id': arrival_address_id,
+                'partner_order_id': origin_res_partner.id,
+                'departure_address_id': origin_res_partner.id,
+                'partner_invoice_id': origin_res_partner.id,
+                'arrival_address_id': arrival_address_id.id,
                 'destination_ids': [(6, 0, destine_res_partners[1:].mapped('id'))],
                 'user_id': self.env.user.id,
                 'company_id': self.env.user.company_id.id,
@@ -106,6 +119,14 @@ class tms_api_model(models.Model):
                 # 'date_start': load_date_sched,
                 # 'date_end': travel_end_sched,
             })
+            # Don't forget to create transaction history
+            self.env['custom.transaction'].create({
+                'transaction_identifier': self.get_transaction_identifier(partner_id.id, args['NoOperacion'], args['NoViaje']),
+                'contact_id': partner_id.id,
+                'status': waybill.state,
+                'waybill_id': waybill,
+            })
+
             return {
                 'name': 'Waybill list view',
                 'view_id': self.env.ref('tms.view_tms_waybill_form').id,

@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_tms_api_waybill_form" model="ir.ui.view">
+        <field name="name">tms_api_waybill.form</field>
+        <field name="model">tms_customer_waybill.tms_api_waybill</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="transaction_identifier" readonly="1" />
+                        <field name="contact_id" readonly="1" />
+                        <field name="status" readonly="1" />
+                        <field name="waybill_id" readonly="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tms_api_waybill_tree" model="ir.ui.view">
+        <field name="name">tms_api_waybill.tree</field>
+        <field name="model">tms_customer_waybill.tms_api_waybill</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="transaction_identifier" />
+                <field name="contact_id" />
+                <field name="status" />
+                <field name="waybill_id" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

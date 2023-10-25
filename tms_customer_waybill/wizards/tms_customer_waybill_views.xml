@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="tms_customer_waybill_wizard_view" model="ir.ui.view">
-        <field name="name">custom.wizard.form</field>
+        <field name="name">tms.customer.waybill.wizard.form</field>
         <field name="model">tms_customer_waybill.customer_waybill_wizard</field>
         <field name="arch" type="xml">
             <form string="Customer">

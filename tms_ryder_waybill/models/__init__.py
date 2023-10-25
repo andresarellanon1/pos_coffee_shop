@@ -1,1 +1,1 @@
-from . import tms_api_model
+from . import tms_api_waybill

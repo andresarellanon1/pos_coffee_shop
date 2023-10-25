@@ -10,13 +10,15 @@ export class CustomerWaybillWidget extends Component {
             contact: {},
             prefix: {},
             headers: [],
-            items: []
+            items: [],
+            status: {}
         })
         onWillUpdateProps(async (nextProps) => {
-            await this._patchStateSwitch()
+            await this._patchState()
         })
     }
-    async _patchStateSwitch() {
+
+    async _patchState() {
         if (!this.props.record.data.contact || !this.props.record.data.endpoint) return
         if (!this.props.record.data.remote_waybills) return
         this.state.items = []
@@ -26,28 +28,29 @@ export class CustomerWaybillWidget extends Component {
             method: 'get_prefix_by_partner_id',
             args: [this.state.contact.id],
         })
+        let meta = await rpc.query({
+            model: 'tms_customer_waybill.tms_api_waybill',
+            method: `${this.state.prefix}_get_meta`,
+            args: [],
+        })
         this.state.headers = await rpc.query({
-            model: 'tms_customer_waybill.tms_api_model',
+            model: 'tms_customer_waybill.tms_api_waybill',
             method: `${this.state.prefix}_get_headers`,
             args: [],
         })
         let buffer_items = await rpc.query({
-            model: 'tms_customer_waybill.tms_api_model',
+            model: 'tms_customer_waybill.tms_api_waybill',
             method: `${this.state.prefix}_get_items`,
             args: [this.props.record.data.remote_waybills],
         })
         if (buffer_items && buffer_items.length >= 0) {
-            let meta = await rpc.query({
-                model: 'tms_customer_waybill.tms_api_model',
-                method: `${this.state.prefix}_get_meta`,
-                args: [],
-            })
             this.state.items = buffer_items.map(buffer_item => {
                 let item = {}
+                item.status = buffer_item.status
+                item.actions = []
                 for (let pair of meta.pairs) {
                     item[pair.key] = buffer_item[pair.value]
                 }
-                item.actions = []
                 for (let action of meta.actions) {
                     let args = {
                         ContactId: this.state.contact.id
@@ -59,7 +62,7 @@ export class CustomerWaybillWidget extends Component {
                         name: action.name,
                         callback: () => {
                             rpc.query({
-                                model: 'tms_customer_waybill.tms_api_model',
+                                model: 'tms_customer_waybill.tms_api_waybill',
                                 method: `${this.state.prefix}_load_remote_waybills_as_pending`,
                                 args: [args],
                             })
