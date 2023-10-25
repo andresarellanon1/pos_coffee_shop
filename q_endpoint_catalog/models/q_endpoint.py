@@ -120,6 +120,19 @@ class QEndpoint(models.Model):
             return endpoints
         return []
 
+    @api.model
+    def get_endpoint_ids_by_contact_id(self, contact_id):
+        """
+        Retrieve a list of endpoint IDs related to a contact by contact id.
+
+        :param int contact_id: The name of the contact for whom to retrieve related endpoints.
+
+        :return: A list of endpoint IDs associated with the specified contact, or an empty list if no matches are found.
+        :rtype: list
+        """
+        endpoints = self.search_read([('contact_id', '=', contact_id)])
+        return endpoints or []
+
 
 class QEndpointResponseAttributes(models.Model):
     _name = 'q_endpoint_catalog.response_attributes'

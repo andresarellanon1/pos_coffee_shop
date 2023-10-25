@@ -7,12 +7,12 @@
     'images': [],
     'depends': ['base', 'contacts', 'q_endpoint_catalog', 'tms'],
     'installable': True,
-    'application': True,
     'data': [
         'security/ir.model.access.csv',
         'wizards/tms_customer_waybill_views.xml',
         'views/actions.xml',
         'views/menus.xml',
+        'views/res_partner_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
