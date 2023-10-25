@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="view_tms_api_waybill_form" model="ir.ui.view">
+    <record id="tms_api_waybill_form_view" model="ir.ui.view">
         <field name="name">tms_api_waybill.form</field>
         <field name="model">tms_customer_waybill.tms_api_waybill</field>
         <field name="arch" type="xml">
@@ -16,7 +16,7 @@
             </form>
         </field>
     </record>
-    <record id="view_tms_api_waybill_tree" model="ir.ui.view">
+    <record id="tms_api_waybill_tree_view" model="ir.ui.view">
         <field name="name">tms_api_waybill.tree</field>
         <field name="model">tms_customer_waybill.tms_api_waybill</field>
         <field name="arch" type="xml">
