@@ -83,8 +83,9 @@ export class CustomerWaybillWidget extends Component {
                 if (tmp_items && tmp_items.length >= 0) {
                     this.state.items = tmp_items.map(tmp => {
                         return {
-                            id: tmp.NoViaje,
-                            name: tmp.NoOperacion,
+                            id: tmp.NoViaje, // required to keep template generic using id as loop key
+                            NoViaje: tmp.NoViaje,
+                            NoOperacion: tmp.NoOperacion,
                             actions: [{
                                 name: 'Load',
                                 callback: () => {
