@@ -22,7 +22,7 @@ class tms_api_model(models.Model):
             'actions': [
                 {
                     'name': 'Cargar',
-                    'args': [
+                    'pairs': [
                         {'key': 'NoViaje', 'value': 'NoViaje'},
                         {'key': 'NoOperacion', 'value': 'NoOperacion'},
                     ]
