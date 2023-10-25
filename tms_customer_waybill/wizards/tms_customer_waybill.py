@@ -1,6 +1,5 @@
 from odoo import models, fields, api
 import logging
-import json
 logger = logging.getLogger(__name__)
 
 
@@ -53,7 +52,7 @@ class CustomerWaybillWizard(models.TransientModel):
                     "customer": True,
                     "supplier": False,
                     'street': response['Datos']['OrigenCalle'],
-                    'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('code', '=', response['Datos']['OrigenMunicipio'])], limit=1)),
+                    'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('l10n_mx_edi_code', '=', response['Datos']['OrigenMunicipio'])], limit=1)),
                     'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', response['Datos']['OrigenEstado'])], limit=1)),
                     'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', response['Datos']['OrigenPais'])], limit=1)),
                     'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', response['Datos']['OrigenCP'])], limit=1)),
