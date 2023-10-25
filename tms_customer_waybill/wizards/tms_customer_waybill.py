@@ -41,39 +41,39 @@ class CustomerWaybillWizard(models.TransientModel):
             origin_res_partner = False
             destine_res_partners = []
             # search or create origin partner
-            existing_origin_partner = self.env['res.partner'].search([('vat', '=', response['OrigenRFC'])], limit=1)
+            existing_origin_partner = self.env['res.partner'].search([('vat', '=', response['Datos']['OrigenRFC'])], limit=1)
             if existing_origin_partner:
                 origin_res_partner = existing_origin_partner
             else:
                 origin_res_partner = self.env['res.partner'].create({
-                    'vat': response['OrigenRFC'],
-                    'name': response['OrigenNombre'],
+                    'vat': response['Datos']['OrigenRFC'],
+                    'name': response['Datos']['OrigenNombre'],
                     "company_type": "company",
                     "is_company": True,
                     "customer": True,
                     "supplier": False,
-                    'street': response['OrigenCalle'],
-                    'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('code', '=', response['OrigenMunicipio'])], limit=1)),
-                    'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', response['OrigenEstado'])], limit=1)),
-                    'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', response['OrigenPais'])], limit=1)),
-                    'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', response['OrigenCP'])], limit=1)),
-                    'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('code', '=', response['OrigenColonia'])], limit=1)),
-                    'locality': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', response['OrigenLocalidad'])], limit=1)),
+                    'street': response['Datos']['OrigenCalle'],
+                    'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('code', '=', response['Datos']['OrigenMunicipio'])], limit=1)),
+                    'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', response['Datos']['OrigenEstado'])], limit=1)),
+                    'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', response['Datos']['OrigenPais'])], limit=1)),
+                    'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', response['Datos']['OrigenCP'])], limit=1)),
+                    'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('code', '=', response['Datos']['OrigenColonia'])], limit=1)),
+                    'locality': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', response['Datos']['OrigenLocalidad'])], limit=1)),
                 })
             # search or create destination partners
-            for destine in response['Destinatarios']:
+            for destine in response['Datos']['Destinatarios']:
                 existing_destine_partner = self.env['res.partner'].search([('vat', '=', destine['OrigenRFC'])], limit=1)
                 if existing_destine_partner:
                     destine_res_partners.append(existing_destine_partner)
                 else:
                     destine_res_partners.append(self.env['res.partner'].create({
-                        'vat': response['DestinoRFC'],
-                        'name': response['DestinoNombre'],
+                        'vat': response['Datos']['DestinoRFC'],
+                        'name': response['Datos']['DestinoNombre'],
                         "company_type": "company",
                         "is_company": True,
                         "customer": True,
                         "supplier": False,
-                        'street': response['DestinoCalle'],
+                        'street': response['Datos']['DestinoCalle'],
                         'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('code', '=', destine['DestinoMunicipio'])], limit=1)),
                         'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', destine['DestinoEstado'])], limit=1)),
                         'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', destine['DestinoPais'])], limit=1)),
