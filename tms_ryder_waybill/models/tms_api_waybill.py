@@ -90,13 +90,13 @@ class tms_api_waybill(models.Model):
                         'name': destine['DestinoNombre'],
                         "company_type": "company",
                         "is_company": True,
-                        'street': destine['DestinoCalle'],
-                        'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('l10n_mx_edi_code', '=', destine['DestinoMunicipio'])], limit=1)),
-                        'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', destine['DestinoEstado'])], limit=1)),
-                        'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', destine['DestinoPais'])], limit=1)),
-                        'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', destine['DestinoCP'])], limit=1)),
+                        'street': f"{destine['DomicilioCalle']}-{destine['DestinoNumeroExterior']}",
+                        'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('l10n_mx_edi_code', '=', destine['DomicilioMunicipio'])], limit=1)),
+                        'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', destine['DomicilioEstado'])], limit=1)),
+                        'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', destine['DomicilioPais'])], limit=1)),
+                        'postal_code': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.postal.code'].search([('name', '=', destine['DomicilioCP'])], limit=1)),
                         'colony': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.colony'].search([('colony_code', '=', destine['DestinoColonia'])], limit=1)),
-                        'l10n_mx_edi_locality_id': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', destine['DestinoLocalidad'])], limit=1)),
+                        'l10n_mx_edi_locality_id': (lambda el: el.id if el else False)(self.env['l10n_mx_edi.res.locality'].search([('code', '=', destine['DomicilioLocalidad'])], limit=1)),
                     }))
             # select index 0 destination partner, at least one is required
             arrival_address_id = destine_res_partners[0].id
