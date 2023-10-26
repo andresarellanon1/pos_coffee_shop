@@ -43,7 +43,6 @@ export class CustomerWaybillWidget extends Component {
                 if (buffer_items && buffer_items.length >= 0) {
                     this.state.items = buffer_items.map(buffer_item => {
                         let item = {}
-                        item.status = buffer_item.status
                         item.actions = []
                         for (let pair of meta.pairs) {
                             item[pair.key] = buffer_item[pair.value]
