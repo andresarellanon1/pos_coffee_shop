@@ -86,11 +86,11 @@ class tms_api_waybill(models.Model):
                     destine_res_partners.append(existing_destine_partner)
                 else:
                     destine_res_partners.append(self.env['res.partner'].create({
-                        'vat': response['Datos']['DestinoRFC'],
-                        'name': response['Datos']['DestinoNombre'],
+                        'vat': destine['DestinoRFC'],
+                        'name': destine['DestinoNombre'],
                         "company_type": "company",
                         "is_company": True,
-                        'street': response['Datos']['DestinoCalle'],
+                        'street': destine['DestinoCalle'],
                         'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('l10n_mx_edi_code', '=', destine['DestinoMunicipio'])], limit=1)),
                         'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', destine['DestinoEstado'])], limit=1)),
                         'country_id': (lambda el: el.id if el else False)(self.env['res.country'].search([('code', '=', destine['DestinoPais'])], limit=1)),
