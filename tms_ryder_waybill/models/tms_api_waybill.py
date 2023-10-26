@@ -122,11 +122,10 @@ class tms_api_waybill(models.Model):
                 # 'date_end': travel_end_sched,
             })
             # Don't forget to create transaction history
-            self.env['custom.transaction'].create({
+            self.env['tms_customer_waybill.tms_api_waybill'].create({
                 'transaction_identifier': self.get_transaction_identifier(partner.id, args['NoOperacion'], args['NoViaje']),
                 'contact_id': partner.id,
-                'status': waybill.state,
-                'waybill_id': waybill,
+                'waybill_id': waybill.id,
             })
 
             return {
