@@ -100,7 +100,7 @@ class tms_api_waybill(models.Model):
                     }))
             # select index 0 destination partner, at least one is required
             arrival_address_id = destine_res_partners[0].id
-            # select customer (ryder) contact by name
+            # select customer (ryder) contact by id
             partner_id = self.env['res.partner'].search([('id', '=', args['ContactId'])], limit=1)
             # create waybill
             waybill = self.env['tms.waybill'].create({
