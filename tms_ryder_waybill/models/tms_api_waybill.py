@@ -100,6 +100,7 @@ class tms_api_waybill(models.Model):
                     }))
             # select index 0 destination partner, at least one is required
             arrival_address_id = destine_res_partners[0].id
+            # select the rest of the destination lines if any
             destination_partner_ids = map(lambda item: {'id': item.id}, destine_res_partners[1:])
             # select customer (ryder) contact by id
             partner_id = self.env['res.partner'].search([('id', '=', args['ContactId'])], limit=1)
