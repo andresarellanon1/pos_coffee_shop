@@ -110,7 +110,7 @@ class tms_api_waybill(models.Model):
                 'partner_order_id': origin_res_partner.id,
                 'departure_address_id': origin_res_partner.id,
                 'partner_invoice_id': origin_res_partner.id,
-                'arrival_address_id': arrival_address_id.id,
+                'arrival_address_id': arrival_address_id,
                 'destination_ids': [(6, 0, destine_res_partners[1:].mapped('id'))],
                 'user_id': self.env.user.id,
                 'company_id': self.env.user.company_id.id,
