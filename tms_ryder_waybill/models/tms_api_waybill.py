@@ -48,7 +48,7 @@ class tms_api_waybill(models.Model):
         return list(status_retrieved)
 
     @api.model
-    def load_remote_waybills_as_pending_ryder(self, args):
+    def ryder_load_remote_waybills_as_pending(self, args):
         try:
             custom_headers = []
             custom_attributes = [
