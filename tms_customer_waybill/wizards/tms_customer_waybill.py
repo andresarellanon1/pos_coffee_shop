@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 import logging
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,11 @@ class CustomerWaybillWizard(models.TransientModel):
     @api.depends('contact', 'endpoint')
     def _compute_remote_waybills(self):
         self.load_waybills()
+
+    @api.depends('contact')
+    def _validate_prefix(self):
+        if not self.contact.prefix:
+            raise ValidationError("Contact requires a prefix")
 
     def load_waybills(self):
         self.remote_waybills = False
