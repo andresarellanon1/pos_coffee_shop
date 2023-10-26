@@ -103,15 +103,15 @@ class tms_api_waybill(models.Model):
             # select the rest of the destination lines if any
             destination_partner_ids = map(lambda item: {'id': item.id}, destine_res_partners[1:])
             # select customer (ryder) contact by id
-            partner_id = self.env['res.partner'].search([('id', '=', args['ContactId'])], limit=1)
+            partner = self.env['res.partner'].search([('id', '=', args['ContactId'])], limit=1)
             # create waybill
             waybill = self.env['tms.waybill'].create({
                 'state': 'draft',
-                'operating_unit_id': self.env.user.default_operating_unit_id,
-                'partner_id': partner_id,
-                'partner_order_id': origin_res_partner.id,
+                'operating_unit_id': self.env.user.default_operating_unit_id.id,
+                'partner_id': partner.id,
+                'partner_order_id': partner.id,
                 'departure_address_id': origin_res_partner.id,
-                'partner_invoice_id': origin_res_partner.id,
+                'partner_invoice_id': partner.id,
                 'arrival_address_id': arrival_address_id,
                 'destination_ids': [(6, 0, destination_partner_ids)],
                 'user_id': self.env.user.id,
@@ -124,7 +124,7 @@ class tms_api_waybill(models.Model):
             # Don't forget to create transaction history
             self.env['custom.transaction'].create({
                 'transaction_identifier': self.get_transaction_identifier(partner_id.id, args['NoOperacion'], args['NoViaje']),
-                'contact_id': partner_id.id,
+                'contact_id': partner.id,
                 'status': waybill.state,
                 'waybill_id': waybill,
             })
