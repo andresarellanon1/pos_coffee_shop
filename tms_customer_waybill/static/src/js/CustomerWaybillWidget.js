@@ -36,7 +36,7 @@ export class CustomerWaybillWidget extends Component {
             let buffer_items = await rpc.query({
                 model: 'tms_customer_waybill.tms_api_waybill',
                 method: `${this.state.prefix}_get_items`,
-                args: [this.props.record.data.remote_waybills],
+                args: [this.props.record.data.remote_waybills, this.state.contact.id],
             })
             if (buffer_items && buffer_items.length >= 0) {
                 this.state.items = buffer_items.map(buffer_item => {
