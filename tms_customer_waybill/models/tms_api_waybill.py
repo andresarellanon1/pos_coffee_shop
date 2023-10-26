@@ -22,5 +22,5 @@ class TmsApiWaybill(models.Model):
     def get_status_by_transaction_identifier(self, transaction_identifier):
         transaction = self.search([('transaction_identifier', '=', transaction_identifier)], limit=1)
         if not transaction:
-            raise 'not_found'
+            return 'not found'
         return transaction.status
