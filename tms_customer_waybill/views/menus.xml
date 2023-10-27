@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-    <menuitem id="tms_remote_waybill_menu_item" name="Customer Waybill" parent="tms.tms_freights_menu"
-        action="action_open_customer_waybill_wizard" sequence="7" />
-    <menuitem id="tms_history_remote_waybill_menu_item" name="Customer Waybill Histroy"
-        parent="tms.tms_freights_menu"
-        action="action_tms_api_waybill_tree" sequence="8" />
-</odoo>

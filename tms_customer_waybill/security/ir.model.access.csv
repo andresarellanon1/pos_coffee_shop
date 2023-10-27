@@ -1,3 +1,0 @@
-id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-access_tms_customer_waybill_wizard,access_tms_customer_waybill_wizard,model_tms_customer_waybill_customer_waybill_wizard,,1,1,1,1
-access_tms_api_waybill,access_tms_api_waybill,model_tms_customer_waybill_tms_api_waybill,,1,1,1,1
