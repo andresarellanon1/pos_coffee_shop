@@ -114,8 +114,8 @@ class tms_api_waybill(models.Model):
                 'operating_unit_id': self.env.user.default_operating_unit_id.id,
                 'partner_id': partner.id,
                 'partner_order_id': partner.id,
-                'departure_address_id': origin_res_partner.id,
                 'partner_invoice_id': partner.id,
+                'departure_address_id': origin_res_partner.id,
                 'arrival_address_id': arrival_address_id,
                 'destination_ids': [(6, 0, destination_partner_ids)],
                 'user_id': self.env.user.id,
@@ -131,8 +131,6 @@ class tms_api_waybill(models.Model):
                 'contact_id': partner.id,
                 'waybill_id': waybill.id,
             })
-            logger.info('====')
-            logger.info(waybill.id)
             return {
                 'name': 'Waybill list view',
                 'view_mode': 'form',
