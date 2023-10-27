@@ -130,13 +130,14 @@ class tms_api_waybill(models.Model):
 
             return {
                 'name': 'Waybill list view',
-                'view_id': self.env.ref('tms.view_tms_waybill_form').id,
-                'view_mode': 'form',
+                'view_type': 'form',
+                'view_mode': 'tree',
                 'target': 'current',
                 'res_model': 'tms.waybill',
                 'res_id': waybill.id,
                 'type': 'ir.actions.act_window'
             }
+
         except Exception as e:
             logger.error(e)
             raise e
