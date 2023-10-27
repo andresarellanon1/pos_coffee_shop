@@ -39,7 +39,6 @@ export class CustomerWaybillWidget extends Component {
                     method: `${this.state.prefix}_get_items`,
                     args: [this.props.record.data.remote_waybills, this.state.contact.id],
                 })
-                console.log(buffer_items)
                 if (buffer_items && buffer_items.length >= 0) {
                     this.state.items = buffer_items.map(buffer_item => {
                         let item = {}
@@ -70,6 +69,7 @@ export class CustomerWaybillWidget extends Component {
                 }
             } catch (e) {
                 console.error(e)
+                throw e
             }
         })
     }
