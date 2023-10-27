@@ -131,14 +131,15 @@ class tms_api_waybill(models.Model):
                 'contact_id': partner.id,
                 'waybill_id': waybill.id,
             })
-
+            logger.info('====')
+            logger.info(waybill.id)
             return {
                 'name': 'Waybill list view',
-                'view_type': 'form',
-                'view_mode': 'tree',
+                'view_mode': 'form',
                 'target': 'current',
                 'res_model': 'tms.waybill',
                 'res_id': waybill.id,
+                'view_id': self.env.ref('tms.view_tms_waybill_form').id,
                 'type': 'ir.actions.act_window'
             }
 
