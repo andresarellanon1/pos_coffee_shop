@@ -1,4 +1,5 @@
 from odoo import models, api
+from odoo.exceptions import ValidationError
 import logging
 logger = logging.getLogger(__name__)
 
@@ -50,6 +51,11 @@ class tms_api_waybill(models.Model):
     @api.model
     def ryder_load_remote_waybills_as_pending(self, args):
         try:
+            # select customer (ryder) contact by id
+            partner = self.env['res.partner'].search([('id', '=', args['ContactId'])], limit=1)
+            status = self.get_status_by_transaction_identifier(self.get_transaction_identifier(partner.id, args['NoOperacion'], args['NoViaje']))
+            if status != "not found":
+                raise ValidationError("Waybill already loaded")
             custom_headers = []
             custom_attributes = [
                 {'key': "OperacionID", 'value': args['NoOperacion']},
@@ -69,8 +75,8 @@ class tms_api_waybill(models.Model):
                 origin_res_partner = self.env['res.partner'].create({
                     'vat': response['Datos']['OrigenRFC'],
                     'name': response['Datos']['OrigenNombre'],
-                    "company_type": "company",
-                    "is_company": True,
+                    'company_type': 'company',
+                    'is_company': True,
                     'street': response['Datos']['OrigenCalle'],
                     'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('l10n_mx_edi_code', '=', response['Datos']['OrigenMunicipio'])], limit=1)),
                     'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', response['Datos']['OrigenEstado'])], limit=1)),
@@ -88,8 +94,8 @@ class tms_api_waybill(models.Model):
                     destine_res_partners.append(self.env['res.partner'].create({
                         'vat': destine['DestinoRFC'],
                         'name': destine['DestinoNombre'],
-                        "company_type": "company",
-                        "is_company": True,
+                        'company_type': 'company',
+                        'is_company': True,
                         'street': f"{destine['DomicilioCalle']}-{destine['DestinoNumeroExterior']}",
                         'city': (lambda el: el.id if el else False)(self.env['res.city'].search([('l10n_mx_edi_code', '=', destine['DomicilioMunicipio'])], limit=1)),
                         'state_id': (lambda el: el.id if el else False)(self.env['res.country.state'].search([('code', '=', destine['DomicilioEstado'])], limit=1)),
@@ -102,8 +108,6 @@ class tms_api_waybill(models.Model):
             arrival_address_id = destine_res_partners[0].id
             # select the rest of the destination lines if any
             destination_partner_ids = map(lambda item: item.id, destine_res_partners[1:])
-            # select customer (ryder) contact by id
-            partner = self.env['res.partner'].search([('id', '=', args['ContactId'])], limit=1)
             # create waybill
             waybill = self.env['tms.waybill'].create({
                 'state': 'draft',
